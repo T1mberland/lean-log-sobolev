@@ -33,6 +33,9 @@ Proved components include:
   exponential chart transition verified on its domain. Smooth matrix inclusion,
   multiplication, inversion, and exponential give an actual Lie group instance.
   Its inclusion derivative is `A ↦ U A`, preserving the exact Frobenius norm.
+* Actual left-invariant SU fields and directional derivatives, local smooth
+  ambient extensions, preservation of smoothness, and the operator identity
+  `D_A D_B − D_B D_A = D_[A,B]` for every smooth SU test.
 * The normalized interval and its L² product with SU(N).
 * The paper's phase map into U(N), with the `sqrt(3)` Lipschitz bound.
 * **The exact short-interval Haar decomposition (Lemma 16)** for every positive N,

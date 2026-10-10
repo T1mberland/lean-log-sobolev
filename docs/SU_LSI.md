@@ -137,6 +137,40 @@ and the su model-coordinate norm. Norms are specified explicitly; no arbitrary
 tangent-space norm or Riemannian structure is assumed. The smooth Riemannian
 metric, connection/curvature formula, and analytic LSI argument remain open.
 
+## Invariant fields and actual differential operators
+
+`Unitary/SpecialUnitaryInvariantFields.lean` proves the derivative of left
+multiplication is the identity in the translated tangent coordinates. In
+particular, Mathlib's `mulInvariantVectorField A` has ambient velocity `U A`,
+proved in `specialUnitary_mulInvariantVectorField_val`. These are preferred
+coordinates depending on the base point; their constancy does not mean the
+vector fields commute.
+
+`Unitary/SpecialUnitarySmoothExtension.lean` constructs a local ambient retraction
+using the analytic logarithm and the proved linear retraction onto su.
+`specialUnitary_exists_local_smooth_extension` shows that every smooth SU test
+admits a smooth ambient extension near each point. It assumes no extension
+hypothesis and does not assert a globally smooth logarithm or retraction.
+
+`Unitary/SpecialUnitaryDifferentialOperators.lean` defines `specialUnitaryDeriv`
+using the actual `mfderiv`, not an arbitrary operator supplied by a class.
+`specialUnitaryDeriv_contMDiff` proves it preserves smoothness, and
+`specialUnitaryDeriv_commutator` proves, for every smooth SU test,
+
+`D_A(D_B f)(U) − D_B(D_A f)(U) = D_[A,B] f(U)`.
+
+The proof uses the verified local extension and the generic normed-algebra
+`Geometry/AlgebraVectorFields.lean:rightMulDeriv_commutator`. The latter uses
+Mathlib's Lie bracket and symmetry of second derivatives. The result is not
+restricted to ambient polynomial or globally extendible tests. An independent
+SU(2) example uses `A = diag(i,−i)` and `B = [[0,1],[-1,0]]`; their operator
+commutator on the matrix inclusion has `(0,1)` entry `2i` at identity.
+
+This proves the differential-operator commutator relation. Equality between
+Mathlib's `GroupLieAlgebra` bracket and the algebraic matrix bracket has not
+itself been packaged as a theorem. No Laplacian, Γ₂ bound, heat semigroup, or LSI
+is asserted by these modules.
+
 ## Inner product, adjoint action, and real contraction
 
 `Unitary/SpecialUnitaryInner.lean` installs the real inner product
@@ -209,6 +243,37 @@ needed for its abstract LSI implication and cannot supply this missing proof.
 
 ## Remaining route to the theorem
 
+An economical next route is to define the actual sum-of-squares operator
+`L = Σᵢ Dᵢ²` and `Γ(f) = Σᵢ (Dᵢ f)²`, then prove the Γ₂ estimate with
+coefficient `N/2` using the commutator identity and the exact Killing contraction.
+This would avoid developing a Levi-Civita connection solely to obtain that
+estimate. The operator approach is supported by
+[Rothaus, *Hypercontractivity and the Bakry–Emery criterion for compact Lie
+groups*, pp. 361–363](https://www.researchgate.net/publication/243022735_Hypercontractivity_and_the_Bakry-Emery_criterion_for_compact_Lie_groups),
+which uses commutation of the Laplacian with invariant fields to reduce the
+curvature expression to second derivatives. This is a proposed formalization
+route, not a proved Γ₂ theorem here. It still needs Haar integration by parts,
+a constructed diffusion, entropy dissipation and equilibrium convergence, and
+the local-slope extension.
+
+A concrete next inequality, already expressible using the proved API, is the
+following **unproved goal**. For a real orthonormal basis `b` of su(N), any
+smooth real SU function `f`, and `U : SU(N)`, prove
+
+```lean
+(N : ℝ) / 2 * (∑ i, (specialUnitaryDeriv (b i) f U) ^ 2) ≤
+  ∑ i, ∑ j, (specialUnitaryDeriv (b i) (specialUnitaryDeriv (b j) f) U) ^ 2
+```
+
+The proposed proof combines the operator commutator with the algebraic
+orthonormal contraction and the sum-of-squares inequality for the antisymmetric
+part of the second-derivative array. Separately prove that the actual operator
+`L = Σᵢ Dᵢ²` commutes with each invariant derivative and that its carré du champ
+is `Σᵢ (Dᵢ f)²`; these identify the displayed second-derivative sum with Γ₂.
+These are remaining proof obligations, not definitions declaring curvature.
+
+The alternative geometric route remains:
+
 1. Use the proved smooth group operations and inclusion derivative to construct
    the Hilbert–Schmidt bi-invariant
    Riemannian metric. For the geometric bracket, reuse Mathlib’s
@@ -227,7 +292,7 @@ needed for its abstract LSI implication and cannot supply this missing proof.
 4. Transfer from the intrinsic metric to the Hilbert–Schmidt metric by proving
    the distance comparison and applying the existing Lipschitz transport API.
 
-The geodesic-LSI-to-Hilbert–Schmidt route is the one cited in the
+The alternative geodesic-LSI-to-Hilbert–Schmidt route is the one cited in the
 [Meckes–Meckes appendix, proof of Theorem 15](https://arxiv.org/pdf/1210.2681).
 Its citation of Bakry–Émery is a mathematical reference, not an imported Lean
 proof. The final bottleneck remains geometric and analytic, not an assembly
@@ -240,13 +305,15 @@ Proof commits: `0f05569` (algebra), `339112a` (curves), and `5bf0ed6`
 `5c6ebdb` (exact Killing coefficient and real orthonormal energy), and
 `2387b3e` (determinant identity and actual local exponential coordinates), and
 `78fea3b` (smooth translated exponential atlas), and `fc7c4c0` (smooth group
-operations, ambient criterion, and exact manifold tangent normalization).
+operations, ambient criterion, and exact manifold tangent normalization), and
+`e5cfa1d` (invariant fields, local smooth extensions, and smooth directional
+operator commutators).
 `lake build` and the independent `Examples.lean`
-compilation pass. The recursive `Audit.lean` check passes for all 402 project
+compilation pass. The recursive `Audit.lean` check passes for all 425 project
 declarations, accepting only `propext`, `Classical.choice`, and `Quot.sound`.
 It prints the fully elaborated commutator-energy, curve-velocity, and
 exponential-speed, conjugation-derivative, and Killing-contraction, exact-coefficient, and real-orthonormal-energy theorems, exposes the Frobenius instances, and inspects the
 Lie-algebra, trace-pairing, exponential-curve, and inner-product definitions.
 The full output is in [axiom-audit.txt](axiom-audit.txt). These checks certify
-the algebraic, curve, local-coordinate, smooth Lie-group, and tangent-derivative
-results above, not an SU(N) LSI theorem.
+the algebraic, curve, local-coordinate, smooth Lie-group, tangent-derivative,
+and smooth differential-operator results above, not an SU(N) LSI theorem.
