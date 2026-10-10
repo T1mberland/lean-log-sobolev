@@ -2,12 +2,8 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 lake build
-lake env lean LogSobolev/Examples.lean
-lake env lean LogSobolev/ExamplesInterval.lean
-lake env lean LogSobolev/ExamplesIntervalMetric.lean
-lake env lean LogSobolev/Audit.lean
-lake env lean LogSobolev/AuditIntervalMetric.lean
-lake env lean LogSobolev/ExamplesPhasePolynomial.lean
-lake env lean LogSobolev/AuditPhasePolynomial.lean
-lake env lean LogSobolev/ExamplesPhaseEnergy.lean
-lake env lean LogSobolev/AuditPhaseEnergy.lean
+for example in Examples ExamplesInterval ExamplesProductEntropy ExamplesIntervalMetric ExamplesPhasePolynomial ExamplesPhaseEnergy ExamplesUnitary; do
+  lake env lean "LogSobolev/${example}.lean"
+done
+# This audit traverses every project declaration and its complete dependency closure.
+lake env lean LogSobolev/AuditUnitary.lean | tee docs/unitary-axiom-audit.txt

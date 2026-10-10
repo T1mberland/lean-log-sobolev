@@ -123,3 +123,9 @@ import LogSobolev.Unitary.UnitaryPhaseConvolutionEnergy
 import LogSobolev.Unitary.UnitaryAveragedSlope
 import LogSobolev.Unitary.UnitaryPhaseIntegratedEnergy
 import LogSobolev.Unitary.UnitarySUConvolution
+import LogSobolev.Analysis.IntervalDerivativeLSI
+import LogSobolev.Unitary.SpecialUnitaryPolynomialFamilyRegularity
+import LogSobolev.Unitary.PolynomialPhaseEntropy
+import LogSobolev.Unitary.PhaseEntropyEnergy
+import LogSobolev.Unitary.PhaseEntropyTransport
+import LogSobolev.Unitary.UnitaryLSI
