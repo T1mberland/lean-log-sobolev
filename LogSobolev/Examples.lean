@@ -7,7 +7,7 @@ functions. They do not claim an LSI on U(N).
 -/
 
 open LogSobolev Matrix MeasureTheory
-open scoped Matrix.Norms.Frobenius
+open scoped Matrix.Norms.Frobenius ContDiff
 
 example : unitaryHaar (Fin 1) Set.univ = 1 := measure_univ
 example : unitaryHaar (Fin 3) Set.univ = 1 := measure_univ
@@ -160,3 +160,21 @@ example : ∃ A : specialUnitaryLieAlgebra (n := Fin 2),
   refine ⟨⟨_, hmem⟩, ?_⟩
   rw [specialUnitary_killing_self_eq, specialUnitaryAlgebra_norm, frobenius_norm_sq]
   norm_num [Fin.sum_univ_two, Matrix.diagonal]
+
+-- Determinant-exponential identity has no skew or trace-zero hypotheses.
+example (A : Matrix (Fin 3) (Fin 3) ℂ) :
+    Matrix.det (NormedSpace.exp A) = Complex.exp (Matrix.trace A) := det_matrix_exp A
+
+-- Every SU(2) matrix in a genuine open neighborhood of identity has an su generator.
+example : ∃ t : Set (Matrix.specialUnitaryGroup (Fin 2) ℂ),
+    IsOpen t ∧ 1 ∈ t ∧ ∀ V ∈ t,
+      ∃ A : specialUnitaryLieAlgebra (n := Fin 2), NormedSpace.exp A.val = V.val := by
+  obtain ⟨s, t, _, _, ht, ht1, e, he⟩ := exists_specialUnitary_exp_homeomorph (n := Fin 2)
+  refine ⟨t, ht, ht1, ?_⟩
+  intro V hV
+  refine ⟨(e.symm ⟨V, hV⟩).val, ?_⟩
+  have h := he (e.symm ⟨V, hV⟩)
+  simpa only [e.apply_symm_apply] using h.symm
+
+example : ContDiffAt ℝ ∞ (matrixExpLocalHomeomorph (n := Fin 3)).symm 1 :=
+  matrixLog_contDiffAt_one ∞

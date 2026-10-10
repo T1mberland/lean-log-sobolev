@@ -28,3 +28,6 @@ import LogSobolev.Unitary.SpecialUnitaryKilling
 import LogSobolev.Unitary.MatrixAdjointTrace
 import LogSobolev.Unitary.MatrixRealForm
 import LogSobolev.Unitary.SpecialUnitaryKillingConstant
+import LogSobolev.Unitary.MatrixExpDeterminant
+import LogSobolev.Unitary.MatrixLocalExponential
+import LogSobolev.Unitary.SpecialUnitaryLocalCoordinates

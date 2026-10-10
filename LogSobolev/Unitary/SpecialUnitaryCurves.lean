@@ -1,5 +1,5 @@
 import LogSobolev.Unitary.UnitaryCurves
-import LogSobolev.Unitary.DeterminantDerivative
+import LogSobolev.Unitary.MatrixExpDeterminant
 import LogSobolev.Unitary.SpecialUnitary
 import Mathlib.Analysis.Calculus.Deriv.Shift
 import Mathlib.Analysis.Calculus.MeanValue
@@ -36,34 +36,11 @@ theorem specialUnitary_curve_derivative_mem
     exact hd.unique (hasDerivAt_const x (1 : ℂ))
 
 /-- The real exponential curve of any trace-zero complex matrix has determinant
-one. The proof uses the determinant derivative, not a determinant-exponential
-identity imported as an assumption. -/
+one. This specializes the proved determinant-exponential identity. -/
 theorem det_exp_smul_eq_one_of_trace_zero (A : Matrix n n ℂ)
     (hA : Matrix.trace A = 0) (t : ℝ) :
     Matrix.det (NormedSpace.exp (t • A)) = 1 := by
-  let f : ℝ → ℂ := fun s => Matrix.det (NormedSpace.exp (s • A))
-  have hmat : HasDerivAt (fun s : ℝ => NormedSpace.exp (s • A)) A 0 := by
-    simpa using hasDerivAt_exp_smul_const A (0 : ℝ)
-  have hf0 : HasDerivAt f 0 0 := by
-    simpa only [hA] using hasDerivAt_det_at_one
-      (fun s : ℝ => NormedSpace.exp (s • A)) A 0 (by simp)
-      (hasDerivAt_matrix_entry hmat)
-  have hmul (r s : ℝ) : f (r + s) = f r * f s := by
-    dsimp [f]
-    rw [add_smul, NormedSpace.exp_add_of_commute
-      (((Commute.refl A).smul_left r).smul_right s), Matrix.det_mul]
-  have hf (r : ℝ) : HasDerivAt f 0 r := by
-    have hshift : HasDerivAt f 0 (r - r) := by simpa using hf0
-    have hd := (hshift.comp_sub_const r r).const_mul (f r)
-    have he : (fun s => f r * f (s - r)) = f := by
-      funext s
-      rw [← hmul]
-      congr 1
-      abel
-    simpa only [he, mul_zero] using hd
-  have he := is_const_of_deriv_eq_zero (fun r => (hf r).differentiableAt)
-    (fun r => (hf r).deriv) t 0
-  simpa [f] using he
+  rw [det_exp_smul, hA, smul_zero, Complex.exp_zero]
 
 /-- Exponentiating a real multiple of a matrix in su gives an actual SU element. -/
 noncomputable def specialUnitaryExpCurve

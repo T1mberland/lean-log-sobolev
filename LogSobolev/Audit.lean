@@ -129,3 +129,15 @@ set_option pp.all true in
 #check LogSobolev.specialUnitary_killing_self_eq
 set_option pp.all true in
 #check LogSobolev.specialUnitary_orthonormal_commutator_energy
+
+#print axioms LogSobolev.det_matrix_exp
+#print axioms LogSobolev.matrixExpLocalHomeomorph
+#print axioms LogSobolev.matrixLog_hasStrictFDerivAt_one
+#print axioms LogSobolev.matrixLog_contDiffAt_one
+#print axioms LogSobolev.exists_specialUnitary_exp_neighborhood
+#print axioms LogSobolev.exists_specialUnitary_exp_homeomorph
+#print LogSobolev.matrixExpLocalHomeomorph
+set_option pp.all true in
+#check LogSobolev.exists_specialUnitary_exp_homeomorph
+set_option pp.all true in
+#check LogSobolev.matrixLog_contDiffAt_one
