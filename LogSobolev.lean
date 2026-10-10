@@ -83,3 +83,6 @@ import LogSobolev.Geometry.LocalSlopeDerivative
 import LogSobolev.Unitary.SpecialUnitarySlope
 import LogSobolev.Unitary.SpecialUnitaryPolynomialExtension
 import LogSobolev.Unitary.SpecialUnitaryPolynomialMetricLSI
+import LogSobolev.Measure.EntropyContinuity
+import LogSobolev.Unitary.SpecialUnitaryPolynomialPullback
+import LogSobolev.Unitary.SpecialUnitaryPolynomialConvolution

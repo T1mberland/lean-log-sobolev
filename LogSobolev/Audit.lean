@@ -390,3 +390,20 @@ set_option pp.all true in
 #check @LogSobolev.specialUnitaryPolynomial_metric_entropy_sq_le
 set_option pp.all true in
 #check @LogSobolev.specialUnitaryPolynomial_entropy_sq_le_slope
+#print axioms LogSobolev.continuous_integral_continuousMap_uniform
+#print axioms LogSobolev.continuous_entropy_continuousMap
+#print axioms LogSobolev.continuous_entropy_sq_continuousMap
+#print axioms LogSobolev.tendsto_entropy_sq_of_tendsto_continuousMap
+#print axioms LogSobolev.specialUnitaryPolynomial_exists_linear_pullback
+#print axioms LogSobolev.specialUnitaryPolynomial_exists_mul_left
+#print axioms LogSobolev.specialUnitaryPolynomial_exists_mul_right
+#print axioms LogSobolev.specialUnitaryPolynomial_exists_inv
+#print axioms LogSobolev.specialUnitaryPolynomial_exists_inv_mul
+#print axioms LogSobolev.specialUnitaryPolynomial_exists_convolution
+#print axioms LogSobolev.specialUnitaryPolynomial_exists_averaging
+#print axioms LogSobolev.specialUnitary_averaging_integral
+#print axioms LogSobolev.specialUnitary_averaging_le
+set_option pp.all true in
+#check @LogSobolev.tendsto_entropy_sq_of_tendsto_continuousMap
+set_option pp.all true in
+#check @LogSobolev.specialUnitaryPolynomial_exists_averaging

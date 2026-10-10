@@ -622,3 +622,22 @@ example (N d : ℕ) (hN : 0 < N) (f : specialUnitaryPolynomialSpace (n := Fin N)
       2 * ((2 / (N : NNReal) : NNReal) : ENNReal) * slopeEnergy (specialUnitaryHaar (Fin N)) f.val := by
   simpa using specialUnitaryPolynomial_metric_entropy_sq_le
     (stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin N))) d (by simpa using hN) f
+
+-- Polynomial regularization accepts arbitrary continuous observables, not only polynomials.
+example (N d : ℕ) (k : specialUnitaryPolynomialSpace (n := Fin N) d)
+    (f : C(Matrix.specialUnitaryGroup (Fin N) ℂ, ℝ)) :
+    ∃ p : specialUnitaryPolynomialSpace (n := Fin N) d,
+      ∀ U, p.val U = ∫ V, f (U * V) * k.val V ∂specialUnitaryHaar (Fin N) :=
+  specialUnitaryPolynomial_exists_averaging d k f
+
+-- Uniform convergence of varying-degree functions suffices for entropy convergence.
+example (N : ℕ) (d : ℕ → ℕ)
+    (p : ∀ j, specialUnitaryPolynomialSpace (n := Fin N) (d j))
+    (f : C(Matrix.specialUnitaryGroup (Fin N) ℂ, ℝ))
+    (h : Filter.Tendsto (fun j => specialUnitaryPolynomialToContinuous (d j) (p j))
+      Filter.atTop (nhds f)) :
+    Filter.Tendsto
+      (fun j => entropy (specialUnitaryHaar (Fin N)) (fun U => (p j).val U ^ 2))
+      Filter.atTop (nhds (entropy (specialUnitaryHaar (Fin N)) (fun U => f U ^ 2))) :=
+  tendsto_entropy_sq_of_tendsto_continuousMap (specialUnitaryHaar (Fin N))
+    (f := fun j => specialUnitaryPolynomialToContinuous (d j) (p j)) (g := f) h
