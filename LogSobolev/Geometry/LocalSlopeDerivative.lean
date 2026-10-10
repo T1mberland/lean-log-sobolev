@@ -26,4 +26,12 @@ theorem localSlope_eq_of_hasDerivAt {f : ℝ → ℝ} {a x : ℝ} (hf : HasDeriv
   rw [he]
   exact h.limsup_eq
 
+/-- The totalized ordinary derivative is bounded by the local slope everywhere.
+At nondifferentiability points the derivative is zero; no regularity is assumed. -/
+theorem ofReal_norm_deriv_le_localSlope (f : ℝ → ℝ) (x : ℝ) :
+    ENNReal.ofReal ‖deriv f x‖ ≤ localSlope f x := by
+  by_cases hd : DifferentiableAt ℝ f x
+  · rw [localSlope_eq_of_hasDerivAt hd.hasDerivAt]
+  · simp [deriv_zero_of_not_differentiableAt hd]
+
 end LogSobolev

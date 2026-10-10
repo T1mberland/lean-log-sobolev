@@ -2,6 +2,7 @@ import LogSobolev.Geometry.SlopeMeasurable
 import LogSobolev.Measure.Entropy
 import Mathlib.MeasureTheory.Integral.Lebesgue.Map
 import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.GCongr
 
 /-! # Metric LSI and Lipschitz pushforward
 
@@ -32,6 +33,14 @@ def MetricLSI (μ : Measure X) (C : ℝ≥0) : Prop :=
     Integrable (fun x => f x ^ 2) μ →
     Integrable (fun x => f x ^ 2 * Real.log (f x ^ 2)) μ →
     ENNReal.ofReal (entropy μ (fun x => f x ^ 2)) ≤ 2 * (C : ℝ≥0∞) * slopeEnergy μ f
+
+omit [BorelSpace X] in
+/-- Increasing the nonnegative LSI constant preserves the inequality. -/
+theorem MetricLSI.mono {μ : Measure X} {C D : ℝ≥0} (h : MetricLSI μ C) (hCD : C ≤ D) :
+    MetricLSI μ D := by
+  intro f hf hi hl
+  apply (h f hf hi hl).trans
+  gcongr
 
 /-- Squared slope energy contracts under Lipschitz pullback, with factor `K²`. -/
 theorem slopeEnergy_comp_le {μ : Measure X} {T : X → Y} {K : ℝ≥0}

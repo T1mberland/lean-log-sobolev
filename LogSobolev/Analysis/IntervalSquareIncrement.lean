@@ -14,8 +14,10 @@ open MeasureTheory Finset
 
 namespace LogSobolev
 
-/-- Scalar integral Cauchy–Schwarz on an interval for a continuous integrand. -/
-theorem interval_integral_sq_le {g : ℝ → ℝ} (hg : Continuous g) {a b : ℝ} (hab : a ≤ b) :
+/-- Scalar integral Cauchy–Schwarz with explicit first and second moment integrability. -/
+theorem interval_integral_sq_le_of_integrable {g : ℝ → ℝ} {a b : ℝ}
+    (hi : IntervalIntegrable g volume a b)
+    (hsq : IntervalIntegrable (fun x => g x ^ 2) volume a b) (hab : a ≤ b) :
     (∫ x in a..b, g x) ^ 2 ≤ (b - a) * ∫ x in a..b, g x ^ 2 := by
   rcases hab.eq_or_lt with hab | hab
   · subst b
@@ -34,9 +36,9 @@ theorem interval_integral_sq_le {g : ℝ → ℝ} (hg : Continuous g) {a b : ℝ
         ring
       _ = _ := by
         have h1 : IntervalIntegrable (fun x => l ^ 2 * g x ^ 2) volume a b :=
-          (continuous_const.mul (hg.pow 2)).intervalIntegrable _ _
+          hsq.const_mul _
         have h2 : IntervalIntegrable (fun x => (2 * l * I) * g x) volume a b :=
-          (continuous_const.mul hg).intervalIntegrable _ _
+          hi.const_mul _
         rw [intervalIntegral.integral_add (h1.sub h2) (continuous_const.intervalIntegrable _ _),
           intervalIntegral.integral_sub h1 h2, intervalIntegral.integral_const_mul,
           intervalIntegral.integral_const_mul, intervalIntegral.integral_const]
@@ -46,6 +48,12 @@ theorem interval_integral_sq_le {g : ℝ → ℝ} (hg : Continuous g) {a b : ℝ
   rw [he] at hnon
   have hprod : 0 ≤ l * (l * (∫ x in a..b, g x ^ 2) - I ^ 2) := by nlinarith
   exact sub_nonneg.mp (nonneg_of_mul_nonneg_right hprod hl)
+
+/-- Scalar integral Cauchy–Schwarz on an interval for a continuous integrand. -/
+theorem interval_integral_sq_le {g : ℝ → ℝ} (hg : Continuous g) {a b : ℝ} (hab : a ≤ b) :
+    (∫ x in a..b, g x) ^ 2 ≤ (b - a) * ∫ x in a..b, g x ^ 2 :=
+  interval_integral_sq_le_of_integrable (hg.intervalIntegrable _ _)
+    ((hg.pow 2).intervalIntegrable _ _) hab
 
 /-- A continuously differentiable function's increment is bounded by derivative energy. -/
 theorem sq_sub_le_interval_integral_deriv_sq {f g : ℝ → ℝ}

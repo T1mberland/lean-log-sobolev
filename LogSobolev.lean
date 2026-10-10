@@ -107,3 +107,7 @@ import LogSobolev.Analysis.IntervalSquareIncrement
 import LogSobolev.Analysis.UnitIntervalLSI
 import LogSobolev.Measure.IntervalIntegral
 import LogSobolev.Analysis.IntervalLSI
+import LogSobolev.Analysis.LipschitzIntervalEnergy
+import LogSobolev.Analysis.LipschitzUnitIntervalLSI
+import LogSobolev.Geometry.IntervalMetricLSI
+import LogSobolev.Unitary.DimensionOneLSI
