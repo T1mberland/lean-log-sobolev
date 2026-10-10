@@ -78,6 +78,13 @@ All names below are in namespace `LogSobolev`.
 | `LogSobolev/Unitary/SpecialUnitaryMaximumPrinciple.lean` | `specialUnitary_laplacian_nonneg_at_min`, `specialUnitary_laplacian_nonpos_at_max` | The actual SU generator has the required signs at local extrema, via verified exponential curves. |
 | `LogSobolev/Unitary/SpecialUnitaryHeatBounds.lean` | `specialUnitary_heat_lower_bound`, `specialUnitary_heat_upper_bound`, `specialUnitary_heat_nonneg` | Supplied classical solutions of the actual SU heat equation preserve initial bounds; positivity is a conclusion. |
 | `LogSobolev/Unitary/SpecialUnitaryLinearHeat.lean` | `specialUnitaryLinearHeat`, `specialUnitaryLaplacian_affine`, `specialUnitaryLinearHeat_hasDerivAt`, `specialUnitaryLinearHeat_pos` | Actual constructed heat solution `c+l(U exp(t ∑ bᵢ²))` for affine matrix observables. Initial value, PDE, continuity, smooth spatial slices, bounds and forward strict positivity are proved. No general heat construction or LSI is asserted. |
+| `LogSobolev/Geometry/DerivationSubmodulePowers.lean` | `derivation_mem_submodule_mul`, `derivation_mem_submodule_pow` | A derivation preserving submodules preserves their products and powers. |
+| `LogSobolev/Unitary/SpecialUnitaryPolynomialSpace.lean` | `specialUnitaryPolynomialSpace_finite`, `specialUnitaryDerivEnd_mem_polynomial`, `specialUnitaryLaplacianEnd_mem_polynomial` | Finite-dimensional powers of actual affine SU observables are preserved by invariant differentiation and the actual generator. |
+| `LogSobolev/Unitary/SpecialUnitaryPolynomialNorm.lean` | `specialUnitaryPolynomialToContinuous_injective`, `specialUnitaryPolynomialLaplacianCLM`, `specialUnitaryPolynomialDerivCLM` | Actual supremum norm, completeness by finite dimensionality, continuous restricted operators. |
+| `LogSobolev/Unitary/SpecialUnitaryPolynomialHeat.lean` | `specialUnitaryPolynomialHeat_hasDerivAt_apply`, `specialUnitaryPolynomialHeat_add`, `specialUnitaryPolynomialHeat_norm_le`, `specialUnitaryPolynomialHeat_integral` | Constructed exponential evolution solves the actual heat equation on each polynomial space, preserves bounds and normalized Haar mass, and contracts the supremum norm. |
+| `LogSobolev/Unitary/SpecialUnitaryPolynomialHeatRegularity.lean` | `specialUnitaryPolynomialForwardHeat_clm_continuous`, `specialUnitaryPolynomialForwardHeat_clm_hasDerivAt` | Joint and mixed derivative regularity for the constructed heat flow, constantly extended before time zero. |
+| `LogSobolev/Analysis/ExponentialDecay.lean` | `le_exp_mul_of_deriv_le` | Integrating-factor decay from `f′ ≤ −a f`, with only continuity required at zero. |
+| `LogSobolev/Unitary/SpecialUnitaryPolynomialDissipation.lean` | `specialUnitaryPolynomialForwardHeat_hasDerivAt_entropy`, `specialUnitaryPolynomialForwardHeat_hasDerivAt_fisher`, `specialUnitaryPolynomialForwardHeat_fisher_le_exp` | Actual entropy/Fisher dissipation and `I(Pₜ f) ≤ exp(−Nt) I(f)` for strictly positive polynomial data. No supplied trajectory, PDE, or mixed-regularity hypothesis remains. Equilibrium and LSI are not proved. |
 | `LogSobolev/Unitary/PhaseMap.lean` | `phaseMul_dist_le`, `phaseMap_lipschitz` | The full-line phase map has Lipschitz constant `sqrt(3)` for every positive N; no probability argument is needed. |
 | `LogSobolev/Measure/Interval.lean` | `intervalUniform_univ`, `map_intervalUniform` | Normalized Lebesgue measure on the Euclidean subtype `[0,L]` for `L>0`. |
 | `LogSobolev/Unitary/ProductDomain.lean` | `phaseDomainMeasure_probability`, `intervalPhaseMap_lipschitz` | The exact interval × SU domain and probability measure, and the restricted map's Lipschitz bound. |
@@ -192,12 +199,16 @@ second-derivative sum, and `Γ₂ ≥ (N/2)Γ` is proved for every smooth real t
 This avoids needing a geometric Ricci theorem for the current operator route.
 Haar integration by parts and the integrated Γ₂ identity are now proved.
 The entropy-dissipation formula for a supplied positive differentiable family
-in the heat direction is also proved. Heat solutions are now explicitly
-constructed for affine matrix observables, with proved preservation of bounds.
-The SU step still needs a general diffusion with the explicit mixed-derivative
-regularity, integration of the
-proved conditional Fisher differential inequality, and equilibrium convergence
-with proved ergodicity. Energy identification and approximation are required to
+in the heat direction is also proved. Heat solutions are now constructed on every finite-degree
+polynomial-observable space, with the actual PDE, preservation of bounds,
+supremum-norm contraction, normalized Haar-mass conservation, and all regularity
+needed for entropy and Fisher differentiation. Exponential Fisher decay at rate
+`N` is proved, including time zero. The next missing step is convergence to
+constants (or vanishing limiting entropy), requiring proved connectedness or
+an equivalent kernel/ergodicity argument. LSI is not yet proved even for positive
+polynomial data. Consistency across polynomial degrees and general heat
+extension are not yet proved; an approximation route after polynomial LSI may
+avoid needing a general heat construction. Energy identification and approximation are required to
 obtain locally Lipschitz functions. The abstract
 `markov-semigroups` class does not eliminate these obligations. Its assumed
 entropy decay must not be passed off as a proved curvature criterion.
@@ -211,16 +222,16 @@ the compact regularity side conditions. A verified Herbst argument is a later ta
 Verification performed on 2026-10-10 with Lean 4.28.0 and the pinned Mathlib
 commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
 
-* `lake build`: passed for the complete library (2956 dependency/build jobs,
+* `lake build`: passed for the complete library (2964 dependency/build jobs,
   primarily cached Mathlib artifacts).
 * `lake env lean LogSobolev/Examples.lean`: passed; the examples compile as an
   independent client importing the public root module.
 * `lake env lean LogSobolev/Audit.lean`: passed. The automated traversal checked
-  **552 declarations** in the `LogSobolev` namespace, including definitions,
+  **657 declarations** in the `LogSobolev` namespace, including definitions,
   instances, and generated auxiliaries. Every transitive axiom was one of
   `propext`, `Classical.choice`, or `Quot.sound`. No `sorryAx` or custom axiom
   was present in those dependency closures.
-* The audit also executes 145 `#print axioms` commands, prints the core
+* The audit also executes 160 `#print axioms` commands, prints the core
   definitions, and prints fully elaborated types for the trace normalization,
   phase-map Lipschitz theorem, U(N) regularity theorem, exact Haar identity,
   conditional final LSI transfer, product entropy chain rule, and SU algebra
@@ -235,7 +246,8 @@ commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
   mass, conditional entropy dissipation, weighted logarithmic Γ₂, the spatial
   Fisher identity, and the conditional Fisher differential inequality with all
   mixed-derivative hypotheses exposed, the actual generator maximum principle,
-  bound preservation, and the constructed affine heat equation and positivity. The elaborated
+  bound preservation, the constructed affine and polynomial heat equations,
+  polynomial Haar conservation, and polynomial Fisher dissipation/decay. The elaborated
   metric instances are explicitly Frobenius and `WithLp 2`.
 * The recursive audit now shares Lean's core collector visited set across all
   project roots. At milestone `6cb53ac`, an independent-root baseline run and
@@ -374,6 +386,18 @@ Completed milestones:
   All 145 explicit axiom checks use only standard foundational axioms.
   Heat construction beyond affine observables, required general regularity,
   convergence, and the locally Lipschitz LSI remain open.
+
+* `50aba17`: finite-degree polynomial spaces of actual SU matrix observables,
+  invariant under the actual derivatives and generator. Constructs their heat
+  evolution, with initial value, semigroup law, PDE, positivity, supremum-norm
+  contraction, and normalized Haar-mass conservation. Proves mixed regularity,
+  entropy and Fisher dissipation for constructed positive polynomial data,
+  and integrated Fisher decay `I(Pₜ f) ≤ exp(−Nt) I(f)` for every `t ≥ 0`.
+  Full build (2964 jobs), independent nonconstant positive quadratic SU(2)
+  examples, and the 657-declaration recursive audit pass. All 160 explicit
+  axiom checks use only standard foundational axioms. Polynomial LSI still
+  needs vanishing limiting entropy; equilibrium/connectedness and the
+  locally Lipschitz approximation and slope identification remain open.
 
 The report and README are committed separately after these verified proof
 milestones; use `git log --oneline` to see the documentation commit as well.

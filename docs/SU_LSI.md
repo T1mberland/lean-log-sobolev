@@ -373,8 +373,9 @@ proves `specialUnitary_weighted_gammaTwo_log_lower_bound`:
 
 This supplies the curvature part of the Fisher-information argument. The
 spatial dissipation identity and a conditional time-derivative theorem are now
-proved below. General heat existence, its required regularity, exponential decay and
-equilibrium convergence remain open.
+proved below. Polynomial heat existence, its required regularity, and exponential
+Fisher decay are established later in this report. Equilibrium convergence and
+extension beyond the polynomial class remain open.
 
 ## Fisher dissipation now proved under explicit regularity
 
@@ -400,12 +401,10 @@ With the additional heat-direction equality `Q_t = L F_t`,
 `I′(t) = −2 ∫ F_t Γ₂(log F_t)`, where `I(t) = ∫ Γ(F_t,F_t)/F_t`.
 
 For positive families, `specialUnitary_fisher_deriv_le` proves `I′(t) ≤ −N I(t)`.
-These are **conditional theorems about supplied regular families**. A heat
-family satisfying their hypotheses for arbitrary smooth initial data has not
-been constructed. The affine construction below proves the PDE and forward
-positivity but has not yet been connected to all mixed-derivative hypotheses;
-the general mixed derivative identity has not yet been deduced from joint
-smoothness.
+These are **conditional theorems about supplied regular families**. Their
+regularity hypotheses are now discharged for the constructed polynomial heat
+flow described below. A heat flow on arbitrary smooth functions has not yet
+been constructed.
 An independent exponential-rescaling example discharges every differentiation
 hypothesis for a time-dependent family, without asserting it solves the heat
 equation.
@@ -446,33 +445,89 @@ from strictly positive affine initial data. An independent SU(2) example uses
 the nonconstant positive density `2 + Im(U₀₀)`; an SU(3) example checks the
 actual PDE with the canonical real HS orthonormal basis.
 
-This is a construction on the affine matrix-observable class only. It does not
-prove heat existence on all smooth functions, equilibration, LSI for this class,
-or extension to locally Lipschitz tests. A concrete next route is to extend
-from affine observables to finite-degree polynomial spaces invariant under `L`,
-exponentiate the finite-dimensional restricted generators, and prove the
-required approximation and regularity. Mathlib's inspected
-`RingTheory/MvPolynomial/Basic.lean` already proves `Module.Finite` for
-`restrictTotalDegree` with finitely many variables. The invariant restriction,
-heat evolution on those spaces, and extension are not yet formalized.
+## Polynomial heat and integrated Fisher decay
+
+`Geometry/DerivationSubmodulePowers.lean` proves that a derivation preserving a
+submodule preserves every power of that submodule. This reuses Mathlib's
+submodule products and `Submodule.FG.pow` rather than introducing a formal
+polynomial quotient.
+
+`Unitary/SpecialUnitaryPolynomialSpace.lean` defines the affine-observable space
+`W` as the range of `(c,l) ↦ (U ↦ c + l(U))` in actual smooth SU functions.
+`specialUnitaryPolynomialSpace d = W^d` consists of linear combinations of
+products of `d` affine observables; constants allow all lower degrees.
+Finite dimensionality, monotonicity in degree, multiplication of degree bounds,
+and invariance under every actual `D_A` and the actual generator `L` are proved.
+
+`Unitary/SpecialUnitaryPolynomialNorm.lean` gives these spaces their actual
+supremum norm by an injective map into continuous functions on SU. Completeness
+and continuity of the restricted generator and invariant derivatives follow
+from finite dimensionality. This function-space norm does not change the
+Hilbert–Schmidt metric on the group.
+
+`Unitary/SpecialUnitaryPolynomialHeat.lean` constructs `P_t = exp(t L)` on each
+space. It proves the initial value, semigroup law, actual heat equation, joint
+continuity, preservation of lower and upper bounds, forward strict positivity,
+supremum-norm contraction, and conservation of normalized Haar mass.
+No supplied solution, positivity, or invariance hypothesis is used.
+
+`Unitary/SpecialUnitaryPolynomialHeatRegularity.lean` derives mixed time/spatial
+regularity by composing the vector-valued heat ODE with the continuous actual
+invariant derivatives. The forward heat flow is extended constantly before
+time zero solely to apply global continuity/positivity integral lemmas; its
+heat equation is asserted only at positive times.
+
+`Unitary/SpecialUnitaryPolynomialDissipation.lean` now proves, for **every
+strictly positive polynomial observable** and the real unnormalized HS
+orthonormal generator:
+
+* `specialUnitaryPolynomialForwardHeat_hasDerivAt_entropy`: `Ent′ = −I`.
+* `specialUnitaryPolynomialForwardHeat_hasDerivAt_fisher`:
+  `I′ = −2 ∫ (P_t f) Γ₂(log P_t f)`.
+* `specialUnitaryPolynomialForwardHeat_fisher_deriv_le`: `I′ ≤ −N I`.
+* `specialUnitaryPolynomialForwardHeat_fisher_le_exp`:
+  `I(P_t f) ≤ exp(−Nt) I(f)` for every `t ≥ 0`, including zero.
+
+Here `I(g) = ∫ Γ(g,g)/g dHaar`. All heat and mixed-regularity hypotheses of
+the earlier conditional theorems are discharged. A reusable integrating-factor
+lemma in `Analysis/ExponentialDecay.lean` uses Mathlib's derivative monotonicity
+criterion and needs only continuity at the initial endpoint.
+Independent examples construct `(2 + Im(U₀₀))²` in degree two on SU(2), prove
+strict positivity and an actual invariant derivative equal to four, and check
+Haar-mass conservation and Fisher decay at exact rate two.
 
 ## Remaining route to the theorem
 
-The sum-of-squares route now has its exact differential estimate
-`Γ₂ ≥ (N/2) Γ`. The remaining central task is analytic: extend the affine heat
-construction to the full test class and prove the entropy argument, with invariant measure equal
-to the already-defined normalized Haar probability. Haar integration by parts
-is now proved, as is the entropy-dissipation formula for a supplied positive
-regular family in the heat direction. Required steps include semigroup
-existence with the explicit mixed-derivative regularity required above,
-integration of the proved Fisher differential inequality, and convergence
-to constants. Connectedness/ergodicity needed for this convergence must be proved;
-it is not supplied by an abstract class or inferred from Γ₂ alone.
+The sum-of-squares estimate `Γ₂ ≥ (N/2) Γ` and polynomial Fisher decay are proved.
+The next central obligation is equilibrium convergence with vanishing limiting
+entropy, followed by integration of entropy dissipation. Connectedness or an
+equivalent rigorous argument identifying the generator's kernel with constants
+must be proved; it cannot be inferred from Γ₂ alone. For a positive polynomial
+`g`, the immediate intended inequality is
 
-For an actual heat family, the next analytic step is to integrate the proved
-`I′ ≤ −N I` inequality to obtain exponential Fisher decay. Combining this with
-entropy dissipation requires convergence to equilibrium and vanishing limiting
-entropy. Those facts remain to be proved, not postulated as semigroup data.
+`entropy Haar g ≤ (1/N) * ∫ Γ(g,g)/g dHaar`.
+
+In the existing API, its exact remaining statement is:
+
+```lean
+-- An unproved goal, not a declaration in the library:
+∀ (N : ℕ), 2 ≤ N → ∀ (ι : Type) [Fintype ι]
+  (b : OrthonormalBasis ι ℝ (specialUnitaryLieAlgebra (n := Fin N)))
+  (d : ℕ) (g : specialUnitaryPolynomialSpace (n := Fin N) d),
+  (∀ U, 0 < g.val U) →
+  entropy (specialUnitaryHaar (Fin N)) g.val ≤
+    (1 / (N : ℝ)) *
+      ∫ U, specialUnitaryGamma b g.val g.val U / g.val U
+        ∂specialUnitaryHaar (Fin N)
+```
+
+This inequality is **not yet proved**, even on the polynomial class. It requires
+the missing zero limiting entropy. Polynomial approximation with control of
+energy, identification of energy with local Hilbert–Schmidt slopes, and the
+extension to locally Lipschitz functions remain open. Consistency between
+finite-degree heat constructions and density/extension to continuous or smooth
+functions are also not yet proved; a proof of LSI on polynomials followed by
+energy approximation could avoid constructing heat on the entire smooth class.
 
 A precise **unproved smooth intermediate goal**, for `N ≥ 2`, a real orthonormal
 basis `b` of su(N), and `f` smooth on SU(N), is
@@ -533,9 +588,11 @@ differentiation, conditional entropy dissipation, and weighted logarithmic Γ₂
 and `d6c3cc6` (spatial Fisher identity and conditional time-dependent Fisher
 dissipation with explicit mixed-derivative hypotheses), and `60361a5` (actual
 generator maximum principle, preservation of heat bounds, and constructed
-positive affine heat solutions).
+positive affine heat solutions), and `50aba17` (finite-degree polynomial heat,
+Haar-mass conservation, mixed regularity, constructed entropy/Fisher
+dissipation, and exponential Fisher decay at rate `N`).
 `lake build` and the independent `Examples.lean`
-compilation pass. The recursive `Audit.lean` check passes for all 552 project
+compilation pass. The recursive `Audit.lean` check passes for all 657 project
 declarations, accepting only `propext`, `Classical.choice`, and `Quot.sound`.
 It prints the fully elaborated commutator-energy, curve-velocity, and
 exponential-speed, conjugation-derivative, and Killing-contraction, exact-coefficient, and real-orthonormal-energy theorems, exposes the Frobenius instances, and inspects the
@@ -545,5 +602,5 @@ the algebraic, curve, local-coordinate, smooth Lie-group, tangent-derivative,
 smooth differential-operator, second-order energy, generator, Γ₂, and Haar
 integration, logarithmic chain-rule, entropy-differentiation, and spatial and
 conditional time-dependent Fisher results, the maximum principle, and the
-constructed affine heat solutions
-above, not an SU(N) LSI theorem.
+constructed affine and polynomial heat solutions, their regularity, and
+polynomial Fisher decay above, not an SU(N) LSI theorem.

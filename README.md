@@ -51,12 +51,20 @@ Proved components include:
 * The spatial Fisher dissipation identity and its exact `−N` bound. For
   supplied time-dependent families with explicit joint-continuity and mixed
   time/spatial derivative hypotheses, Fisher dissipation and `I′ ≤ −N I` are
-  proved. These hypotheses are not yet established for a constructed heat flow.
+  proved. These hypotheses are now discharged for the constructed polynomial
+  heat flow below.
 * The actual generator maximum principle and preservation of initial bounds
   for supplied classical heat solutions. An explicit heat solution is now
   constructed for every affine matrix observable `c + l(U)`, with verified
   initial value, PDE, smooth spatial slices, continuity, and preservation of
-  positivity. This does not yet give heat evolution for arbitrary smooth tests.
+  positivity.
+* Finite-dimensional spaces of polynomial matrix observables, invariant under
+  the actual generator. Its exponential constructs polynomial heat evolution
+  with the semigroup law, positivity, supremum-norm contraction, and normalized
+  Haar-mass conservation. All regularity needed for entropy and Fisher
+  differentiation is proved. For strictly positive polynomial data,
+  `I(Pₜ f) ≤ exp(−Nt) I(f)` holds for every `t ≥ 0`. Equilibrium convergence,
+  the resulting LSI, and extension to locally Lipschitz tests remain open.
 * The normalized interval and its L² product with SU(N).
 * The paper's phase map into U(N), with the `sqrt(3)` Lipschitz bound.
 * **The exact short-interval Haar decomposition (Lemma 16)** for every positive N,
