@@ -6,7 +6,7 @@ import Mathlib.Analysis.Normed.Lp.MeasurableSpace
 /-! # The exact interval × SU(N) domain
 
 The probability measure and the Lipschitz map are constructed independently.
-The assertion that its pushforward is Haar is still an open obligation.
+Its pushforward is identified with Haar in `LogSobolev.Unitary.PhaseHaar`.
 -/
 
 open MeasureTheory

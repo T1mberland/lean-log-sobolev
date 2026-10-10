@@ -48,3 +48,20 @@ example {X Y : Type*} [MetricSpace X] [MetricSpace Y]
     (h : MetricLSI μ 3) : MetricLSI (Measure.map T μ) 12 := by
   convert h.map hT using 1
   norm_num
+
+-- The exact short interval works in dimension one as well as higher dimensions.
+example : Measure.map (intervalPhaseMap 1) (phaseDomainMeasure 1) = unitaryHaar (Fin 1) :=
+  map_intervalPhaseMap 1 (by decide)
+
+example : Measure.map (intervalPhaseMap 3) (phaseDomainMeasure 3) = unitaryHaar (Fin 3) :=
+  map_intervalPhaseMap 3 (by decide)
+
+example : Measure.map circleSpecialUnitaryMap
+    (circleHaar.prod (specialUnitaryHaar (Fin 2))) = unitaryHaar (Fin 2) :=
+  map_circleSpecialUnitaryMap (by decide)
+
+-- Only the final transfer is claimed here, with the missing source LSI explicit.
+example (h : MetricLSI (phaseDomainMeasure 2) 1) :
+    MetricLSI (unitaryHaar (Fin 2)) 3 := by
+  convert unitary_metricLSI_of_phaseDomain 2 (by decide) (by simpa using h) using 1
+  norm_num

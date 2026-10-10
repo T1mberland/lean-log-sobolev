@@ -45,6 +45,13 @@ run_cmd do
 #print axioms LogSobolev.phaseDomainMeasure_probability
 #print axioms LogSobolev.intervalPhaseMap_lipschitz
 
+#print axioms LogSobolev.circleSpecialUnitaryMap_surjective
+#print axioms LogSobolev.map_circleSpecialUnitaryMap
+#print axioms LogSobolev.map_circleSpecialUnitaryMap_mul_root
+#print axioms LogSobolev.phaseSliceMeasure_periodic
+#print axioms LogSobolev.map_intervalPhaseMap
+#print axioms LogSobolev.unitary_metricLSI_of_phaseDomain
+
 -- Audit the definitions as well as the proof terms and their dependencies.
 #print LogSobolev.entropy
 #print LogSobolev.localSlope
@@ -62,3 +69,8 @@ set_option pp.all true in
 #check LogSobolev.phaseMap_lipschitz
 set_option pp.all true in
 #check LogSobolev.unitary_regular
+
+set_option pp.all true in
+#check LogSobolev.map_intervalPhaseMap
+set_option pp.all true in
+#check LogSobolev.unitary_metricLSI_of_phaseDomain

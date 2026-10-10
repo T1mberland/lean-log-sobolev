@@ -11,3 +11,7 @@ import LogSobolev.Unitary.SpecialUnitary
 import LogSobolev.Unitary.PhaseMap
 import LogSobolev.Unitary.Observables
 import LogSobolev.Unitary.ProductDomain
+import LogSobolev.Unitary.CircleDecomposition
+import LogSobolev.Unitary.PhasePeriodicity
+import LogSobolev.Unitary.PhaseHaar
+import LogSobolev.Unitary.LSITransfer
