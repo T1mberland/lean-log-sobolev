@@ -111,3 +111,8 @@ import LogSobolev.Analysis.LipschitzIntervalEnergy
 import LogSobolev.Analysis.LipschitzUnitIntervalLSI
 import LogSobolev.Geometry.IntervalMetricLSI
 import LogSobolev.Unitary.DimensionOneLSI
+import LogSobolev.Unitary.PhaseSlices
+import LogSobolev.Unitary.SpecialUnitaryPolynomialFamily
+import LogSobolev.Unitary.UnitaryPhasePolynomial
+import LogSobolev.Unitary.SpecialUnitaryPolynomialJointDerivative
+import LogSobolev.Unitary.CentralOrthogonality
