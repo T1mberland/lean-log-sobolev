@@ -218,3 +218,18 @@ set_option pp.all true in
 #check LogSobolev.specialUnitaryLaplacian_deriv
 set_option pp.all true in
 #check LogSobolev.specialUnitaryGammaTwo_lower_bound
+
+#print axioms LogSobolev.specialUnitary_hasDerivAt_mul_exp
+#print axioms LogSobolev.eq_specialUnitaryHaar
+#print axioms LogSobolev.specialUnitary_integral_deriv_eq_zero
+#print axioms LogSobolev.specialUnitary_integral_mul_deriv
+#print axioms LogSobolev.specialUnitary_integral_laplacian_eq_zero
+#print axioms LogSobolev.specialUnitary_integral_mul_laplacian
+#print axioms LogSobolev.specialUnitary_laplacian_symmetric
+#print axioms LogSobolev.specialUnitary_laplacian_nonpos
+#print axioms LogSobolev.specialUnitary_integral_gammaTwo
+#print axioms LogSobolev.specialUnitary_integrated_gammaTwo_lower_bound
+set_option pp.all true in
+#check @LogSobolev.specialUnitary_integral_mul_laplacian
+set_option pp.all true in
+#check @LogSobolev.specialUnitary_integrated_gammaTwo_lower_bound

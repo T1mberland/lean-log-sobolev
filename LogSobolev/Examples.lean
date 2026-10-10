@@ -315,3 +315,21 @@ example {ι : Type*} [Fintype ι]
       specialUnitaryDeriv A (specialUnitaryLaplacian b (specialUnitaryLaplacian b f)) := by
   rw [specialUnitaryLaplacian_deriv b A hf]
   exact specialUnitaryLaplacian_deriv b A (specialUnitaryLaplacian_contMDiff b hf)
+
+-- The pointwise SU(3) curvature bound now gives an actual normalized-Haar estimate.
+example {f : Matrix.specialUnitaryGroup (Fin 3) ℂ → ℝ}
+    (hf : ContMDiff 𝓘(ℝ, specialUnitaryLieAlgebra (n := Fin 3)) 𝓘(ℝ) ∞ f) :
+    let b := stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 3))
+    (3 / 2 : ℝ) * (∫ U, specialUnitaryGamma b f f U ∂specialUnitaryHaar (Fin 3)) ≤
+      ∫ U, (specialUnitaryLaplacian b f U) ^ 2 ∂specialUnitaryHaar (Fin 3) := by
+  simpa using specialUnitary_integrated_gammaTwo_lower_bound
+    (stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 3))) hf
+
+-- Haar integration by parts applies to the nonconstant imaginary matrix-entry test.
+example (A : specialUnitaryLieAlgebra (n := Fin 2)) :
+    (∫ U : Matrix.specialUnitaryGroup (Fin 2) ℂ,
+      specialUnitaryDeriv A (fun V => (V.val 0 0).im) U ∂specialUnitaryHaar (Fin 2)) = 0 := by
+  let l : Matrix (Fin 2) (Fin 2) ℂ →L[ℝ] ℝ := Complex.imCLM.comp
+    (LinearMap.toContinuousLinearMap (Matrix.entryLinearMap ℝ ℂ 0 0))
+  exact specialUnitary_integral_deriv_eq_zero A
+    (l.contMDiff.comp specialUnitary_val_contMDiff)

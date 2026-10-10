@@ -48,3 +48,6 @@ import LogSobolev.Geometry.CasimirCommutation
 import LogSobolev.Unitary.SpecialUnitaryOperatorAlgebra
 import LogSobolev.Unitary.SpecialUnitaryGeneratorCommutation
 import LogSobolev.Unitary.SpecialUnitaryGammaTwo
+import LogSobolev.Unitary.SpecialUnitaryFlow
+import LogSobolev.Unitary.SpecialUnitaryHaarCalculus
+import LogSobolev.Unitary.SpecialUnitaryIntegratedGammaTwo
