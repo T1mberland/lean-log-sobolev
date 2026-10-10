@@ -233,3 +233,22 @@ set_option pp.all true in
 #check @LogSobolev.specialUnitary_integral_mul_laplacian
 set_option pp.all true in
 #check @LogSobolev.specialUnitary_integrated_gammaTwo_lower_bound
+
+#print axioms LogSobolev.hasDerivAt_integral_of_compact
+#print axioms LogSobolev.hasDerivAt_entropy_of_compact
+#print axioms LogSobolev.hasDerivAt_entropy_of_compact_of_integral_eq_zero
+#print axioms LogSobolev.specialUnitaryDeriv_comp
+#print axioms LogSobolev.specialUnitaryLaplacian_comp
+#print axioms LogSobolev.specialUnitaryLaplacian_log
+#print axioms LogSobolev.specialUnitaryGamma_log
+#print axioms LogSobolev.specialUnitary_integral_log_mul_laplacian
+#print axioms LogSobolev.specialUnitary_integrable_fisher
+#print axioms LogSobolev.specialUnitary_hasDerivAt_entropy
+#print axioms LogSobolev.specialUnitary_entropy_deriv_nonpos
+#print axioms LogSobolev.specialUnitary_weighted_gammaTwo_log_lower_bound
+set_option pp.all true in
+#check @LogSobolev.hasDerivAt_entropy_of_compact
+set_option pp.all true in
+#check @LogSobolev.specialUnitary_hasDerivAt_entropy
+set_option pp.all true in
+#check @LogSobolev.specialUnitary_weighted_gammaTwo_log_lower_bound

@@ -51,3 +51,7 @@ import LogSobolev.Unitary.SpecialUnitaryGammaTwo
 import LogSobolev.Unitary.SpecialUnitaryFlow
 import LogSobolev.Unitary.SpecialUnitaryHaarCalculus
 import LogSobolev.Unitary.SpecialUnitaryIntegratedGammaTwo
+import LogSobolev.Measure.CompactDifferentiation
+import LogSobolev.Measure.EntropyDifferentiation
+import LogSobolev.Unitary.SpecialUnitaryChainRules
+import LogSobolev.Unitary.SpecialUnitaryEntropyDissipation

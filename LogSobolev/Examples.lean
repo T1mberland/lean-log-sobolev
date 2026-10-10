@@ -333,3 +333,36 @@ example (A : specialUnitaryLieAlgebra (n := Fin 2)) :
     (LinearMap.toContinuousLinearMap (Matrix.entryLinearMap ℝ ℂ 0 0))
   exact specialUnitary_integral_deriv_eq_zero A
     (l.contMDiff.comp specialUnitary_val_contMDiff)
+
+-- The logarithmic curvature estimate applies to an everywhere-positive, nonconstant SU(2) test.
+example :
+    let f : Matrix.specialUnitaryGroup (Fin 2) ℂ → ℝ := fun U => Real.exp (U.val 0 0).im
+    let b := stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 2))
+    (∫ U, specialUnitaryGamma b f f U / f U ∂specialUnitaryHaar (Fin 2)) ≤
+      ∫ U, f U * specialUnitaryGammaTwo b (Real.log ∘ f) U ∂specialUnitaryHaar (Fin 2) := by
+  let l : Matrix (Fin 2) (Fin 2) ℂ →L[ℝ] ℝ := Complex.imCLM.comp
+    (LinearMap.toContinuousLinearMap (Matrix.entryLinearMap ℝ ℂ 0 0))
+  have hf : ContMDiff 𝓘(ℝ, specialUnitaryLieAlgebra (n := Fin 2)) 𝓘(ℝ) ∞
+      (fun U : Matrix.specialUnitaryGroup (Fin 2) ℂ => Real.exp (l U.val)) :=
+    Real.contDiff_exp.comp_contMDiff (l.contMDiff.comp specialUnitary_val_contMDiff)
+  simpa using specialUnitary_weighted_gammaTwo_log_lower_bound
+    (stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 2))) hf
+    (fun U : Matrix.specialUnitaryGroup (Fin 2) ℂ => Real.exp_pos (l U.val))
+
+-- The entropy differentiation API retains the mass correction for exponential families.
+example {h : Matrix.specialUnitaryGroup (Fin 2) ℂ → ℝ} (hc : Continuous h) (t : ℝ) :
+    HasDerivAt
+      (fun r => entropy (specialUnitaryHaar (Fin 2)) (fun U => Real.exp (r * h U)))
+      ((∫ U, (Real.log (Real.exp (t * h U)) + 1) * (Real.exp (t * h U) * h U)
+          ∂specialUnitaryHaar (Fin 2)) -
+        (Real.log (∫ U, Real.exp (t * h U) ∂specialUnitaryHaar (Fin 2)) + 1) *
+          (∫ U, Real.exp (t * h U) * h U ∂specialUnitaryHaar (Fin 2))) t := by
+  apply hasDerivAt_entropy_of_compact (s := Set.univ)
+    (F := fun r U => Real.exp (r * h U)) (Q := fun r U => Real.exp (r * h U) * h U)
+  · exact Real.continuous_exp.comp (continuous_fst.mul (hc.comp continuous_snd))
+  · exact (Real.continuous_exp.comp (continuous_fst.mul (hc.comp continuous_snd))).mul
+      (hc.comp continuous_snd)
+  · exact fun r U => Real.exp_pos _
+  · intro r _ U
+    simpa only [one_mul] using ((hasDerivAt_id r).mul_const (h U)).exp
+  · simp
