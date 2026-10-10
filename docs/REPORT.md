@@ -48,7 +48,10 @@ All names below are in namespace `LogSobolev`.
 | `LogSobolev/Unitary/SpecialUnitaryLocalCoordinates.lean` | `exists_specialUnitary_exp_homeomorph` | Exponential is a homeomorphism between genuine open identity neighborhoods in the real algebra and the actual matrix SU group. Smooth compatibility is supplied by the later manifold module; curvature is still unproved. |
 | `LogSobolev/Unitary/SpecialUnitaryAnalyticNeighborhood.lean` | `exists_specialUnitary_analytic_exp` | SU-compatible ambient exponential chart with analytic inverse at every target point. |
 | `LogSobolev/Unitary/SpecialUnitaryChart.lean` | `specialUnitaryExpChart`, `specialUnitaryChartedSpace` | Actual SU/su partial homeomorphism and a translated covering atlas on the existing group topology. |
-| `LogSobolev/Unitary/SpecialUnitaryManifold.lean` | `specialUnitary_chart_transition_contDiffOn`, `specialUnitaryIsManifold` | Every atlas transition is smooth; the actual matrix group is a smooth real manifold modeled on su with its Frobenius norm. Lie-group operations, tangent metric, curvature, and LSI are not asserted. |
+| `LogSobolev/Unitary/SpecialUnitaryManifold.lean` | `specialUnitary_chart_transition_contDiffOn`, `specialUnitaryIsManifold` | Every atlas transition is smooth; the actual matrix group is a smooth real manifold modeled on su with its Frobenius norm. The tangent metric, curvature, and LSI are not asserted by this module. |
+| `LogSobolev/Unitary/SpecialUnitarySmoothMaps.lean` | `specialUnitary_val_contMDiff`, `contMDiff_specialUnitary_iff` | Inclusion is smooth; an SU-valued map is smooth iff its ambient matrix map is smooth, for arbitrary source charted spaces. |
+| `LogSobolev/Unitary/SpecialUnitaryLieGroup.lean` | `specialUnitary_mul_contMDiff`, `specialUnitary_inv_contMDiff`, `specialUnitaryLieGroup`, `specialUnitary_exp_contMDiff` | Proved smooth operations install a genuine Lie group on the original matrix SU group and atlas. |
+| `LogSobolev/Unitary/SpecialUnitaryTangent.lean` | `specialUnitary_val_hasMFDerivAt`, `specialUnitary_mfderiv_val_norm` | Actual manifold inclusion derivative is `A ↦ U A` with exact Frobenius norm preservation in model coordinates. No Riemannian bundle or curvature theorem is assumed. |
 | `LogSobolev/Unitary/PhaseMap.lean` | `phaseMul_dist_le`, `phaseMap_lipschitz` | The full-line phase map has Lipschitz constant `sqrt(3)` for every positive N; no probability argument is needed. |
 | `LogSobolev/Measure/Interval.lean` | `intervalUniform_univ`, `map_intervalUniform` | Normalized Lebesgue measure on the Euclidean subtype `[0,L]` for `L>0`. |
 | `LogSobolev/Unitary/ProductDomain.lean` | `phaseDomainMeasure_probability`, `intervalPhaseMap_lipschitz` | The exact interval × SU domain and probability measure, and the restricted map's Lipschitz bound. |
@@ -153,8 +156,10 @@ setting needs the appropriate gradient-to-local-slope identification; the
 inspected Gaussian tensorization is not immediately that theorem. Prove a one-dimensional
 circle/interval LSI and scaling, including the circle case for N=1.
 
-The [SU-specific proof boundary](SU_LSI.md) describes the new algebraic
-normalization proofs and the missing tangent, basis, and curvature identifications.
+The [SU-specific proof boundary](SU_LSI.md) describes the algebraic
+normalization, smooth Lie group, and tangent-inclusion proofs. The geometric
+Lie-bracket identification, Riemannian metric, and curvature computation remain
+to be established.
 The SU step still needs a concrete diffusion or Riemannian development: the
 Hilbert–Schmidt bi-invariant geometry, Ricci normalization, entropy dissipation,
 curvature-to-Fisher-information decay, equilibrium convergence, and any smooth
@@ -171,22 +176,23 @@ the compact regularity side conditions. A verified Herbst argument is a later ta
 Verification performed on 2026-10-10 with Lean 4.28.0 and the pinned Mathlib
 commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
 
-* `lake build`: passed for the complete library (2885 dependency/build jobs,
+* `lake build`: passed for the complete library (2903 dependency/build jobs,
   primarily cached Mathlib artifacts).
 * `lake env lean LogSobolev/Examples.lean`: passed; the examples compile as an
   independent client importing the public root module.
 * `lake env lean LogSobolev/Audit.lean`: passed. The automated traversal checked
-  **380 declarations** in the `LogSobolev` namespace, including definitions,
+  **402 declarations** in the `LogSobolev` namespace, including definitions,
   instances, and generated auxiliaries. Every transitive axiom was one of
   `propext`, `Classical.choice`, or `Quot.sound`. No `sorryAx` or custom axiom
   was present in those dependency closures.
-* The audit also executes 70 `#print axioms` commands, prints the core
+* The audit also executes 78 `#print axioms` commands, prints the core
   definitions, and prints fully elaborated types for the trace normalization,
   phase-map Lipschitz theorem, U(N) regularity theorem, exact Haar identity,
   conditional final LSI transfer, product entropy chain rule, and SU algebra
   commutator energy, SU curve-velocity characterization, and exponential speed, the real Killing contraction, and the derivative of
   conjugation, the exact Killing coefficient, the real orthonormal energy, the actual SU local
-  coordinates, smoothness of the ambient inverse, and the actual smooth atlas. The elaborated
+  coordinates, smoothness of the ambient inverse, the actual smooth atlas, the ambient smooth-map criterion, Lie group instance,
+  and inclusion derivative with exact coordinate-norm preservation. The elaborated
   metric instances are explicitly Frobenius and `WithLp 2`.
 * Source scan found no proof omissions or custom axiom declarations;
   `git diff --check` passed.
@@ -246,6 +252,13 @@ Completed milestones:
   transition is smooth on its source. Build, independent examples, and the
   380-declaration recursive audit pass. Smooth group operations, tangent metric,
   curvature, and the analytic LSI remain open.
+
+* `fc7c4c0`: ambient smooth-map criterion, smooth multiplication/inversion and
+  exponential, the actual SU `LieGroup` instance, and the inclusion derivative
+  `A ↦ U A` with exact Frobenius norm preservation in model coordinates.
+  Full build (2903 jobs), independent examples, and the 402-declaration recursive
+  axiom audit pass. The geometric bracket identification, smooth Riemannian
+  metric, curvature, and analytic LSI remain open.
 
 The report and README are committed separately after these verified proof
 milestones; use `git log --oneline` to see the documentation commit as well.

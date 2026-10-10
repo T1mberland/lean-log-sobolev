@@ -30,7 +30,9 @@ Proved components include:
 * The full determinant-exponential identity and exponential homeomorphisms
   between open identity neighborhoods in su(N) and the actual SU(N) group.
 * A proved smooth atlas on the actual matrix SU(N) group, with every translated
-  exponential chart transition verified on its domain.
+  exponential chart transition verified on its domain. Smooth matrix inclusion,
+  multiplication, inversion, and exponential give an actual Lie group instance.
+  Its inclusion derivative is `A ↦ U A`, preserving the exact Frobenius norm.
 * The normalized interval and its L² product with SU(N).
 * The paper's phase map into U(N), with the `sqrt(3)` Lipschitz bound.
 * **The exact short-interval Haar decomposition (Lemma 16)** for every positive N,

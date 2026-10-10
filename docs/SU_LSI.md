@@ -21,7 +21,8 @@ locally Lipschitz real function. No alternative energy or measure is substituted
 * `Unitary/SpecialUnitaryAlgebra.lean` defines `specialUnitaryLieAlgebra` as
   a real `LieSubalgebra` of complex matrices with `star A = -A` and `trace A = 0`.
   Closure under real scalar multiplication and the associative commutator is
-  proved. This has **not** been identified with a manifold tangent space.
+  proved. For the constructed atlas, manifold tangent coordinates now map to
+  ambient velocities by the proved inclusion derivative `A ↦ U A`.
 * `negTracePair_lie` proves invariance of `negTracePair A B = -Re Tr(A B)`.
   `negTracePair_self` proves that its diagonal equals the unnormalized
   Frobenius norm squared on skew-Hermitian matrices. Positive definiteness on
@@ -121,9 +122,20 @@ is only a device for extending the coordinate expression into the model space;
 it is not asserted to be an orthogonal or Riemannian projection. On overlaps,
 the logarithm already lies in su and the projection fixes it.
 
-Thus the smooth-atlas obligation is closed. Smooth group operations, the
-identification of the tangent metric with ambient Hilbert–Schmidt velocities,
-the connection/curvature formula, and the analytic LSI argument are still open.
+The smooth group operations are now proved in
+`Unitary/SpecialUnitaryLieGroup.lean`. The instance `specialUnitaryLieGroup`
+uses the original matrix type and the previously verified atlas. The ambient
+criterion `contMDiff_specialUnitary_iff` proves smoothness into SU exactly when
+the ambient matrix map is smooth. Matrix multiplication, real linear adjoint,
+and the matrix exponential then give smooth multiplication, inversion, and
+exponential without additional assumptions.
+
+`Unitary/SpecialUnitaryTangent.lean:specialUnitary_val_hasMFDerivAt` identifies
+the actual manifold derivative of inclusion at `U` with `A ↦ U A`.
+`specialUnitary_mfderiv_val_norm` proves equality of its ambient Frobenius norm
+and the su model-coordinate norm. Norms are specified explicitly; no arbitrary
+tangent-space norm or Riemannian structure is assumed. The smooth Riemannian
+metric, connection/curvature formula, and analytic LSI argument remain open.
 
 ## Inner product, adjoint action, and real contraction
 
@@ -184,7 +196,8 @@ latter is still a geometric obligation here; the reference is not a Lean axiom.
 
 The real orthonormal contraction and its exact dimension factor are now proved.
 Interpreting one quarter of this contraction as Ricci curvature still requires
-the manifold tangent identification and the Levi-Civita/curvature calculation
+identifying the geometric Lie bracket with the matrix commutator and proving
+the Levi-Civita/curvature calculation
 for the actual bi-invariant metric. No algebraic expression has been defined
 as the Ricci tensor to bypass that obligation.
 
@@ -196,10 +209,12 @@ needed for its abstract LSI implication and cannot supply this missing proof.
 
 ## Remaining route to the theorem
 
-1. Prove smooth multiplication and inversion for the installed atlas. Identify
-   its tangent vectors with the proved ambient curve velocities, and construct
+1. Use the proved smooth group operations and inclusion derivative to construct
    the Hilbert–Schmidt bi-invariant
-   Riemannian metric. Prove the geometric Ricci formula `Ric = −¼ Killing`;
+   Riemannian metric. For the geometric bracket, reuse Mathlib’s
+   `GroupLieAlgebra` and `mulInvariantVectorField` and identify their bracket
+   with the matrix commutator; the algebraic subalgebra alone is not that proof.
+   Prove the geometric Ricci formula `Ric = −¼ Killing`;
    the now-proved Killing coefficient then yields the normalization `N/2`.
 2. Prove an applicable curvature-to-LSI criterion. A diffusion route needs a
    constructed heat semigroup, invariant probability identified with Haar,
@@ -224,12 +239,14 @@ Proof commits: `0f05569` (algebra), `339112a` (curves), and `5bf0ed6`
 (inner product, adjoint isometry, and real Killing contraction), followed by
 `5c6ebdb` (exact Killing coefficient and real orthonormal energy), and
 `2387b3e` (determinant identity and actual local exponential coordinates), and
-`78fea3b` (smooth translated exponential atlas).
+`78fea3b` (smooth translated exponential atlas), and `fc7c4c0` (smooth group
+operations, ambient criterion, and exact manifold tangent normalization).
 `lake build` and the independent `Examples.lean`
-compilation pass. The recursive `Audit.lean` check passes for all 380 project
+compilation pass. The recursive `Audit.lean` check passes for all 402 project
 declarations, accepting only `propext`, `Classical.choice`, and `Quot.sound`.
 It prints the fully elaborated commutator-energy, curve-velocity, and
 exponential-speed, conjugation-derivative, and Killing-contraction, exact-coefficient, and real-orthonormal-energy theorems, exposes the Frobenius instances, and inspects the
 Lie-algebra, trace-pairing, exponential-curve, and inner-product definitions.
 The full output is in [axiom-audit.txt](axiom-audit.txt). These checks certify
-the algebraic, curve, local-coordinate, and smooth-atlas results above, not an SU(N) LSI theorem.
+the algebraic, curve, local-coordinate, smooth Lie-group, and tangent-derivative
+results above, not an SU(N) LSI theorem.
