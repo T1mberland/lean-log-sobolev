@@ -641,3 +641,28 @@ example (N : ℕ) (d : ℕ → ℕ)
       Filter.atTop (nhds (entropy (specialUnitaryHaar (Fin N)) (fun U => f U ^ 2))) :=
   tendsto_entropy_sq_of_tendsto_continuousMap (specialUnitaryHaar (Fin N))
     (f := fun j => specialUnitaryPolynomialToContinuous (d j) (p j)) (g := f) h
+
+-- Explicit polynomial probability densities exist in every positive dimension.
+example (N j : ℕ) (hN : 0 < N) :
+    (∫ U, (specialUnitaryPowerKernel (n := Fin N) j).val U ∂specialUnitaryHaar (Fin N)) = 1 :=
+  specialUnitaryPowerKernel_integral (by simpa using hN) j
+
+-- The peak uses the unnormalized HS distance; in SU(2) the coefficient is 4.
+example (U : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    ‖U.val - 1‖ ^ 2 = 4 - 2 * U.val.trace.re := by
+  have h := specialUnitary_norm_sub_one_sq U
+  norm_num at h
+  exact h
+
+-- Uniform and entropy approximation apply to the distance-to-identity observable,
+-- with no smoothness hypothesis at its zero.
+example : ∃ p : ∀ j, specialUnitaryPolynomialSpace (n := Fin 2) j,
+    Filter.Tendsto (fun j => specialUnitaryPolynomialToContinuous j (p j)) Filter.atTop
+      (nhds (⟨fun U => dist U 1, continuous_id.dist continuous_const⟩ :
+        C(Matrix.specialUnitaryGroup (Fin 2) ℂ, ℝ))) ∧
+    Filter.Tendsto
+      (fun j => entropy (specialUnitaryHaar (Fin 2)) (fun U => (p j).val U ^ 2))
+      Filter.atTop (nhds (entropy (specialUnitaryHaar (Fin 2)) (fun U => dist U 1 ^ 2))) := by
+  obtain ⟨p, _, hu, he⟩ := specialUnitaryPolynomial_exists_uniform_entropy_approximation
+    (n := Fin 2) (by decide) ⟨fun U => dist U 1, continuous_id.dist continuous_const⟩
+  exact ⟨p, hu, he⟩

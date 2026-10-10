@@ -407,3 +407,33 @@ set_option pp.all true in
 #check @LogSobolev.tendsto_entropy_sq_of_tendsto_continuousMap
 set_option pp.all true in
 #check @LogSobolev.specialUnitaryPolynomial_exists_averaging
+#print axioms LogSobolev.powerKernel
+#print axioms LogSobolev.integrable_pow_of_continuous
+#print axioms LogSobolev.integral_pow_pos
+#print axioms LogSobolev.continuous_powerKernel
+#print axioms LogSobolev.powerKernel_nonneg
+#print axioms LogSobolev.integral_powerKernel
+#print axioms LogSobolev.integral_powerKernel_le
+#print axioms LogSobolev.tendsto_integral_powerKernel_zero
+#print axioms LogSobolev.tendsto_integral_powerKernel_compl_zero
+#print axioms LogSobolev.tendsto_integral_powerKernel_smul
+#print axioms LogSobolev.specialUnitary_norm_sub_one_sq
+#print axioms LogSobolev.specialUnitary_norm_add_one_sq
+#print axioms LogSobolev.specialUnitaryPeak
+#print axioms LogSobolev.specialUnitaryPeak_apply
+#print axioms LogSobolev.specialUnitaryPeak_nonneg
+#print axioms LogSobolev.specialUnitaryPeak_one
+#print axioms LogSobolev.specialUnitaryPeak_lt_one
+#print axioms LogSobolev.specialUnitaryPowerKernel
+#print axioms LogSobolev.specialUnitaryPowerKernel_apply
+#print axioms LogSobolev.specialUnitaryPowerKernel_nonneg
+#print axioms LogSobolev.specialUnitaryPeak_integral_pow_pos
+#print axioms LogSobolev.specialUnitaryPowerKernel_integral
+#print axioms LogSobolev.specialUnitaryPowerKernel_concentrates
+#print axioms LogSobolev.specialUnitaryPolynomial_exists_uniform_approximation
+#print axioms LogSobolev.specialUnitaryPolynomial_exists_uniform_entropy_approximation
+#print LogSobolev.powerKernel
+#print LogSobolev.specialUnitaryPeak
+#print LogSobolev.specialUnitaryPowerKernel
+set_option pp.all true in
+#check @LogSobolev.specialUnitaryPolynomial_exists_uniform_entropy_approximation

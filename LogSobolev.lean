@@ -86,3 +86,8 @@ import LogSobolev.Unitary.SpecialUnitaryPolynomialMetricLSI
 import LogSobolev.Measure.EntropyContinuity
 import LogSobolev.Unitary.SpecialUnitaryPolynomialPullback
 import LogSobolev.Unitary.SpecialUnitaryPolynomialConvolution
+import LogSobolev.Measure.PowerKernel
+import LogSobolev.Measure.PowerKernelApproximation
+import LogSobolev.Unitary.SpecialUnitaryPeak
+import LogSobolev.Unitary.SpecialUnitaryPowerKernel
+import LogSobolev.Unitary.SpecialUnitaryPolynomialApproximation
