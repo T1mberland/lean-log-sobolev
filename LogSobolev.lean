@@ -116,3 +116,10 @@ import LogSobolev.Unitary.SpecialUnitaryPolynomialFamily
 import LogSobolev.Unitary.UnitaryPhasePolynomial
 import LogSobolev.Unitary.SpecialUnitaryPolynomialJointDerivative
 import LogSobolev.Unitary.CentralOrthogonality
+import LogSobolev.Measure.IntervalAlmostEverywhere
+import LogSobolev.Unitary.UnitaryPhaseFlow
+import LogSobolev.Unitary.UnitaryConvolutionDerivative
+import LogSobolev.Unitary.UnitaryPhaseConvolutionEnergy
+import LogSobolev.Unitary.UnitaryAveragedSlope
+import LogSobolev.Unitary.UnitaryPhaseIntegratedEnergy
+import LogSobolev.Unitary.UnitarySUConvolution

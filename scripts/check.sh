@@ -9,3 +9,5 @@ lake env lean LogSobolev/Audit.lean
 lake env lean LogSobolev/AuditIntervalMetric.lean
 lake env lean LogSobolev/ExamplesPhasePolynomial.lean
 lake env lean LogSobolev/AuditPhasePolynomial.lean
+lake env lean LogSobolev/ExamplesPhaseEnergy.lean
+lake env lean LogSobolev/AuditPhaseEnergy.lean
