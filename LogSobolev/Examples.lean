@@ -193,3 +193,28 @@ example (U V : Matrix.specialUnitaryGroup (Fin 3) ℂ) :
     ContDiffOn ℝ ∞ ((specialUnitaryChartAt U).symm.trans (specialUnitaryChartAt V))
       ((specialUnitaryChartAt U).symm.trans (specialUnitaryChartAt V)).source :=
   specialUnitary_chart_transition_contDiffOn U V
+
+-- Mathlib's generic Lie-group calculus works on the original SU(3) type.
+example : LieGroup 𝓘(ℝ, specialUnitaryLieAlgebra (n := Fin 3)) ∞
+    (Matrix.specialUnitaryGroup (Fin 3) ℂ) := inferInstance
+
+example (V : Matrix.specialUnitaryGroup (Fin 3) ℂ) :
+    ContMDiff 𝓘(ℝ, specialUnitaryLieAlgebra (n := Fin 3))
+      𝓘(ℝ, specialUnitaryLieAlgebra (n := Fin 3)) ∞
+      (fun U : Matrix.specialUnitaryGroup (Fin 3) ℂ => U * V * U⁻¹) :=
+  (contMDiff_id.mul contMDiff_const).mul contMDiff_id.inv
+
+example : ContMDiff 𝓘(ℝ, specialUnitaryLieAlgebra (n := Fin 2))
+    𝓘(ℝ, specialUnitaryLieAlgebra (n := Fin 2)) ∞
+    (fun A : specialUnitaryLieAlgebra (n := Fin 2) => specialUnitaryExpCurve A 1) :=
+  specialUnitary_exp_contMDiff
+
+-- Tangent differentiation uses the actual inclusion into Frobenius matrices.
+example (U : Matrix.specialUnitaryGroup (Fin 2) ℂ)
+    (A : specialUnitaryLieAlgebra (n := Fin 2)) :
+    mfderiv 𝓘(ℝ, specialUnitaryLieAlgebra (n := Fin 2))
+      𝓘(ℝ, Matrix (Fin 2) (Fin 2) ℂ)
+      (Subtype.val : Matrix.specialUnitaryGroup (Fin 2) ℂ → Matrix (Fin 2) (Fin 2) ℂ) U A =
+      U.val * A.val := by
+  rw [(specialUnitary_val_hasMFDerivAt U).mfderiv]
+  rfl

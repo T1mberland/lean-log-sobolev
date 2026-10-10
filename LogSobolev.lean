@@ -34,3 +34,6 @@ import LogSobolev.Unitary.SpecialUnitaryLocalCoordinates
 import LogSobolev.Unitary.SpecialUnitaryAnalyticNeighborhood
 import LogSobolev.Unitary.SpecialUnitaryChart
 import LogSobolev.Unitary.SpecialUnitaryManifold
+import LogSobolev.Unitary.SpecialUnitarySmoothMaps
+import LogSobolev.Unitary.SpecialUnitaryLieGroup
+import LogSobolev.Unitary.SpecialUnitaryTangent

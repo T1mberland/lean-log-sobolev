@@ -154,3 +154,20 @@ set_option pp.all true in
 #check LogSobolev.specialUnitaryIsManifold
 set_option pp.all true in
 #check LogSobolev.specialUnitary_chart_transition_contDiffOn
+
+#print axioms LogSobolev.specialUnitary_val_contMDiff
+#print axioms LogSobolev.contMDiff_specialUnitary_iff
+#print axioms LogSobolev.specialUnitary_mul_contMDiff
+#print axioms LogSobolev.specialUnitary_inv_contMDiff
+#print axioms LogSobolev.specialUnitaryLieGroup
+#print axioms LogSobolev.specialUnitary_exp_contMDiff
+set_option pp.all true in
+#check LogSobolev.contMDiff_specialUnitary_iff
+#print LogSobolev.specialUnitaryLieGroup
+
+#print axioms LogSobolev.specialUnitary_val_hasMFDerivAt
+#print axioms LogSobolev.specialUnitary_mfderiv_val_norm
+set_option pp.all true in
+#check LogSobolev.specialUnitary_val_hasMFDerivAt
+set_option pp.all true in
+#check LogSobolev.specialUnitary_mfderiv_val_norm
