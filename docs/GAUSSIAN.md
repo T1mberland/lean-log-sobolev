@@ -213,3 +213,9 @@ low-memory scheduling without changing the library, dependencies, or proofs.
 
 - `3315813`: compactly supported C² real Gaussian LSI, with its approximation
   chain compiled and its main theorem's transitive axioms checked.
+- `1185375`: dimension-free C¹ Gaussian theorem on Euclidean space, automatic
+  compact-support integrability, shared slope-energy bounds, independent
+  examples, and the successful full build and recursive audits.
+
+The prior completed U(N) proof (`8ea00af`, with report `aad1e98`) is preserved;
+no existing unitary proof file was changed by this extension.
