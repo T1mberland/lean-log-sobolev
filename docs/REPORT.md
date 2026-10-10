@@ -12,8 +12,9 @@ The SU(N) entropy inequality is now proved on **all polynomial matrix observable
 in carré-du-champ energy form, with coefficient `4/N` on `Ent(f²)`. The constructed
 heat proof includes positivity, Haar-mass conservation, Fisher decay, convergence,
 and vanishing limiting entropy. The principal remaining SU obligation is extension
-to the full locally Lipschitz class with verified local Hilbert–Schmidt slope
-energy control. The interval/circle LSI and the appropriate tensorization argument are also
+to the full locally Lipschitz class by an energy-controlled approximation.
+The comparison with the actual local Hilbert–Schmidt slope and the polynomial
+metric LSI, including finite slope energy, are now proved. The interval/circle LSI and the appropriate tensorization argument are also
 substantial analytic obligations. The exact short-interval Haar decomposition is now proved, including N=1.
 The remaining analytic/geometric obligations are mathematical missing proofs,
 not merely unresolved Lean syntax or typeclass errors.
@@ -96,7 +97,11 @@ All names below are in namespace `LogSobolev`.
 | `LogSobolev/Unitary/SpecialUnitaryPolynomialEquilibrium.lean` | `specialUnitaryPolynomialForwardHeat_tendsto_mean`, `specialUnitaryPolynomialForwardHeat_entropy_tendsto_zero` | Supremum-norm convergence to the normalized Haar mean and zero limiting entropy; no assumed convergence/ergodicity. |
 | `LogSobolev/Analysis/DissipationBound.lean` | `initial_le_div_of_dissipation_decay` | Scalar comparison bound from explicit dissipation, information decay, continuity at zero, and a zero entropy limit. |
 | `LogSobolev/Unitary/SpecialUnitarySquareEnergy.lean` | `specialUnitaryGamma_sq_add_const`, `specialUnitary_fisher_sq_add_const_le` | Exact factor four for regularized squares and the corresponding Fisher-density bound. |
-| `LogSobolev/Unitary/SpecialUnitaryPolynomialLSI.lean` | `specialUnitaryPolynomial_entropy_le_fisher`, `specialUnitaryPolynomial_entropy_sq_le` | Proved positive-density `Ent(g) ≤ I(g)/N`, then `Ent(f²) ≤ (4/N) ∫ Γ(f,f)` for every real polynomial observable, without a positivity hypothesis on `f`. Actual normalized Haar and unnormalized HS orthonormal generator. Full smooth/locally Lipschitz extension and local-slope identification remain open. |
+| `LogSobolev/Unitary/SpecialUnitaryPolynomialLSI.lean` | `specialUnitaryPolynomial_entropy_le_fisher`, `specialUnitaryPolynomial_entropy_sq_le` | Proved positive-density `Ent(g) ≤ I(g)/N`, then `Ent(f²) ≤ (4/N) ∫ Γ(f,f)` for every real polynomial observable, without a positivity hypothesis on `f`. Actual normalized Haar and unnormalized HS orthonormal generator. The local-slope form is proved in the subsequent metric module; the full smooth/locally Lipschitz extension remains open. |
+| `LogSobolev/Geometry/LocalSlopeDerivative.lean` | `localSlope_eq_of_hasDerivAt` | The paper's upper local slope on the real line is the absolute derivative. |
+| `LogSobolev/Unitary/SpecialUnitarySlope.lean` | `specialUnitaryDeriv_le_localSlope`, `specialUnitaryGradient_norm_sq`, `specialUnitaryGamma_le_localSlope_sq` | Verified exponential curves and exact HS gradient coordinates give pointwise actual energy ≤ local metric slope squared, including infinite slopes. |
+| `LogSobolev/Unitary/SpecialUnitaryPolynomialExtension.lean` | `specialUnitaryPolynomial_exists_contDiff_extension`, `specialUnitaryPolynomial_locallyLipschitz` | Every polynomial observable has a globally smooth ambient matrix extension and is locally Lipschitz in the actual HS metric. |
+| `LogSobolev/Unitary/SpecialUnitaryPolynomialMetricLSI.lean` | `specialUnitaryPolynomial_metric_entropy_sq_le`, `specialUnitaryPolynomial_slopeEnergy_ne_top`, `specialUnitaryPolynomial_entropy_sq_le_slope` | Actual local-slope LSI for all polynomial observables, with finite energy, extended constant `2/N`, and real coefficient `4/N`. The full locally Lipschitz `MetricLSI` is not asserted. |
 | `LogSobolev/Unitary/PhaseMap.lean` | `phaseMul_dist_le`, `phaseMap_lipschitz` | The full-line phase map has Lipschitz constant `sqrt(3)` for every positive N; no probability argument is needed. |
 | `LogSobolev/Measure/Interval.lean` | `intervalUniform_univ`, `map_intervalUniform` | Normalized Lebesgue measure on the Euclidean subtype `[0,L]` for `L>0`. |
 | `LogSobolev/Unitary/ProductDomain.lean` | `phaseDomainMeasure_probability`, `intervalPhaseMap_lipschitz` | The exact interval × SU domain and probability measure, and the restricted map's Lipschitz bound. |
@@ -221,7 +226,9 @@ mean; limiting entropy is proved zero. This yields the polynomial LSI
 `Ent(f²) ≤ (4/N) ∫ Γ(f,f)` with no sign restriction on `f`, after regularizing
 squares and taking the limit. The remaining SU step is extension to arbitrary
 smooth and locally Lipschitz functions, with verified energy approximation and
-comparison with the local Hilbert–Schmidt metric slope. Uniform polynomial
+control of the approximants' energies by the original local-slope energy. The
+pointwise energy-to-slope bound, local Lipschitz regularity of all polynomial
+observables, and the finite-energy polynomial metric LSI are now proved. Uniform polynomial
 density alone would not establish the energy bound. Consistency across degrees
 and general heat extension remain unproved but can be bypassed by extending the
 proved polynomial inequality directly. The abstract
@@ -237,16 +244,16 @@ the compact regularity side conditions. A verified Herbst argument is a later ta
 Verification performed on 2026-10-10 with Lean 4.28.0 and the pinned Mathlib
 commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
 
-* `lake build`: passed for the complete library (3100 dependency/build jobs,
+* `lake build`: passed for the complete library (3104 dependency/build jobs,
   primarily cached Mathlib artifacts).
 * `lake env lean LogSobolev/Examples.lean`: passed; the examples compile as an
   independent client importing the public root module.
 * `lake env lean LogSobolev/Audit.lean`: passed. The automated traversal checked
-  **706 declarations** in the `LogSobolev` namespace, including definitions,
+  **723 declarations** in the `LogSobolev` namespace, including definitions,
   instances, and generated auxiliaries. Every transitive axiom was one of
   `propext`, `Classical.choice`, or `Quot.sound`. No `sorryAx` or custom axiom
   was present in those dependency closures.
-* The audit also executes 183 `#print axioms` commands, prints the core
+* The audit also executes 195 `#print axioms` commands, prints the core
   definitions, and prints fully elaborated types for the trace normalization,
   phase-map Lipschitz theorem, U(N) regularity theorem, exact Haar identity,
   conditional final LSI transfer, product entropy chain rule, and SU algebra
@@ -264,7 +271,8 @@ commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
   bound preservation, the constructed affine and polynomial heat equations,
   polynomial Haar conservation, polynomial Fisher dissipation/decay, actual
   U(N)/SU(N) connectedness, zero-energy/kernel constancy, polynomial equilibrium,
-  zero limiting entropy, and both polynomial entropy bounds. The elaborated
+  zero limiting entropy, both polynomial entropy bounds, actual local-slope
+  comparison, polynomial ambient extension, and polynomial metric LSI. The elaborated
   metric instances are explicitly Frobenius and `WithLp 2`.
 * The recursive audit now shares Lean's core collector visited set across all
   project roots. At milestone `6cb53ac`, an independent-root baseline run and
@@ -440,6 +448,19 @@ Completed milestones:
   axiom checks use only standard foundational axioms. The full locally Lipschitz
   metric LSI still requires local-slope comparison and energy-controlled
   approximation; it is not claimed by this polynomial result.
+
+* `1e2e435`: scalar derivative–local-slope identity; actual HS isometric
+  translation and exponential-curve derivative bounds; explicit gradient
+  coordinates with squared norm `Γ`; and the pointwise bound `Γ ≤ localSlope²`.
+  Every polynomial has a proved global smooth ambient extension, hence local
+  Lipschitz regularity and finite slope energy. The polynomial LSI now uses the
+  actual paper local slope, with extended constant `2/N` and real coefficient
+  `4/N`. Build (3104 jobs), independent nonconstant finite positive slope-energy,
+  centered quadratic, and arbitrary-positive-dimension examples pass. All 723
+  declarations pass recursive auditing; all 195 explicit axiom prints use only
+  standard foundational axioms. The remaining full-SU obligation is verified
+  energy-controlled approximation and entropy convergence for arbitrary locally
+  Lipschitz functions; no full `MetricLSI` instance is asserted.
 
 The report and README are committed separately after these verified proof
 milestones; use `git log --oneline` to see the documentation commit as well.

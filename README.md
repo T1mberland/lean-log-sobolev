@@ -72,9 +72,13 @@ Proved components include:
 * Polynomial heat converges uniformly to its Haar mean and has vanishing limiting
   entropy. The resulting **polynomial LSI is proved**:
   `Ent(f²) ≤ (4/N) ∫ Γ(f,f)` for every real finite-degree polynomial observable,
-  with no positivity restriction on `f`. This is the carré-du-champ energy form;
-  local Hilbert–Schmidt slope identification and extension to all locally
-  Lipschitz functions remain open.
+  with no positivity restriction on `f`.
+* Actual invariant derivative energy is proved bounded by the paper's squared
+  local Hilbert–Schmidt slope. Every polynomial has a global smooth ambient
+  extension and is locally Lipschitz, with finite slope energy. The polynomial
+  LSI now holds with the **actual local slope**, both in extended form with
+  constant `2/N` and in real-integral form with coefficient `4/N`.
+  Extension to all locally Lipschitz functions remains open.
 * The normalized interval and its L² product with SU(N).
 * The paper's phase map into U(N), with the `sqrt(3)` Lipschitz bound.
 * **The exact short-interval Haar decomposition (Lemma 16)** for every positive N,
@@ -85,8 +89,8 @@ Proved components include:
   positive dimension.
 
 The full metric LSI on SU(N), U(N), the interval, and the circle remains open.
-The proved SU inequality currently covers polynomial observables with actual
-carré-du-champ energy. The U(N) transfer still takes an explicit product
+The proved SU inequality currently covers polynomial observables with both
+actual carré-du-champ energy and the paper's local metric slope. The U(N) transfer still takes an explicit product
 `MetricLSI` assumption, which this development has not discharged.
 
 ## Build and audit

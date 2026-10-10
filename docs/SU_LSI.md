@@ -1,7 +1,8 @@
 # SU(N) LSI: current proof boundary
 
-**The SU(N) LSI is proved in carré-du-champ energy form on all polynomial
-observables. It is not yet proved on all smooth or locally Lipschitz functions.**
+**The SU(N) LSI is proved with the paper's actual local Hilbert–Schmidt slope
+on every polynomial observable. It is not yet proved on all smooth or locally
+Lipschitz functions.**
 The exact remaining target, with the existing definitions, is:
 
 ```lean
@@ -583,34 +584,82 @@ no sign or nonvanishing hypothesis. Independent examples check a nonconstant
 quadratic density, a centered quadratic vanishing at the identity, and the exact
 coefficient `4/N` for arbitrary positive `N`.
 
-## Remaining route to the theorem
+## Actual local-slope comparison and polynomial metric LSI
 
-**Polynomial carré-du-champ LSI is now proved.** It is not yet a theorem for the
-whole smooth or locally Lipschitz test class, nor has `Γ` been identified with
-(or bounded by) the paper's local metric slope in a proved theorem.
+`Geometry/LocalSlopeDerivative.lean:localSlope_eq_of_hasDerivAt` proves that the
+paper's local slope on the real line equals the absolute derivative. It uses the
+proved punctured-limsup characterization, so the zero quotient at the base point
+does not invalidate the limit argument.
 
-The remaining central task is approximation with energy control. One route is
-approximation by polynomial matrix observables with convergence of entropy and
-suitable gradient/energy bounds, followed by extension to locally Lipschitz tests.
-A smoothing or convolution argument must preserve the local-slope energy bound;
-uniform density alone does not suffice. The existing exact tangent-inclusion
-norm identity and exponential curves can be used for the missing relation
-between invariant derivatives and the unnormalized Hilbert–Schmidt local slope.
-A sufficient pointwise bridge, still **unproved**, for smooth `f`, an HS
-orthonormal basis `b`, and `U : SU(N)`, is:
+`Unitary/SpecialUnitarySlope.lean` proves left multiplication is an isometry for
+the unnormalized Hilbert–Schmidt metric. Combining translated exponential curves,
+their verified speed, and slope composition gives `specialUnitaryDeriv_le_localSlope`.
+The actual gradient coordinates in a real HS orthonormal basis have squared norm
+`Γ(f,f)`, and differentiation in that direction gives `Γ(f,f)`.
+`specialUnitaryGamma_le_localSlope_sq` then proves, for every smooth real test:
 
 ```lean
 ENNReal.ofReal (specialUnitaryGamma b f f U) ≤ localSlope f U ^ 2
 ```
 
-The extended-real statement permits infinite slope and avoids silently
-converting infinity to zero. The full `MetricLSI` target at the top of this
-report still requires the energy-controlled extension to all locally Lipschitz
-functions.
+The proof treats infinite slope separately before taking real values, and treats
+a zero gradient separately before canceling its norm. No dimension factor or
+normalization is lost. Equality of the two energies is not needed for this bound.
+
+`Unitary/SpecialUnitaryPolynomialExtension.lean` constructs a **global smooth
+ambient extension** of every polynomial observable by induction on submodule
+powers. Restriction along the actual isometric matrix inclusion proves
+`specialUnitaryPolynomial_locallyLipschitz`. Thus the compact regularity API
+establishes measurability, square/log-moment integrability, and finite slope energy.
+
+`Unitary/SpecialUnitaryPolynomialMetricLSI.lean` proves:
+
+* `specialUnitaryPolynomial_metric_entropy_sq_le`: the exact extended local-slope
+  inequality with constant `2/N` for every real polynomial observable.
+* `specialUnitaryPolynomial_slopeEnergy_ne_top`: the right-hand side is finite.
+* `specialUnitaryPolynomial_entropy_sq_le_slope`: the real form
+  `Ent(f²) ≤ (4/N) ∫ (localSlope f).toReal² dHaar`, with no regularity or
+  integrability premises beyond polynomial membership.
+
+Independent examples check finite **strictly positive** slope energy on a concrete
+nonconstant SU(2) polynomial, the real inequality for a centered quadratic with
+a zero at the identity, and the exact constant `2/N` for arbitrary positive `N`.
+
+## Remaining route to the theorem
+
+**Polynomial local-slope LSI is now proved.** The remaining central task is an
+energy-controlled approximation covering the whole locally Lipschitz class.
+Uniform polynomial density alone does not suffice: the approximants' energies
+must also be controlled by the original function's local-slope energy.
+
+A polynomial smoothing/convolution route is a candidate: construct polynomial
+approximate-identity kernels on SU, prove convergence of their averages and entropy,
+and prove the averaged slope/energy bound using Haar invariance and the HS-isometric
+group translations. These approximation and energy-control results are not yet
+formalized. A sufficient precise approximation statement, for a locally Lipschitz
+`f : SU(N) → ℝ`, `hf : LocallyLipschitz f`, and HS orthonormal basis `b`, is:
+
+```lean
+-- An unproved approximation target, not a declaration in the library:
+∃ (d : ℕ → ℕ) (p : ∀ k, specialUnitaryPolynomialSpace (n := Fin N) (d k)),
+  Filter.Tendsto
+    (fun k => ‖specialUnitaryPolynomialToContinuous (d k) (p k) -
+      (⟨f, hf.continuous⟩ : C(Matrix.specialUnitaryGroup (Fin N) ℂ, ℝ))‖)
+    Filter.atTop (nhds 0) ∧
+  ∀ k, ENNReal.ofReal
+    (∫ U, specialUnitaryGamma b (p k).val (p k).val U ∂specialUnitaryHaar (Fin N)) ≤
+    slopeEnergy (specialUnitaryHaar (Fin N)) f
+```
+
+Together with a verified entropy limit under uniform convergence, this would
+extend the existing polynomial energy inequality directly. It does not require
+controlling the approximants' full local-slope energy. Neither this approximation
+statement nor that general entropy-limit theorem has yet been proved. The full
+`MetricLSI` target at the top of this report remains unproved.
 
 Consistency across finite-degree heat constructions and extension of heat to
-arbitrary smooth functions remain unproved, but are no longer needed if the
-polynomial LSI is extended directly by a verified energy approximation argument.
+arbitrary smooth functions remain unproved, but are not needed if the polynomial
+inequality is extended directly by this verified approximation route.
 
 A precise **unproved smooth intermediate goal**, for `N ≥ 2`, a real orthonormal
 basis `b` of su(N), and `f` smooth on SU(N), is
@@ -620,9 +669,8 @@ entropy (specialUnitaryHaar (Fin N)) (fun U => f U ^ 2) ≤
   (4 / (N : ℝ)) * ∫ U, specialUnitaryGamma b f f U ∂specialUnitaryHaar (Fin N)
 ```
 
-After that, identify the energy with the local Hilbert–Schmidt metric slope and
-prove the extension to all locally Lipschitz functions. These remain proof
-obligations, not assumed data. The operator route follows the approach described
+The sufficient energy-to-local-slope comparison is now proved. The extension
+to all locally Lipschitz functions remains a proof obligation, not assumed data. The operator route follows the approach described
 in [Rothaus, *Hypercontractivity and the Bakry–Emery criterion for compact Lie
 groups*, pp. 361–363](https://www.researchgate.net/publication/243022735_Hypercontractivity_and_the_Bakry-Emery_criterion_for_compact_Lie_groups).
 The source is a mathematical reference, not an imported Lean foundation.
@@ -677,9 +725,11 @@ dissipation, and exponential Fisher decay at rate `N`), and `c70774f`
 (connectedness of actual U(N)/SU(N), zero-energy constancy, and the smooth
 generator kernel), and `35e2978` (polynomial heat equilibrium, zero limiting
 entropy, positive-density entropy bound, and the squared-polynomial LSI with
-coefficient `4/N`).
+coefficient `4/N`), and `1e2e435` (pointwise local-slope comparison, polynomial
+ambient extension and local Lipschitz regularity, and finite-energy polynomial
+metric LSI).
 `lake build` and the independent `Examples.lean`
-compilation pass. The recursive `Audit.lean` check passes for all 706 project
+compilation pass. The recursive `Audit.lean` check passes for all 723 project
 declarations, accepting only `propext`, `Classical.choice`, and `Quot.sound`.
 It prints the fully elaborated commutator-energy, curve-velocity, and
 exponential-speed, conjugation-derivative, and Killing-contraction, exact-coefficient, and real-orthonormal-energy theorems, exposes the Frobenius instances, and inspects the
@@ -691,5 +741,6 @@ integration, logarithmic chain-rule, entropy-differentiation, and spatial and
 conditional time-dependent Fisher results, the maximum principle, constructed
 affine and polynomial heat solutions, their regularity and Fisher decay, and
 actual U(N)/SU(N) connectedness, kernel constancy, polynomial equilibrium, and
-polynomial entropy inequalities above. They do not certify the full locally
+polynomial entropy inequalities, the actual local-slope comparison, ambient
+extension/regularity, and polynomial metric LSI above. They do not certify the full locally
 Lipschitz metric LSI.
