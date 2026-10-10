@@ -116,3 +116,16 @@ set_option pp.all true in
 #check LogSobolev.specialUnitary_killing_self
 set_option pp.all true in
 #check LogSobolev.specialUnitaryAdjoint_exp_derivative
+
+#print axioms LogSobolev.matrix_real_trace_ad_sq
+#print axioms LogSobolev.matrix_real_trace_eq_twice_skew
+#print axioms LogSobolev.specialUnitary_killing_eq_skew_trace
+#print axioms LogSobolev.specialUnitary_killing_self_eq
+#print axioms LogSobolev.specialUnitary_killing_eq_inner
+#print axioms LogSobolev.specialUnitary_orthonormal_commutator_energy
+#print LogSobolev.tracelessSkewSubmodule
+#print LogSobolev.specialUnitaryTracelessSkewEquiv
+set_option pp.all true in
+#check LogSobolev.specialUnitary_killing_self_eq
+set_option pp.all true in
+#check LogSobolev.specialUnitary_orthonormal_commutator_energy

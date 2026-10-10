@@ -25,3 +25,6 @@ import LogSobolev.Unitary.SpecialUnitaryCurves
 import LogSobolev.Unitary.SpecialUnitaryInner
 import LogSobolev.Unitary.SpecialUnitaryAdjoint
 import LogSobolev.Unitary.SpecialUnitaryKilling
+import LogSobolev.Unitary.MatrixAdjointTrace
+import LogSobolev.Unitary.MatrixRealForm
+import LogSobolev.Unitary.SpecialUnitaryKillingConstant

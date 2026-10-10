@@ -134,3 +134,29 @@ example (A : specialUnitaryLieAlgebra (n := Fin 2)) :
     killingForm ℝ (specialUnitaryLieAlgebra (n := Fin 2)) A A =
       -(∑ i, ‖⁅A, stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 2)) i⁆‖ ^ 2) :=
   specialUnitary_killing_self _ A
+
+-- The dimension factor now holds for the real Killing form, not only matrix units.
+example (A : specialUnitaryLieAlgebra (n := Fin 3)) :
+    killingForm ℝ (specialUnitaryLieAlgebra (n := Fin 3)) A A = -6 * ‖A.val‖ ^ 2 := by
+  convert specialUnitary_killing_self_eq A using 1
+  norm_num
+
+example {ι : Type*} [Fintype ι]
+    (b : OrthonormalBasis ι ℝ (specialUnitaryLieAlgebra (n := Fin 3)))
+    (A : specialUnitaryLieAlgebra (n := Fin 3)) :
+    (∑ i, ‖⁅A, b i⁆‖ ^ 2) = 6 * ‖A‖ ^ 2 := by
+  convert specialUnitary_orthonormal_commutator_energy b A using 1
+  norm_num
+
+-- A concrete witness rules out vacuity of the Killing calculation.
+example : ∃ A : specialUnitaryLieAlgebra (n := Fin 2),
+    killingForm ℝ (specialUnitaryLieAlgebra (n := Fin 2)) A A = -8 := by
+  have hmem : (Matrix.diagonal ![Complex.I, -Complex.I]) ∈
+      (specialUnitaryLieAlgebra : LieSubalgebra ℝ (Matrix (Fin 2) (Fin 2) ℂ)) := by
+    constructor
+    · ext i j
+      fin_cases i <;> fin_cases j <;> simp [Matrix.diagonal]
+    · simp [Matrix.trace, Fin.sum_univ_two]
+  refine ⟨⟨_, hmem⟩, ?_⟩
+  rw [specialUnitary_killing_self_eq, specialUnitaryAlgebra_norm, frobenius_norm_sq]
+  norm_num [Fin.sum_univ_two, Matrix.diagonal]
