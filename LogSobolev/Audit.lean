@@ -80,3 +80,13 @@ set_option pp.all true in
 #check LogSobolev.unitary_metricLSI_of_phaseDomain
 set_option pp.all true in
 #check LogSobolev.entropy_prod_chain
+
+#print axioms LogSobolev.specialUnitaryLieAlgebra
+#print axioms LogSobolev.negTracePair_self
+#print axioms LogSobolev.negTracePair_lie
+#print axioms LogSobolev.sum_matrixUnits_double_lie
+#print axioms LogSobolev.specialUnitary_commutator_energy
+set_option pp.all true in
+#check LogSobolev.specialUnitary_commutator_energy
+#print LogSobolev.specialUnitaryLieAlgebra
+#print LogSobolev.negTracePair

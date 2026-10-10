@@ -77,3 +77,24 @@ example {X Y : Type*} [MetricSpace X] [MetricSpace Y]
         entropy μ (fun x => ∫ y, f (x, y) ^ 2 ∂ν) :=
   entropy_prod_chain (Filter.Eventually.of_forall fun p => sq_nonneg (f p))
     (integrable_sq_of_locallyLipschitz hf) (integrable_sq_log_of_locallyLipschitz hf)
+
+-- This checks the exact dimension coefficient in the SU algebra calculation.
+example (A : specialUnitaryLieAlgebra (n := Fin 3)) :
+    (∑ i : Fin 3, ∑ j : Fin 3, ‖⁅Matrix.single i j (1 : ℂ), A.val⁆‖ ^ 2) =
+      6 * ‖A.val‖ ^ 2 := by
+  convert specialUnitary_commutator_energy A using 1
+  norm_num
+
+-- A concrete nonzero element of the traceless skew-Hermitian algebra.
+example : (Matrix.diagonal ![Complex.I, -Complex.I]) ∈
+    (specialUnitaryLieAlgebra : LieSubalgebra ℝ (Matrix (Fin 2) (Fin 2) ℂ)) := by
+  rw [mem_specialUnitaryLieAlgebra]
+  constructor
+  · ext i j
+    fin_cases i <;> fin_cases j <;> simp [Matrix.diagonal]
+  · simp [Matrix.trace, Fin.sum_univ_two]
+
+example : ‖(Matrix.diagonal ![Complex.I, -Complex.I] :
+    Matrix (Fin 2) (Fin 2) ℂ)‖ ^ 2 = 2 := by
+  rw [frobenius_norm_sq]
+  norm_num [Fin.sum_univ_two, Matrix.diagonal]

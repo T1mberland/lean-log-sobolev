@@ -16,3 +16,6 @@ import LogSobolev.Unitary.CircleDecomposition
 import LogSobolev.Unitary.PhasePeriodicity
 import LogSobolev.Unitary.PhaseHaar
 import LogSobolev.Unitary.LSITransfer
+import LogSobolev.Unitary.SpecialUnitaryAlgebra
+import LogSobolev.Unitary.MatrixCasimir
+import LogSobolev.Unitary.SpecialUnitaryCasimir
