@@ -93,10 +93,13 @@ theorem entropy_prod_le_integral_entropy_add
 
 section Compact
 
-variable [MetricSpace X] [MetricSpace Y] [CompactSpace X] [CompactSpace Y]
-  [BorelSpace X] [BorelSpace Y]
+variable [TopologicalSpace X] [TopologicalSpace Y]
+  [FirstCountableTopology X] [FirstCountableTopology Y]
+  [LocallyCompactSpace X] [LocallyCompactSpace Y] [CompactSpace X] [CompactSpace Y]
+  [BorelSpace X] [BorelSpace Y] [SecondCountableTopologyEither X Y]
 
-/-- On compact metric probability spaces, a positive continuous joint density
+omit [FirstCountableTopology Y] [LocallyCompactSpace Y] in
+/-- On compact probability spaces with the stated topological hypotheses, a positive continuous joint density
 satisfies binary entropy subadditivity. All integrability and marginal positivity
 conditions are established here. -/
 theorem entropy_prod_le_integral_entropy_add_of_continuous_pos
@@ -132,7 +135,7 @@ theorem entropy_prod_le_integral_entropy_add_of_continuous_pos
     (Eventually.of_forall fun p => (hpos p).le) hi hl (Eventually.of_forall hmp) hM hc
 
 /-- Binary entropy subadditivity for every nonnegative continuous density on
-compact metric probability spaces, including densities with zeros. -/
+compact probability spaces with the stated topological hypotheses, including zeros. -/
 theorem entropy_prod_le_integral_entropy_add_of_continuous
     (hg : Continuous g) (hn : ∀ p, 0 ≤ g p) :
     entropy (μ.prod ν) g ≤

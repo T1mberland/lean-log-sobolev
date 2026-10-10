@@ -97,3 +97,13 @@ import LogSobolev.Unitary.SpecialUnitaryPolynomialApproximation
 import LogSobolev.Geometry.LocalSlopeAverage
 import LogSobolev.Unitary.SpecialUnitaryConvolutionEnergy
 import LogSobolev.Unitary.SpecialUnitaryLSI
+import LogSobolev.Analysis.TwoPointEntropy
+import LogSobolev.Measure.FiniteUniform
+import LogSobolev.Analysis.DyadicEntropy
+import LogSobolev.Analysis.DyadicEnergy
+import LogSobolev.Analysis.DyadicLSI
+import LogSobolev.Analysis.UniformGridLimit
+import LogSobolev.Analysis.IntervalSquareIncrement
+import LogSobolev.Analysis.UnitIntervalLSI
+import LogSobolev.Measure.IntervalIntegral
+import LogSobolev.Analysis.IntervalLSI

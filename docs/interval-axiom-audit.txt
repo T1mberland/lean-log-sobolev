@@ -1,0 +1,199 @@
+Recursive axiom audit passed for 922 LogSobolev declarations.
+'LogSobolev.TwoPoint.rothaus_lemma' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.TwoPoint.entropy_le_of_nonneg' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.TwoPoint.sq_entropy_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.integral_uniformOn_univ' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.uniformOn_univ_prod' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.entropy_uniformOn_equiv' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.entropy_prod_le_integral_entropy_add_of_continuous' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'LogSobolev.entropy_uniformOn_prod_fin_two_sq_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.uniformGridEntropy_double_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.discreteWeightedEnergy_double_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.uniformGridEntropy_pow_two_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.uniformGridEntropy_pow_two_le_unweighted' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.uniformGridAverage_error_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.tendsto_uniformGridAverage_pow_two' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.interval_integral_sq_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.sum_sq_uniform_increments_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.tendsto_uniformGridEntropy_samples' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.unitInterval_entropy_sq_le_of_hasDerivAt' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.entropy_intervalUniform_eq_unit' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.intervalUniform_entropy_sq_le_of_hasDerivAt' depends on axioms: [propext, Classical.choice, Quot.sound]
+LogSobolev.intervalUniform_entropy_sq_le_of_hasDerivAt : ∀ (L : Real)
+  (hL : @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) L)
+  {f g : Real → Real}
+  (hf :
+    ∀ (x : Real),
+      @HasDerivAt.{0, 0} Real (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField) Real
+        Real.instAddCommGroup
+        (@NormedSpace.toModule.{0, 0} Real Real Real.normedField
+          (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real
+            (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real
+              (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real
+                (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing))))
+          (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike
+            (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real
+              (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real
+                (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real
+                  (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing))))
+            (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike)))
+        (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+        (@IsModuleTopology.toContinuousSMul.{0, 0} Real
+          (@UniformSpace.toTopologicalSpace.{0} Real
+            (@PseudoMetricSpace.toUniformSpace.{0} Real
+              (@SeminormedRing.toPseudoMetricSpace.{0} Real
+                (@SeminormedCommRing.toSeminormedRing.{0} Real
+                  (@NormedCommRing.toSeminormedCommRing.{0} Real
+                    (@NormedField.toNormedCommRing.{0} Real
+                      (@NontriviallyNormedField.toNormedField.{0} Real
+                        (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))))
+          Real Real.instAdd
+          (@SMulZeroClass.toSMul.{0, 0} Real Real
+            (@AddZero.toZero.{0} Real
+              (@AddZeroClass.toAddZero.{0} Real
+                (@AddMonoid.toAddZeroClass.{0} Real
+                  (@SubNegMonoid.toAddMonoid.{0} Real
+                    (@AddGroup.toSubNegMonoid.{0} Real (@AddCommGroup.toAddGroup.{0} Real Real.instAddCommGroup))))))
+            (@DistribSMul.toSMulZeroClass.{0, 0} Real Real
+              (@AddMonoid.toAddZeroClass.{0} Real
+                (@SubNegMonoid.toAddMonoid.{0} Real
+                  (@AddGroup.toSubNegMonoid.{0} Real (@AddCommGroup.toAddGroup.{0} Real Real.instAddCommGroup))))
+              (@DistribMulAction.toDistribSMul.{0, 0} Real Real
+                (@MonoidWithZero.toMonoid.{0} Real
+                  (@Semiring.toMonoidWithZero.{0} Real
+                    (@DivisionSemiring.toSemiring.{0} Real
+                      (@Semifield.toDivisionSemiring.{0} Real
+                        (@Field.toSemifield.{0} Real
+                          (@NormedField.toField.{0} Real
+                            (@NontriviallyNormedField.toNormedField.{0} Real
+                              (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))))
+                (@SubNegMonoid.toAddMonoid.{0} Real
+                  (@AddGroup.toSubNegMonoid.{0} Real (@AddCommGroup.toAddGroup.{0} Real Real.instAddCommGroup)))
+                (@Module.toDistribMulAction.{0, 0} Real Real
+                  (@DivisionSemiring.toSemiring.{0} Real
+                    (@Semifield.toDivisionSemiring.{0} Real
+                      (@Field.toSemifield.{0} Real
+                        (@NormedField.toField.{0} Real
+                          (@NontriviallyNormedField.toNormedField.{0} Real
+                            (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                  (@AddCommGroup.toAddCommMonoid.{0} Real Real.instAddCommGroup)
+                  (@NormedSpace.toModule.{0, 0} Real Real Real.normedField
+                    (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real
+                      (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real
+                        (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real
+                          (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing))))
+                    (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike
+                      (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real
+                        (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real
+                          (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real
+                            (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing))))
+                      (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike)))))))
+          (@UniformSpace.toTopologicalSpace.{0} Real
+            (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+          (@IsTopologicalSemiring.toIsModuleTopology.{0} Real Real.semiring
+            (@UniformSpace.toTopologicalSpace.{0} Real
+              (@PseudoMetricSpace.toUniformSpace.{0} Real
+                (@SeminormedRing.toPseudoMetricSpace.{0} Real
+                  (@SeminormedCommRing.toSeminormedRing.{0} Real
+                    (@NormedCommRing.toSeminormedCommRing.{0} Real
+                      (@NormedField.toNormedCommRing.{0} Real
+                        (@NontriviallyNormedField.toNormedField.{0} Real
+                          (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))))
+            (@IsTopologicalRing.toIsTopologicalSemiring.{0} Real
+              (@UniformSpace.toTopologicalSpace.{0} Real
+                (@PseudoMetricSpace.toUniformSpace.{0} Real
+                  (@SeminormedRing.toPseudoMetricSpace.{0} Real
+                    (@SeminormedCommRing.toSeminormedRing.{0} Real
+                      (@NormedCommRing.toSeminormedCommRing.{0} Real
+                        (@NormedField.toNormedCommRing.{0} Real
+                          (@NontriviallyNormedField.toNormedField.{0} Real
+                            (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))))
+              (@NonUnitalNonAssocCommRing.toNonUnitalNonAssocRing.{0} Real
+                (@NonUnitalCommRing.toNonUnitalNonAssocCommRing.{0} Real
+                  (@NonUnitalNormedCommRing.toNonUnitalCommRing.{0} Real
+                    (@NormedCommRing.toNonUnitalNormedCommRing.{0} Real Real.normedCommRing))))
+              instIsTopologicalRingReal)))
+        f (g x) x)
+  (hg :
+    @Continuous.{0, 0} Real Real
+      (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+      (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+      g),
+  @LE.le.{0} Real Real.instLE
+    (@LogSobolev.entropy.{0}
+      (@Set.Elem.{0} Real
+        (@Set.Icc.{0} Real Real.instPreorder (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+          L))
+      (@Subtype.instMeasurableSpace.{0} Real
+        (fun (x : Real) =>
+          @Membership.mem.{0, 0} Real (Set.{0} Real) (@Set.instMembership.{0} Real)
+            (@Set.Icc.{0} Real Real.instPreorder
+              (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) L)
+            x)
+        Real.measurableSpace)
+      (LogSobolev.intervalUniform L)
+      fun
+        (t :
+          @Set.Elem.{0} Real
+            (@Set.Icc.{0} Real Real.instPreorder
+              (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) L)) =>
+      @HPow.hPow.{0, 0, 0} Real Nat Real (@instHPow.{0, 0} Real Nat (@Monoid.toNatPow.{0} Real Real.instMonoid))
+        (f
+          (@Subtype.val.{1} Real
+            (fun (x : Real) =>
+              @Membership.mem.{0, 0} Real (Set.{0} Real) (@Set.instMembership.{0} Real)
+                (@Set.Icc.{0} Real Real.instPreorder
+                  (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) L)
+                x)
+            t))
+        (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))
+    (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+      (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+        (@HPow.hPow.{0, 0, 0} Real Nat Real (@instHPow.{0, 0} Real Nat (@Monoid.toNatPow.{0} Real Real.instMonoid)) L
+          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))
+        (@OfNat.ofNat.{0} Real (nat_lit 4)
+          (@instOfNatAtLeastTwo.{0} Real (nat_lit 4) Real.instNatCast
+            (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))
+              (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))))))
+      (@MeasureTheory.integral.{0, 0}
+        (@Set.Elem.{0} Real
+          (@Set.Icc.{0} Real Real.instPreorder
+            (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) L))
+        Real Real.normedAddCommGroup
+        (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike
+          (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)
+          (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))
+        (@Subtype.instMeasurableSpace.{0} Real
+          (fun (x : Real) =>
+            @Membership.mem.{0, 0} Real (Set.{0} Real) (@Set.instMembership.{0} Real)
+              (@Set.Icc.{0} Real Real.instPreorder
+                (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) L)
+              x)
+          Real.measurableSpace)
+        (LogSobolev.intervalUniform L)
+        fun
+          (t :
+            @Set.Elem.{0} Real
+              (@Set.Icc.{0} Real Real.instPreorder
+                (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) L)) =>
+        @HPow.hPow.{0, 0, 0} Real Nat Real (@instHPow.{0, 0} Real Nat (@Monoid.toNatPow.{0} Real Real.instMonoid))
+          (g
+            (@Subtype.val.{1} Real
+              (fun (x : Real) =>
+                @Membership.mem.{0, 0} Real (Set.{0} Real) (@Set.instMembership.{0} Real)
+                  (@Set.Icc.{0} Real Real.instPreorder
+                    (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) L)
+                  x)
+              t))
+          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))
+def LogSobolev.intervalUniform : (L : ℝ) → MeasureTheory.Measure ↑(Set.Icc 0 L) :=
+fun L => (ENNReal.ofReal L)⁻¹ • MeasureTheory.Measure.comap Subtype.val MeasureTheory.volume
+def LogSobolev.entropy.{u_1} : {X : Type u_1} → [inst : MeasurableSpace X] → MeasureTheory.Measure X → (X → ℝ) → ℝ :=
+fun {X} [MeasurableSpace X] μ g =>
+  ∫ (x : X), g x * Real.log (g x) ∂μ - (∫ (x : X), g x ∂μ) * Real.log (∫ (x : X), g x ∂μ)
+def LogSobolev.uniformGridEntropy : ℕ → (ℕ → ℝ) → ℝ :=
+fun m f => LogSobolev.entropy (ProbabilityTheory.uniformOn Set.univ) fun i => f ↑i ^ 2
+def LogSobolev.discreteWeightedEnergy : ℕ → (ℕ → ℝ) → ℝ :=
+fun m f => ∑ i ∈ Finset.range m, (↑i + 1) * (↑m - (↑i + 1)) * (f (i + 1) - f i) ^ 2
