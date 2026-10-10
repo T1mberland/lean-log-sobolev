@@ -18,8 +18,9 @@ Proved components include:
   locally Lipschitz real observable under actual Haar and the HS metric.
 * SU polynomial regularization of locally Lipschitz U(N) observables gives a
   polynomial-valued phase curve differentiable almost everywhere. Its joint
-  derivative along SU exponential curves and the exact central/traceless
-  quadratic norm identity are proved; the final energy assembly remains open.
+  derivative, exact combined-flow speed, and integrated quadratic energy bound
+  are proved. SU convolution converges uniformly and in squared entropy. The
+  slice-entropy estimate and final U(N) assembly remain open.
 * Entropy continuity under uniform convergence on compact finite-measure spaces,
   including squared observables with zeros and varying polynomial degree.
 * Explicit polynomial probability kernels on SU concentrate at identity and

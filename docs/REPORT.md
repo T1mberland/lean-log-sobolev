@@ -315,13 +315,18 @@ formula `specialUnitaryPolynomial_hasDerivAt_phase_flow` is proved by finite
 basis expansion, and `specialUnitary_phase_velocity_norm_sq` proves the exact
 central/traceless orthogonality identity.
 
-Still needed: prove the combined phase/exponential curve's Lipschitz constant
-from its velocity norm; apply the averaged-derivative local-slope bound with
-the SU gradient and phase speed equal to half the phase derivative; integrate
-this quadratic estimate through the verified Haar decomposition; and pass to
-the SU convolution limit in entropy. The proposed resulting coefficient is
-`π²/N ≤ 12/N`. The combined energy estimate and final limit theorem remain
-unproved; these new differentiation lemmas do not assert an LSI on U(N).
+The exact combined-flow Lipschitz bound, pointwise quadratic slope estimate,
+and integrated energy estimate are now proved. Positive SU convolution of an
+arbitrary continuous U(N) function also converges uniformly and in squared
+entropy. The remaining step is an entropy bound for the polynomial-valued
+phase family: apply the interval LSI and SU polynomial LSI to the two slices,
+use product entropy subadditivity, and compare their weighted energies with
+`Q = (phase derivative)²/2 + Γ_SU`. At the paper's interval length, the intended
+coefficient is `π²/N ≤ 12/N`. This slice-entropy estimate requires the relevant
+joint measurability, integrability, and scalar evaluation derivative identities.
+Once proved, the integrated energy estimate and entropy limit already available
+should give the final U(N) theorem. The entropy estimate and final assembly
+remain unproved; no U(N) LSI for N ≥ 2 is currently asserted.
 
 The [completed SU proof](SU_LSI.md) supplies the `2/N` factor unconditionally,
 including locally Lipschitz tests. Its route uses actual sum-of-squares Γ₂ and
@@ -682,3 +687,60 @@ axiom prints use only `propext`, `Classical.choice`, and `Quot.sound`.
 Full elaborated statements are saved in `phase-polynomial-axiom-audit.txt`.
 The source omission scan and `git diff --check` pass. These are proved analytic
 and algebraic components; the U(N) LSI for N ≥ 2 remains open.
+
+
+## Combined energy and approximation
+
+* `Unitary/UnitaryPhaseFlow.lean`: `unitaryPhaseFlow_speed_sq` and
+  `unitaryPhaseFlow_lipschitz` prove exact squared speed `‖A‖² + 2c²` for the
+  simultaneous phase translation and SU exponential curve.
+* `Unitary/UnitaryConvolutionDerivative.lean`: `unitary_SU_average_deriv_sq_le`
+  bounds a derivative of an average by original local slopes. The input is
+  merely locally Lipschitz; only its average along the curve is differentiated.
+* `Unitary/UnitaryPhaseConvolutionEnergy.lean`:
+  `unitary_phase_convolution_energy_le` proves pointwise control of
+  `(p′(t)(U))²/2 + Γ_SU(p(t),p(t))(U)` by averaged original squared slopes.
+  Choosing the SU gradient and phase speed `p′(t)(U)/2` allows exact cancellation.
+* `Unitary/UnitaryAveragedSlope.lean`: `lintegral_phase_decomposition` transports
+  nonnegative measurable integrands through actual Haar decomposition;
+  `phase_SU_average_slopeEnergy` identifies the integrated averaged slope energy.
+* `Measure/IntervalAlmostEverywhere.lean`: `ae_intervalUniform_of_ae` transfers
+  Lebesgue-almost-everywhere assertions to the normalized interval subtype.
+* `Unitary/UnitaryPhaseIntegratedEnergy.lean`:
+  `unitary_phase_integrated_energy_le` proves the integrated quadratic estimate;
+  `unitary_exists_phase_polynomial_energy` supplies actual normalized-power
+  approximants with that bound for every locally Lipschitz input. This theorem
+  assumes neither an LSI nor energy control of the input.
+* `Unitary/UnitarySUConvolution.lean`: `unitarySUConvolution_apply` identifies the
+  Banach-space integral with the scalar average. `tendsto_unitarySUConvolution`
+  and `tendsto_entropy_sq_unitarySUConvolution` prove uniform and squared-entropy
+  convergence for all continuous U(N) observables, including signed functions
+  and zeros. All source paths in this list are relative to `LogSobolev/`.
+
+
+The exact remaining analytic inequality can be stated independently of the
+original observable. For `N>0`, `L = π sqrt(2/N)`, any Lipschitz curve `p : ℝ →
+specialUnitaryPolynomialSpace d`, and an HS orthonormal SU basis `b`, prove
+
+```
+Ent_(intervalUniform L × SU Haar)((t,U) ↦ p(t)(U)²)
+  ≤ (π²/N) ∫ t ∫ U [ (deriv p t)(U)²/2 + Γ_b(p(t),p(t))(U) ].
+```
+
+Here the integrals use actual normalized interval and SU Haar probabilities.
+This statement is an unproved goal, not a library declaration or assumption.
+For the constructed curves, the already proved integrated bound controls its
+right-hand side by `(π²/N) * slopeEnergy(U Haar,f)`. The proved entropy limit
+then supplies the limiting argument after the slice-entropy inequality is
+established.
+
+
+Commit `85a8c1e` contains the combined energy and U(N) entropy-approximation
+results. `lake build` passed (3193 jobs), and `ExamplesPhaseEnergy.lean`
+compiled independently, including arbitrary positive dimension energy bounds
+and entropy approximation of the nonsmooth U(2) distance observable.
+`AuditPhaseEnergy.lean` recursively checked all 1001 project declarations and
+their dependency closures. All 17 selected axiom prints use only `propext`,
+`Classical.choice`, and `Quot.sound`; full elaborated statements are saved in
+`phase-energy-axiom-audit.txt`. The source omission scan and `git diff --check`
+pass. The final U(N) LSI for N ≥ 2 is still unproved.
