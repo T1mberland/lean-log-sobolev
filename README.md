@@ -20,6 +20,8 @@ Proved components include:
 * Exact Hilbert–Schmidt trace normalization and unitary multiplication isometries
   at the norm level.
 * Compactness and Haar probability on U(N) and SU(N).
+* The traceless skew-Hermitian matrix Lie algebra, its trace pairing, and the
+  exact `2N` matrix commutator-energy identity (not yet a Ricci or LSI theorem).
 * The normalized interval and its L² product with SU(N).
 * The paper's phase map into U(N), with the `sqrt(3)` Lipschitz bound.
 * **The exact short-interval Haar decomposition (Lemma 16)** for every positive N,
@@ -58,7 +60,8 @@ example : LipschitzWith ⟨Real.sqrt 3, Real.sqrt_nonneg 3⟩ (intervalPhaseMap 
 
 See [the source audit](docs/ECOSYSTEM.md) for inspected versions, actual
 external theorem assumptions and the `markov-semigroups` trust-boundary findings.
-See [the mathematical report](docs/REPORT.md) for the exact scope and open goals.
+See [the mathematical report](docs/REPORT.md) for the exact scope and open goals,
+and [the SU proof boundary](docs/SU_LSI.md) for the remaining geometric and analytic steps.
 
 ## Layout
 
