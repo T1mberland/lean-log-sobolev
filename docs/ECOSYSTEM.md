@@ -62,6 +62,11 @@ integral formula; `entropy_nonneg` requires nonnegativity a.e., integrability of
 the function, and integrability of its log moment. We port the small compatible
 definition/API, with attribution, rather than introduce another entropy convention.
 
+The product chain rule and marginal log-integrability arguments from
+`Conditional/Decomposition.lean` and `Conditional/Subadditivity.lean` are now
+adapted in `LogSobolev/Measure/ProductEntropy.lean` to heterogeneous binary
+products. These compiled proofs do not supply metric-LSI tensorization.
+
 `Probability/Entropy/Conditional/Subadditivity.lean:entropy_subadditive` proves
 an entropy bound for finite independent products. It assumes measurability,
 nonnegativity a.e., integrability, and log-moment integrability. This is a useful

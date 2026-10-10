@@ -22,6 +22,7 @@ All names below are in namespace `LogSobolev`.
 | Source | Main declarations | Precise scope |
 |---|---|---|
 | `LogSobolev/Measure/Entropy.lean` | `entropy_nonneg`, `entropy_map` | Jensen with integrability; entropy commutes with measurable pushforward. |
+| `LogSobolev/Measure/ProductEntropy.lean` | `integrable_marginal_mul_log`, `integrable_slice_entropy`, `entropy_prod_chain`, `entropy_marginal_le` | Exact binary product chain rule and entropy contraction under marginalization. For nonnegative integrable densities with integrable log moment, marginal log-integrability is proved. This is not metric-LSI tensorization. |
 | `LogSobolev/Measure/LSI.lean` | `HasEnergyLSI.map`, `.mono`, `.scale_energy` | Abstract implications with explicitly supplied source LSI, test class and energy comparison; not LSI existence. |
 | `LogSobolev/Geometry/LocalSlope.lean` | `localSlope_eq_limsup_nhdsNE`, `localSlope_lt_top`, `localSlope_comp_le`, `localSlope_comp_isometryEquiv` | Actual upper local metric slope, including collapsed points under a map and isolated points. |
 | `LogSobolev/Geometry/SlopeMeasurable.lean` | `localSlope_eq_iInf_iSup_probe`, `measurable_localSlope` | Borel measurability for every continuous real function on a metric space; no separability assumption. |
@@ -124,10 +125,14 @@ integration show invariance under every left translation in U. The existing
 endpoints are handled by the verified equality of Lebesgue integrals on Icc
 and Ioc. This argument applies for every positive N.
 
-For analysis, port the inspected finite-product entropy subadditivity rather
-than redeveloping it. Prove the required gradient-to-local-slope identification
-and tensorization in the manifold/interval setting; the inspected Gaussian
-tensorization is not immediately that theorem. Prove a one-dimensional
+The binary entropy chain rule and its marginal log-integrability are now
+proved in `ProductEntropy.lean`, adapted from the inspected conditional-entropy
+library to heterogeneous products. This is an analytic ingredient, not the
+metric-LSI tensorization theorem. The next tensorization obligation is to control
+the local slope of the square root of a marginal of `f²`, and relate the two
+coordinate energies to the full L²-product energy. The manifold/interval
+setting needs the appropriate gradient-to-local-slope identification; the
+inspected Gaussian tensorization is not immediately that theorem. Prove a one-dimensional
 circle/interval LSI and scaling, including the circle case for N=1.
 
 The SU step needs a concrete diffusion or Riemannian development: the
@@ -146,19 +151,19 @@ the compact regularity side conditions. A verified Herbst argument is a later ta
 Verification performed on 2026-10-10 with Lean 4.28.0 and the pinned Mathlib
 commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
 
-* `lake build`: passed for the complete library (2744 dependency/build jobs,
+* `lake build`: passed for the complete library (2745 dependency/build jobs,
   primarily cached Mathlib artifacts).
 * `lake env lean LogSobolev/Examples.lean`: passed; the examples compile as an
   independent client importing the public root module.
 * `lake env lean LogSobolev/Audit.lean`: passed. The automated traversal checked
-  **163 declarations** in the `LogSobolev` namespace, including definitions,
+  **167 declarations** in the `LogSobolev` namespace, including definitions,
   instances, and generated auxiliaries. Every transitive axiom was one of
   `propext`, `Classical.choice`, or `Quot.sound`. No `sorryAx` or custom axiom
   was present in those dependency closures.
-* The audit also executes 29 `#print axioms` commands, prints the core
+* The audit also executes 33 `#print axioms` commands, prints the core
   definitions, and prints fully elaborated types for the trace normalization,
   phase-map Lipschitz theorem, U(N) regularity theorem, exact Haar identity,
-  and conditional final LSI transfer. The elaborated
+  conditional final LSI transfer, and product entropy chain rule. The elaborated
   metric instances are explicitly Frobenius and `WithLp 2`.
 * Source scan found no proof omissions or custom axiom declarations;
   `git diff --check` passed.
@@ -178,6 +183,10 @@ Completed milestones:
   N, full-circle decomposition, central-root invariance and phase periodicity;
   conditional `2/N` to `6/N` LSI transfer; independent examples at N=1 and N=3,
   and the expanded 163-declaration recursive audit.
+* `0e9ac0d`: product entropy chain rule, proved marginal log-integrability,
+  integrability of slice entropy, and entropy contraction under marginalization;
+  a compact locally Lipschitz usage example and the 167-declaration audit.
+  This milestone does not close metric-LSI tensorization or the main theorem.
 
 The report and README are committed separately after these verified proof
 milestones; use `git log --oneline` to see the documentation commit as well.

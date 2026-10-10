@@ -9,7 +9,8 @@ It uses Mathlib's actual matrix unitary and special unitary groups and the
 
 Proved components include:
 
-* Entropy transport and an explicit-energy LSI transport/scaling API.
+* Entropy transport, the product entropy chain rule with proved marginal
+  log-integrability, and an explicit-energy LSI transport/scaling API.
 * The upper local metric slope: agreement with the punctured limsup,
   finiteness for locally Lipschitz functions, Borel measurability, a Lipschitz
   chain bound, and invariance under domain isometries.
