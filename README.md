@@ -11,6 +11,8 @@ Proved components include:
 
 * Entropy continuity under uniform convergence on compact finite-measure spaces,
   including squared observables with zeros and varying polynomial degree.
+* Explicit polynomial probability kernels on SU concentrate at identity and
+  approximate every continuous observable uniformly and in squared entropy.
 * Polynomial convolution on SU preserves degree; normalized averaging preserves
   Haar mass and nonnegative normalized kernels preserve upper bounds.
 * Entropy transport, the product entropy chain rule with proved marginal

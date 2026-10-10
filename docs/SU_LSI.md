@@ -650,13 +650,33 @@ in these results.
 in the uniform norm on continuous real functions on any compact space with a
 finite measure. It includes zeros and sequences of varying polynomial degree.
 
-It remains to construct polynomial approximate-identity kernels on SU, prove
-uniform convergence of their averages, and prove the averaged energy bound
-using Haar invariance and the HS-isometric group translations. A sufficient precise approximation statement, for a locally Lipschitz
+The approximate-identity construction is now proved. In
+`SpecialUnitaryPeak.lean`, the affine polynomial `q(U) = (N + Re Tr U)/(2N)`
+is nonnegative, equals one at identity, and is strictly less than one elsewhere
+for `N > 0`. The exact identities `‖U-I‖²_HS = 2N - 2 Re Tr U` and
+`‖U+I‖²_HS = 2N + 2 Re Tr U` establish its metric normalization and bounds.
+`SpecialUnitaryPowerKernel.lean` represents `k_j = q^j / ∫ q^j` as an actual
+polynomial of degree at most `j`, proves positive normalization and mass one,
+and proves vanishing mass outside every open identity neighborhood.
+
+The concentration argument is reusable: `Measure/PowerKernel.lean` compares
+sets where `q ≤ a` and `b ≤ q` to obtain the geometric bound
+`(μ(s)/μ(t)) (a/b)^j`. `Measure/PowerKernelApproximation.lean` proves convergence
+of averages of continuous Banach-valued functions. Applying it to the space of
+continuous SU observables gives **uniform convergence**, not just pointwise
+convergence.
+
+`specialUnitaryPolynomial_exists_uniform_entropy_approximation` in
+`SpecialUnitaryPolynomialApproximation.lean` supplies degree-`j` polynomials,
+their exact convolution formula, uniform convergence, and squared entropy
+convergence for every continuous real function, including nonsmooth ones.
+
+It remains to prove the averaged energy bound using Haar invariance and the
+HS-isometric group translations. A sufficient precise statement, for a locally Lipschitz
 `f : SU(N) → ℝ`, `hf : LocallyLipschitz f`, and HS orthonormal basis `b`, is:
 
 ```lean
--- An unproved approximation target, not a declaration in the library:
+-- The uniform-convergence part is proved; the joint energy assertion is still unproved:
 ∃ (d : ℕ → ℕ) (p : ∀ k, specialUnitaryPolynomialSpace (n := Fin N) (d k)),
   Filter.Tendsto
     (fun k => ‖specialUnitaryPolynomialToContinuous (d k) (p k) -
@@ -671,15 +691,23 @@ Together with the now-proved entropy limit under uniform convergence, this
 would extend the existing polynomial energy inequality directly. It does not
 require controlling the approximants' full local-slope energy. The approximation
 statement and full `MetricLSI` target at the top of this report remain unproved.
-The bottleneck is analytic: kernel concentration and the derivative/local-slope
-bound for averaging a nonsmooth function, rather than polynomial closure or
-entropy continuity.
+The bottleneck is the analytic derivative/local-slope bound for averaging a
+nonsmooth function. Kernel concentration, uniform polynomial approximation,
+and entropy convergence are now proved.
 
-A concrete next construction (not yet formalized) is
-`q(U) = (N + Re Tr U)/(2N) = 1 - ‖U-I‖²_HS/(4N)` for `N > 0`, and
-`k_j = q^j / ∫ q^j`. One must prove `0 ≤ q ≤ 1`, its unique maximum at identity,
-positive normalization, and concentration of the normalized powers. Compactness
-then yields uniform convergence of the averages of every continuous function.
+More specifically, it suffices to prove the following for the kernels already
+constructed, with `hf : LocallyLipschitz f` and HS orthonormal basis `b`:
+
+```lean
+-- Unproved energy estimate for the existing approximants:
+∀ (j : ℕ) (p : specialUnitaryPolynomialSpace (n := Fin N) j),
+  (∀ U, p.val U = ∫ V, f (U * V) *
+    (specialUnitaryPowerKernel (n := Fin N) j).val V ∂specialUnitaryHaar (Fin N)) →
+  ENNReal.ofReal
+    (∫ U, specialUnitaryGamma b p.val p.val U ∂specialUnitaryHaar (Fin N)) ≤
+    slopeEnergy (specialUnitaryHaar (Fin N)) f
+```
+
 For energy control, use difference quotients along the verified exponential
 curves and Mathlib's `MeasureTheory.limsup_lintegral_le` (reverse Fatou), with
 finite domination from compact local Lipschitz regularity. The intended estimate
@@ -759,9 +787,11 @@ entropy, positive-density entropy bound, and the squared-polynomial LSI with
 coefficient `4/N`), and `1e2e435` (pointwise local-slope comparison, polynomial
 ambient extension and local Lipschitz regularity, and finite-energy polynomial
 metric LSI), and `e41ed2b` (uniform entropy continuity, degree-preserving
-pullbacks, polynomial convolution, and normalized averaging identities).
+pullbacks, polynomial convolution, and normalized averaging identities), and
+`b391128` (concentrating polynomial probability kernels, Banach-valued
+approximation, and uniform/entropy approximation of continuous SU observables).
 `lake build` and the independent `Examples.lean`
-compilation pass. The recursive `Audit.lean` check passes for all 736 project
+compilation pass. The recursive `Audit.lean` check passes for all 783 project
 declarations, accepting only `propext`, `Classical.choice`, and `Quot.sound`.
 It prints the fully elaborated commutator-energy, curve-velocity, and
 exponential-speed, conjugation-derivative, and Killing-contraction, exact-coefficient, and real-orthonormal-energy theorems, exposes the Frobenius instances, and inspects the

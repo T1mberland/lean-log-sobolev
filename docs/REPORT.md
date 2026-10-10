@@ -19,9 +19,11 @@ substantial analytic obligations. The exact short-interval Haar decomposition is
 Entropy continuity under uniform convergence, degree preservation under translations
 and inversion, and polynomial convolution of arbitrary continuous observables are
 also proved. Normalized convolution preserves Haar mass; nonnegative normalized
-kernels preserve upper bounds. What remains on the SU approximation route is
-kernel concentration and control of the averaged differential energy by the
-original function's local-slope energy.
+kernels preserve upper bounds. Explicit normalized powers of the polynomial
+peak now give concentrating polynomial probability densities and uniform
+polynomial approximation of every continuous observable, with convergence of
+squared entropy. What remains on the SU approximation route is control of the
+averaged differential energy by the original function's local-slope energy.
 The remaining analytic/geometric obligations are mathematical missing proofs,
 not merely unresolved Lean syntax or typeclass errors.
 
@@ -135,6 +137,24 @@ The latest approximation infrastructure is unconditional:
   normalized kernels, and `specialUnitary_averaging_le` proves preservation of
   upper bounds for nonnegative normalized kernels. These theorems do not claim
   that such kernels form an approximate identity or control differential energy.
+
+The normalized-power construction is also proved:
+
+* `Measure/PowerKernel.lean`: positive normalization, mass one, a geometric
+  tail estimate, and concentration at a unique peak on a compact space with a
+  finite full-support measure.
+* `Measure/PowerKernelApproximation.lean`:
+  `tendsto_integral_powerKernel_smul` gives norm convergence of averages for
+  continuous functions with values in any real Banach space.
+* `Unitary/SpecialUnitaryPeak.lean`: exact HS distance/trace identities and a
+  degree-one nonnegative polynomial uniquely peaked at identity.
+* `Unitary/SpecialUnitaryPowerKernel.lean`: actual polynomial normalized-power
+  densities of mass one, with concentration for the normalized SU Haar measure.
+* `Unitary/SpecialUnitaryPolynomialApproximation.lean`:
+  `specialUnitaryPolynomial_exists_uniform_entropy_approximation` proves the
+  explicit convolution formula, uniform approximation, and squared entropy
+  convergence for every continuous real SU observable. No energy bound for
+  the approximants is assumed or claimed.
 
 ## Convention and semantic checks
 
@@ -269,16 +289,16 @@ the compact regularity side conditions. A verified Herbst argument is a later ta
 Verification performed on 2026-10-10 with Lean 4.28.0 and the pinned Mathlib
 commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
 
-* `lake build`: passed for the complete library (3107 dependency/build jobs,
+* `lake build`: passed for the complete library (3112 dependency/build jobs,
   primarily cached Mathlib artifacts).
 * `lake env lean LogSobolev/Examples.lean`: passed; the examples compile as an
   independent client importing the public root module.
 * `lake env lean LogSobolev/Audit.lean`: passed. The automated traversal checked
-  **736 declarations** in the `LogSobolev` namespace, including definitions,
+  **783 declarations** in the `LogSobolev` namespace, including definitions,
   instances, and generated auxiliaries. Every transitive axiom was one of
   `propext`, `Classical.choice`, or `Quot.sound`. No `sorryAx` or custom axiom
   was present in those dependency closures.
-* The audit also executes 208 `#print axioms` commands, prints the core
+* The audit also executes 233 `#print axioms` commands, prints the core
   definitions, and prints fully elaborated types for the trace normalization,
   phase-map Lipschitz theorem, U(N) regularity theorem, exact Haar identity,
   conditional final LSI transfer, product entropy chain rule, and SU algebra
@@ -497,6 +517,15 @@ Completed milestones:
   recursive audit pass. All 736 project declarations and 208 explicit axiom
   checks use only standard foundational axioms. Kernel concentration and the
   averaged energy bound remain unproved; full SU(N) `MetricLSI` is not asserted.
+
+* `b391128`: normalized powers of the explicit SU peak give nonnegative,
+  normalized polynomial kernels concentrating at identity. A reusable Banach-valued
+  approximation theorem yields uniform polynomial convolution approximation and
+  squared entropy convergence for every continuous SU observable. Build (3112
+  jobs), independent normalization and distance-to-identity examples, and the
+  full audit pass: 783 declarations, 233 explicit axiom prints, only the three
+  standard foundational axioms. The averaged differential-energy bound for
+  locally Lipschitz input remains unproved.
 
 The report and README are committed separately after these verified proof
 milestones; use `git log --oneline` to see the documentation commit as well.
