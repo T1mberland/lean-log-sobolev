@@ -8,24 +8,25 @@ for N=1. No interval or SU(N) LSI has been assumed as an axiom or installed in a
 typeclass. The development proves the metric/measure foundations, the exact Haar
 decomposition in Lemma 16, and the transport and regularity results below.
 
-The SU(N) entropy inequality is now proved on **all polynomial matrix observables**
-in carré-du-champ energy form, with coefficient `4/N` on `Ent(f²)`. The constructed
-heat proof includes positivity, Haar-mass conservation, Fisher decay, convergence,
-and vanishing limiting entropy. The principal remaining SU obligation is extension
-to the full locally Lipschitz class by an energy-controlled approximation.
-The comparison with the actual local Hilbert–Schmidt slope and the polynomial
-metric LSI, including finite slope energy, are now proved. The interval/circle LSI and the appropriate tensorization argument are also
-substantial analytic obligations. The exact short-interval Haar decomposition is now proved, including N=1.
-Entropy continuity under uniform convergence, degree preservation under translations
-and inversion, and polynomial convolution of arbitrary continuous observables are
-also proved. Normalized convolution preserves Haar mass; nonnegative normalized
-kernels preserve upper bounds. Explicit normalized powers of the polynomial
-peak now give concentrating polynomial probability densities and uniform
-polynomial approximation of every continuous observable, with convergence of
-squared entropy. What remains on the SU approximation route is control of the
-averaged differential energy by the original function's local-slope energy.
-The remaining analytic/geometric obligations are mathematical missing proofs,
-not merely unresolved Lean syntax or typeclass errors.
+**The SU(N) LSI is now fully proved for all locally Lipschitz real functions
+and every positive dimension, including SU(1).**
+`specialUnitary_metricLSI` gives constant `2/N` for actual normalized Haar and
+the unnormalized Hilbert–Schmidt metric. The real theorem
+`specialUnitary_entropy_sq_le_of_locallyLipschitz` gives coefficient `4/N` and
+has only a local Lipschitz function hypothesis. Compact regularity proves square,
+log-moment, and slope-energy integrability.
+
+The proof constructs finite-degree heat flow, proves the `N/2` Γ₂ bound,
+Fisher decay, equilibrium, and polynomial LSI. Explicit positive polynomial
+convolution approximates every continuous observable uniformly and in squared
+entropy. Reverse Fatou and Jensen control the approximants' differential energy
+by the original locally Lipschitz function's local-slope energy. Passing to the
+limit proves the full metric result without an assumed Bakry–Émery criterion.
+
+For the larger U(N) objective, the remaining obligations are the interval/circle
+LSI, the appropriate L²-product tensorization, and the U(1) case. The short-interval
+Haar decomposition and Lipschitz transfer are already proved. This SU result
+is not presented as a complete proof of Theorem 15 on U(N).
 
 ## Proved declarations
 
@@ -105,11 +106,11 @@ All names below are in namespace `LogSobolev`.
 | `LogSobolev/Unitary/SpecialUnitaryPolynomialEquilibrium.lean` | `specialUnitaryPolynomialForwardHeat_tendsto_mean`, `specialUnitaryPolynomialForwardHeat_entropy_tendsto_zero` | Supremum-norm convergence to the normalized Haar mean and zero limiting entropy; no assumed convergence/ergodicity. |
 | `LogSobolev/Analysis/DissipationBound.lean` | `initial_le_div_of_dissipation_decay` | Scalar comparison bound from explicit dissipation, information decay, continuity at zero, and a zero entropy limit. |
 | `LogSobolev/Unitary/SpecialUnitarySquareEnergy.lean` | `specialUnitaryGamma_sq_add_const`, `specialUnitary_fisher_sq_add_const_le` | Exact factor four for regularized squares and the corresponding Fisher-density bound. |
-| `LogSobolev/Unitary/SpecialUnitaryPolynomialLSI.lean` | `specialUnitaryPolynomial_entropy_le_fisher`, `specialUnitaryPolynomial_entropy_sq_le` | Proved positive-density `Ent(g) ≤ I(g)/N`, then `Ent(f²) ≤ (4/N) ∫ Γ(f,f)` for every real polynomial observable, without a positivity hypothesis on `f`. Actual normalized Haar and unnormalized HS orthonormal generator. The local-slope form is proved in the subsequent metric module; the full smooth/locally Lipschitz extension remains open. |
+| `LogSobolev/Unitary/SpecialUnitaryPolynomialLSI.lean` | `specialUnitaryPolynomial_entropy_le_fisher`, `specialUnitaryPolynomial_entropy_sq_le` | Proved positive-density `Ent(g) ≤ I(g)/N`, then `Ent(f²) ≤ (4/N) ∫ Γ(f,f)` for every real polynomial observable, without a positivity hypothesis on `f`. Actual normalized Haar and unnormalized HS orthonormal generator. The local-slope form is proved in the subsequent metric module; the full locally Lipschitz metric extension is proved in `SpecialUnitaryLSI.lean`. |
 | `LogSobolev/Geometry/LocalSlopeDerivative.lean` | `localSlope_eq_of_hasDerivAt` | The paper's upper local slope on the real line is the absolute derivative. |
 | `LogSobolev/Unitary/SpecialUnitarySlope.lean` | `specialUnitaryDeriv_le_localSlope`, `specialUnitaryGradient_norm_sq`, `specialUnitaryGamma_le_localSlope_sq` | Verified exponential curves and exact HS gradient coordinates give pointwise actual energy ≤ local metric slope squared, including infinite slopes. |
 | `LogSobolev/Unitary/SpecialUnitaryPolynomialExtension.lean` | `specialUnitaryPolynomial_exists_contDiff_extension`, `specialUnitaryPolynomial_locallyLipschitz` | Every polynomial observable has a globally smooth ambient matrix extension and is locally Lipschitz in the actual HS metric. |
-| `LogSobolev/Unitary/SpecialUnitaryPolynomialMetricLSI.lean` | `specialUnitaryPolynomial_metric_entropy_sq_le`, `specialUnitaryPolynomial_slopeEnergy_ne_top`, `specialUnitaryPolynomial_entropy_sq_le_slope` | Actual local-slope LSI for all polynomial observables, with finite energy, extended constant `2/N`, and real coefficient `4/N`. The full locally Lipschitz `MetricLSI` is not asserted. |
+| `LogSobolev/Unitary/SpecialUnitaryPolynomialMetricLSI.lean` | `specialUnitaryPolynomial_metric_entropy_sq_le`, `specialUnitaryPolynomial_slopeEnergy_ne_top`, `specialUnitaryPolynomial_entropy_sq_le_slope` | Actual local-slope LSI for all polynomial observables, with finite energy, extended constant `2/N`, and real coefficient `4/N`. The full locally Lipschitz `MetricLSI` is supplied by `SpecialUnitaryLSI.lean`. |
 | `LogSobolev/Unitary/PhaseMap.lean` | `phaseMul_dist_le`, `phaseMap_lipschitz` | The full-line phase map has Lipschitz constant `sqrt(3)` for every positive N; no probability argument is needed. |
 | `LogSobolev/Measure/Interval.lean` | `intervalUniform_univ`, `map_intervalUniform` | Normalized Lebesgue measure on the Euclidean subtype `[0,L]` for `L>0`. |
 | `LogSobolev/Unitary/ProductDomain.lean` | `phaseDomainMeasure_probability`, `intervalPhaseMap_lipschitz` | The exact interval × SU domain and probability measure, and the restricted map's Lipschitz bound. |
@@ -154,7 +155,25 @@ The normalized-power construction is also proved:
   `specialUnitaryPolynomial_exists_uniform_entropy_approximation` proves the
   explicit convolution formula, uniform approximation, and squared entropy
   convergence for every continuous real SU observable. No energy bound for
-  the approximants is assumed or claimed.
+  the approximants is assumed or claimed by that module; the energy theorem
+  below supplies the bound.
+
+The completed extension is proved in:
+
+* `Geometry/LocalSlopeAverage.lean`:
+  `ofReal_deriv_integral_sq_le_lintegral_localSlope_sq` controls a differentiable
+  average by squared local slopes of uniformly Lipschitz, possibly nonsmooth
+  summands, using squared difference quotients, Jensen, and reverse Fatou.
+* `Unitary/SpecialUnitaryConvolutionEnergy.lean`:
+  `specialUnitary_convolution_deriv_sq_le`, `specialUnitary_convolution_gamma_le`,
+  and `specialUnitary_convolution_energy_le_slopeEnergy` give directional,
+  pointwise, and integrated energy control for nonnegative normalized convolution.
+  They use actual HS translation isometries, exponential curves, and Haar invariance.
+* `Unitary/SpecialUnitaryLSI.lean`:
+  `specialUnitary_entropy_sq_le_of_locallyLipschitz` and
+  `specialUnitary_metricLSI` are the unconditional full SU(N) conclusions.
+  Their hypotheses contain no supplied heat flow, curvature estimate,
+  approximation, polynomial restriction, or assumed entropy inequality.
 
 ## Convention and semantic checks
 
@@ -204,13 +223,10 @@ Equivalently for the intended applications, the desired real inequality is:
         ∫ U, (localSlope f U).toReal ^ 2 ∂unitaryHaar (Fin N)
 ```
 
-The reference route still needs these statements:
+The SU(N) statement is proved by `specialUnitary_metricLSI`. The reference
+route to U(N) still needs these statements:
 
 ```lean
--- SU(N), with exactly the unnormalized metric and Haar probability:
-∀ (N : ℕ), 2 ≤ N →
-  MetricLSI (specialUnitaryHaar (Fin N)) (2 / (N : ℝ≥0))
-
 -- The Euclidean interval, all locally Lipschitz finite-entropy tests:
 ∀ (N : ℕ), 0 < N →
   MetricLSI (intervalUniform (phaseIntervalLength N)) (2 / (N : ℝ≥0))
@@ -251,34 +267,12 @@ setting needs the appropriate gradient-to-local-slope identification; the
 inspected Gaussian tensorization is not immediately that theorem. Prove a one-dimensional
 circle/interval LSI and scaling, including the circle case for N=1.
 
-The [SU-specific proof boundary](SU_LSI.md) describes the algebraic
-normalization, smooth Lie group, and tangent-inclusion proofs. The geometric
-Lie-bracket identification, Riemannian metric, and curvature computation remain
-to be established.
-The sum-of-squares Γ₂ argument is now closed: the generator commutes with
-invariant derivatives, its actual iterated carré du champ equals the
-second-derivative sum, and `Γ₂ ≥ (N/2)Γ` is proved for every smooth real test.
-This avoids needing a geometric Ricci theorem for the current operator route.
-Haar integration by parts and the integrated Γ₂ identity are now proved.
-The entropy-dissipation formula for a supplied positive differentiable family
-in the heat direction is also proved. Heat solutions are now constructed on every finite-degree
-polynomial-observable space, with the actual PDE, preservation of bounds,
-supremum-norm contraction, normalized Haar-mass conservation, and all regularity
-needed for entropy and Fisher differentiation. Exponential Fisher decay at rate
-`N` is proved, including time zero. Connectedness and zero-energy/kernel constancy are proved.
-The polynomial heat orbit now converges in its actual supremum norm to the Haar
-mean; limiting entropy is proved zero. This yields the polynomial LSI
-`Ent(f²) ≤ (4/N) ∫ Γ(f,f)` with no sign restriction on `f`, after regularizing
-squares and taking the limit. The remaining SU step is extension to arbitrary
-smooth and locally Lipschitz functions, with verified energy approximation and
-control of the approximants' energies by the original local-slope energy. The
-pointwise energy-to-slope bound, local Lipschitz regularity of all polynomial
-observables, and the finite-energy polynomial metric LSI are now proved. Uniform polynomial
-density alone would not establish the energy bound. Consistency across degrees
-and general heat extension remain unproved but can be bypassed by extending the
-proved polynomial inequality directly. The abstract
-`markov-semigroups` class does not eliminate these obligations. Its assumed
-entropy decay must not be passed off as a proved curvature criterion.
+The [completed SU proof](SU_LSI.md) supplies the `2/N` factor unconditionally,
+including locally Lipschitz tests. Its route uses actual sum-of-squares Γ₂ and
+finite-degree heat, followed by verified positive convolution approximation.
+It requires neither a Ricci theorem nor a general heat semigroup on all smooth
+functions. The custom assumptions in the inspected `markov-semigroups` project
+are not imported as foundations.
 
 Once the analytic ingredients exist, `unitary_metricLSI_of_phaseDomain`
 already assembles the result with constant `6/N`; `MetricLSI.real_form` removes
@@ -286,19 +280,22 @@ the compact regularity side conditions. A verified Herbst argument is a later ta
 
 ## Verification and commits
 
+The commit history below records the proof boundary at each milestone; later
+milestones supersede earlier open obligations.
+
 Verification performed on 2026-10-10 with Lean 4.28.0 and the pinned Mathlib
 commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
 
-* `lake build`: passed for the complete library (3112 dependency/build jobs,
+* `lake build`: passed for the complete library (3115 dependency/build jobs,
   primarily cached Mathlib artifacts).
 * `lake env lean LogSobolev/Examples.lean`: passed; the examples compile as an
   independent client importing the public root module.
 * `lake env lean LogSobolev/Audit.lean`: passed. The automated traversal checked
-  **783 declarations** in the `LogSobolev` namespace, including definitions,
+  **792 declarations** in the `LogSobolev` namespace, including definitions,
   instances, and generated auxiliaries. Every transitive axiom was one of
   `propext`, `Classical.choice`, or `Quot.sound`. No `sorryAx` or custom axiom
   was present in those dependency closures.
-* The audit also executes 233 `#print axioms` commands, prints the core
+* The audit also executes 242 `#print axioms` commands, prints the core
   definitions, and prints fully elaborated types for the trace normalization,
   phase-map Lipschitz theorem, U(N) regularity theorem, exact Haar identity,
   conditional final LSI transfer, product entropy chain rule, and SU algebra
@@ -526,6 +523,21 @@ Completed milestones:
   full audit pass: 783 declarations, 233 explicit axiom prints, only the three
   standard foundational axioms. The averaged differential-energy bound for
   locally Lipschitz input remains unproved.
+
+* `1e46e9a`: squared derivatives of integral averages are bounded by averaged
+  squared local slopes, using Jensen and reverse Fatou. Applied to actual
+  normalized polynomial convolution on SU(N), this bounds the approximants'
+  differential energy by the input's metric slope energy. Uniform entropy
+  convergence then proves `specialUnitary_entropy_sq_le_of_locallyLipschitz`
+  and `specialUnitary_metricLSI` in `LogSobolev/Unitary/SpecialUnitaryLSI.lean`:
+  all positive dimensions, all locally Lipschitz real observables, actual
+  normalized Haar and unnormalized Hilbert–Schmidt metric, real coefficient
+  `4/N` and LSI constant `2/N`. No approximation or analytic criterion is
+  assumed in these conclusions. Build (3115 jobs), independent arbitrary-N,
+  SU(1), and nonconstant SU(2) distance examples pass. The final audit exits
+  successfully: 792 recursively audited declarations, 242 explicit axiom
+  prints, only `propext`, `Classical.choice`, and `Quot.sound`. The larger U(N)
+  theorem still needs the interval/circle LSI and metric product tensorization.
 
 The report and README are committed separately after these verified proof
 milestones; use `git log --oneline` to see the documentation commit as well.

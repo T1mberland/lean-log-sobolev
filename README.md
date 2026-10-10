@@ -1,6 +1,7 @@
 # Logarithmic Sobolev infrastructure for U(N)
 
-**Status: verified partial development. Theorem 15 is not proved.**
+**Status: SU(N) LSI is proved for all locally Lipschitz functions.
+The full U(N) Theorem 15 remains open.**
 
 This Lean 4.28.0 / Mathlib project develops components for the logarithmic
 Sobolev inequality in [Meckes–Meckes](https://arxiv.org/pdf/1210.2681).
@@ -46,7 +47,7 @@ Proved components include:
   sum-of-squares operator whose carré du champ is proved to be first-derivative
   energy. Generator commutation, the Γ₂ identity, and `Γ₂ ≥ (N/2) Γ` are
   now proved for all smooth real SU tests. The entropy inequality is proved
-  on polynomial tests below; the full smooth and locally Lipschitz classes remain open.
+  on polynomial tests below, followed by a proved extension to all locally Lipschitz tests.
 * Haar integration by parts for actual SU derivatives and the generator,
   with symmetry, nonpositivity, and the integrated estimate
   `(N/2) ∫ Γ(f,f) ≤ ∫ (Lf)²` for every smooth real test.
@@ -84,7 +85,8 @@ Proved components include:
   extension and is locally Lipschitz, with finite slope energy. The polynomial
   LSI now holds with the **actual local slope**, both in extended form with
   constant `2/N` and in real-integral form with coefficient `4/N`.
-  Extension to all locally Lipschitz functions remains open.
+  Positive convolution and reverse Fatou now extend the bound to every locally
+  Lipschitz real function, including SU(1), with the exact constant `2/N`.
 * The normalized interval and its L² product with SU(N).
 * The paper's phase map into U(N), with the `sqrt(3)` Lipschitz bound.
 * **The exact short-interval Haar decomposition (Lemma 16)** for every positive N,
@@ -94,10 +96,13 @@ Proved components include:
 * A 1-Lipschitz diagonal coordinate that is not Haar-a.e. constant in every
   positive dimension.
 
-The full metric LSI on SU(N), U(N), the interval, and the circle remains open.
-The proved SU inequality currently covers polynomial observables with both
-actual carré-du-champ energy and the paper's local metric slope. The U(N) transfer still takes an explicit product
-`MetricLSI` assumption, which this development has not discharged.
+`specialUnitary_metricLSI` in
+[`SpecialUnitaryLSI.lean`](LogSobolev/Unitary/SpecialUnitaryLSI.lean) proves the
+full SU(N) result for all positive dimensions. The real theorem has coefficient
+`4/N` and requires only local Lipschitz regularity.
+
+The U(N), interval, and circle inequalities and L²-product tensorization remain
+open. The U(N) transfer still takes an explicit product `MetricLSI` assumption.
 
 ## Build and audit
 
@@ -125,7 +130,7 @@ example : LipschitzWith ⟨Real.sqrt 3, Real.sqrt_nonneg 3⟩ (intervalPhaseMap 
 See [the source audit](docs/ECOSYSTEM.md) for inspected versions, actual
 external theorem assumptions and the `markov-semigroups` trust-boundary findings.
 See [the mathematical report](docs/REPORT.md) for the exact scope and open goals,
-and [the SU proof boundary](docs/SU_LSI.md) for the remaining geometric and analytic steps.
+and [the completed SU proof](docs/SU_LSI.md) for the SU theorem and its verification.
 
 ## Layout
 

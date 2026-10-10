@@ -1,22 +1,26 @@
-# SU(N) LSI: current proof boundary
+# SU(N) logarithmic Sobolev inequality
 
-**The SU(N) LSI is proved with the paper's actual local Hilbert–Schmidt slope
-on every polynomial observable. It is not yet proved on all smooth or locally
-Lipschitz functions.**
-The exact remaining target, with the existing definitions, is:
+**The full SU(N) metric LSI is proved for every locally Lipschitz real function
+and every positive dimension, including SU(1).**
+
+The public theorem is in `LogSobolev/Unitary/SpecialUnitaryLSI.lean`:
 
 ```lean
-open LogSobolev MeasureTheory
-open scoped NNReal Matrix.Norms.Frobenius
-
--- An unproved goal, not a declaration in the library:
-∀ N : ℕ, 2 ≤ N →
-  MetricLSI (specialUnitaryHaar (Fin N)) (2 / (N : ℝ≥0))
+LogSobolev.specialUnitary_metricLSI
+  (hN : 0 < Fintype.card n) :
+  MetricLSI (specialUnitaryHaar n) (2 / (Fintype.card n : ℝ≥0))
 ```
 
-This asks for entropy coefficient `4/N`, the existing normalized Haar measure
-on `Matrix.specialUnitaryGroup (Fin N) ℂ`, and the local metric slope of every
-locally Lipschitz real function. No alternative energy or measure is substituted.
+`specialUnitary_entropy_sq_le_of_locallyLipschitz` gives the real form directly:
+`Ent(f²) ≤ (4/N) ∫ (localSlope f).toReal²`. Its only function hypothesis is
+`LocallyLipschitz f`. The group is Mathlib's actual
+`Matrix.specialUnitaryGroup n ℂ`, the measure is normalized Haar probability,
+and the metric is the **unnormalized Hilbert–Schmidt metric**. Compact regularity
+proves square, log-moment, and slope-energy integrability.
+
+This closes the SU ingredient of the Meckes–Meckes appendix proof. The interval
+LSI, L²-product tensorization, and U(1) analytic case are still needed for the
+larger U(N) Theorem 15 goal; they are not claimed here.
 
 ## Algebraic steps now proved
 
@@ -137,7 +141,8 @@ the actual manifold derivative of inclusion at `U` with `A ↦ U A`.
 `specialUnitary_mfderiv_val_norm` proves equality of its ambient Frobenius norm
 and the su model-coordinate norm. Norms are specified explicitly; no arbitrary
 tangent-space norm or Riemannian structure is assumed. The smooth Riemannian
-metric, connection/curvature formula, and analytic LSI argument remain open.
+metric and connection/curvature formula are not constructed. The completed LSI
+proof below uses the actual sum-of-squares operator instead.
 
 ## Invariant fields and actual differential operators
 
@@ -377,7 +382,7 @@ This supplies the curvature part of the Fisher-information argument. The
 spatial dissipation identity and a conditional time-derivative theorem are now
 proved below. Polynomial heat existence, its required regularity, and exponential
 Fisher decay, equilibrium, and polynomial LSI are established later in this
-report. Extension beyond the polynomial class remains open.
+report. The final convolution argument below extends to every locally Lipschitz function.
 
 ## Fisher dissipation now proved under explicit regularity
 
@@ -625,140 +630,55 @@ Independent examples check finite **strictly positive** slope energy on a concre
 nonconstant SU(2) polynomial, the real inequality for a centered quadratic with
 a zero at the identity, and the exact constant `2/N` for arbitrary positive `N`.
 
-## Remaining route to the theorem
+## Completed extension to locally Lipschitz functions
 
-**Polynomial local-slope LSI is now proved.** The remaining central task is an
-energy-controlled approximation covering the whole locally Lipschitz class.
-Uniform polynomial density alone does not suffice: the approximants' energies
-must also be controlled by the original function's local-slope energy.
+`Geometry/LocalSlopeAverage.lean` proves
+`ofReal_deriv_integral_sq_le_lintegral_localSlope_sq`. If summands are continuous
+in the compact probability-space variable and uniformly Lipschitz in a real
+time variable, and their average is differentiable, its squared derivative is
+bounded by the average of their squared local slopes. The summands need not be
+differentiable. The proof applies Jensen to difference quotients at
+`t_j = 1/(j+1)`, then reverse Fatou with a finite constant dominator. The
+sequential limsup is bounded by the actual metric local slope.
 
-The polynomial convolution construction is now proved in
-`Unitary/SpecialUnitaryPolynomialConvolution.lean`: for any continuous `f` and
-polynomial kernel `k` of degree at most `d`, there is an actual polynomial `p`
-of degree at most `d` with
-
-`p(U) = ∫ f(V) k(U⁻¹ V) dHaar(V) = ∫ f(U V) k(V) dHaar(V)`.
-
-The proof uses degree preservation under real linear matrix pullbacks
-(`SpecialUnitaryPolynomialPullback.lean`), integration in the closed
-finite-dimensional polynomial subspace, and proved Haar invariance.
-Normalized kernels preserve the Haar mean; nonnegative normalized kernels
-preserve pointwise upper bounds. No convergence or energy estimate is assumed
-in these results.
-
-`Measure/EntropyContinuity.lean` proves entropy and squared entropy continuous
-in the uniform norm on continuous real functions on any compact space with a
-finite measure. It includes zeros and sequences of varying polynomial degree.
-
-The approximate-identity construction is now proved. In
-`SpecialUnitaryPeak.lean`, the affine polynomial `q(U) = (N + Re Tr U)/(2N)`
-is nonnegative, equals one at identity, and is strictly less than one elsewhere
-for `N > 0`. The exact identities `‖U-I‖²_HS = 2N - 2 Re Tr U` and
-`‖U+I‖²_HS = 2N + 2 Re Tr U` establish its metric normalization and bounds.
-`SpecialUnitaryPowerKernel.lean` represents `k_j = q^j / ∫ q^j` as an actual
-polynomial of degree at most `j`, proves positive normalization and mass one,
-and proves vanishing mass outside every open identity neighborhood.
-
-The concentration argument is reusable: `Measure/PowerKernel.lean` compares
-sets where `q ≤ a` and `b ≤ q` to obtain the geometric bound
-`(μ(s)/μ(t)) (a/b)^j`. `Measure/PowerKernelApproximation.lean` proves convergence
-of averages of continuous Banach-valued functions. Applying it to the space of
-continuous SU observables gives **uniform convergence**, not just pointwise
-convergence.
-
-`specialUnitaryPolynomial_exists_uniform_entropy_approximation` in
-`SpecialUnitaryPolynomialApproximation.lean` supplies degree-`j` polynomials,
-their exact convolution formula, uniform convergence, and squared entropy
-convergence for every continuous real function, including nonsmooth ones.
-
-It remains to prove the averaged energy bound using Haar invariance and the
-HS-isometric group translations. A sufficient precise statement, for a locally Lipschitz
-`f : SU(N) → ℝ`, `hf : LocallyLipschitz f`, and HS orthonormal basis `b`, is:
+`Unitary/SpecialUnitaryConvolutionEnergy.lean` applies this result to
+`f(U exp(tA) V)` under the probability measure with density `k(V)` against Haar.
+Compact local Lipschitz regularity supplies a global bound, and verified left
+and right HS isometries give speed `‖A‖`. Taking `A` to be the already constructed
+smooth gradient gives the pointwise carré-du-champ bound. Tonelli and actual
+right Haar invariance then prove:
 
 ```lean
--- The uniform-convergence part is proved; the joint energy assertion is still unproved:
-∃ (d : ℕ → ℕ) (p : ∀ k, specialUnitaryPolynomialSpace (n := Fin N) (d k)),
-  Filter.Tendsto
-    (fun k => ‖specialUnitaryPolynomialToContinuous (d k) (p k) -
-      (⟨f, hf.continuous⟩ : C(Matrix.specialUnitaryGroup (Fin N) ℂ, ℝ))‖)
-    Filter.atTop (nhds 0) ∧
-  ∀ k, ENNReal.ofReal
-    (∫ U, specialUnitaryGamma b (p k).val (p k).val U ∂specialUnitaryHaar (Fin N)) ≤
-    slopeEnergy (specialUnitaryHaar (Fin N)) f
+specialUnitary_convolution_energy_le_slopeEnergy
+-- For any nonnegative continuous kernel of Haar mass one, any locally
+-- Lipschitz f, and any smooth p with p(U) = ∫ f(UV) k(V) dHaar(V):
+-- ofReal (∫ Γ(p,p) dHaar) ≤ slopeEnergy Haar f.
 ```
 
-Together with the now-proved entropy limit under uniform convergence, this
-would extend the existing polynomial energy inequality directly. It does not
-require controlling the approximants' full local-slope energy. The approximation
-statement and full `MetricLSI` target at the top of this report remain unproved.
-The bottleneck is the analytic derivative/local-slope bound for averaging a
-nonsmooth function. Kernel concentration, uniform polynomial approximation,
-and entropy convergence are now proved.
+The approximation uses the degree-one peak
+`q(U) = (N + Re Tr U)/(2N)`, uniquely maximized at identity, and normalized
+powers `k_j = q^j / ∫ q^j`. `SpecialUnitaryPeak.lean` proves the exact HS
+trace identities and peak bounds. `SpecialUnitaryPowerKernel.lean` constructs
+actual polynomial probability densities and proves concentration. The reusable
+`Measure/PowerKernel.lean` gives a geometric tail bound; the Banach-valued
+result in `Measure/PowerKernelApproximation.lean` yields **uniform** convergence
+of the polynomial convolution approximants. `EntropyContinuity.lean` gives
+squared entropy convergence, including functions with zeros.
 
-More specifically, it suffices to prove the following for the kernels already
-constructed, with `hf : LocallyLipschitz f` and HS orthonormal basis `b`:
+`Unitary/SpecialUnitaryLSI.lean` applies the proved polynomial energy LSI to each
+approximant, bounds every approximant's energy by the original slope energy,
+and passes to the entropy limit. The resulting full theorem has no polynomial,
+smoothness, supplied heat flow, curvature criterion, approximation, or energy
+estimate among its hypotheses. It is valid for every positive dimension.
 
-```lean
--- Unproved energy estimate for the existing approximants:
-∀ (j : ℕ) (p : specialUnitaryPolynomialSpace (n := Fin N) j),
-  (∀ U, p.val U = ∫ V, f (U * V) *
-    (specialUnitaryPowerKernel (n := Fin N) j).val V ∂specialUnitaryHaar (Fin N)) →
-  ENNReal.ofReal
-    (∫ U, specialUnitaryGamma b p.val p.val U ∂specialUnitaryHaar (Fin N)) ≤
-    slopeEnergy (specialUnitaryHaar (Fin N)) f
-```
+A general heat semigroup on all smooth functions, a Ricci theorem, and an
+imported Bakry–Émery axiom are unnecessary for this proof. The finite-degree
+heat construction and the verified approximation close the argument.
 
-For energy control, use difference quotients along the verified exponential
-curves and Mathlib's `MeasureTheory.limsup_lintegral_le` (reverse Fatou), with
-finite domination from compact local Lipschitz regularity. The intended estimate
-is `|D_A p(U)| ≤ ‖A‖ ∫ k(V) localSlope(f)(UV) dHaar(V)`. Choosing the proved
-polynomial gradient direction, applying Jensen to the square, and integrating
-using Haar invariance would give the required energy bound. This is a proposed
-proof route, not an imported assertion or a proved theorem in the library.
-
-Consistency across finite-degree heat constructions and extension of heat to
-arbitrary smooth functions remain unproved, but are not needed if the polynomial
-inequality is extended directly by this verified approximation route.
-
-A precise **unproved smooth intermediate goal**, for `N ≥ 2`, a real orthonormal
-basis `b` of su(N), and `f` smooth on SU(N), is
-
-```lean
-entropy (specialUnitaryHaar (Fin N)) (fun U => f U ^ 2) ≤
-  (4 / (N : ℝ)) * ∫ U, specialUnitaryGamma b f f U ∂specialUnitaryHaar (Fin N)
-```
-
-The sufficient energy-to-local-slope comparison is now proved. The extension
-to all locally Lipschitz functions remains a proof obligation, not assumed data. The operator route follows the approach described
-in [Rothaus, *Hypercontractivity and the Bakry–Emery criterion for compact Lie
-groups*, pp. 361–363](https://www.researchgate.net/publication/243022735_Hypercontractivity_and_the_Bakry-Emery_criterion_for_compact_Lie_groups).
-The source is a mathematical reference, not an imported Lean foundation.
-
-The alternative geometric route remains:
-
-1. Use the proved smooth group operations and inclusion derivative to construct
-   the Hilbert–Schmidt bi-invariant
-   Riemannian metric. For the geometric bracket, reuse Mathlib’s
-   `GroupLieAlgebra` and `mulInvariantVectorField` and identify their bracket
-   with the matrix commutator; the algebraic subalgebra alone is not that proof.
-   Prove the geometric Ricci formula `Ric = −¼ Killing`;
-   the now-proved Killing coefficient then yields the normalization `N/2`.
-2. Prove an applicable curvature-to-LSI criterion. A diffusion route needs a
-   constructed heat semigroup, invariant probability identified with Haar,
-   entropy dissipation, the gradient/Fisher-information estimate, and convergence
-   to equilibrium. None of those analytic estimates is supplied by the Casimir
-   computation.
-3. Obtain the locally Lipschitz formulation, including any approximation and
-   identification of the gradient energy with local metric slopes required by
-   the analytic proof.
-4. Transfer from the intrinsic metric to the Hilbert–Schmidt metric by proving
-   the distance comparison and applying the existing Lipschitz transport API.
-
-The alternative geodesic-LSI-to-Hilbert–Schmidt route is the one cited in the
-[Meckes–Meckes appendix, proof of Theorem 15](https://arxiv.org/pdf/1210.2681).
-Its citation of Bakry–Émery is a mathematical reference, not an imported Lean
-proof. The final bottleneck remains geometric and analytic, not an assembly
-or constant-arithmetic problem.
+Independent examples include arbitrary positive dimensions, SU(1), and the
+nonconstant distance-to-identity observable on SU(2), with its integrability
+and finite slope energy proved. Earlier examples also prove strictly positive
+finite slope energy for a concrete nonconstant quadratic observable.
 
 ## Verification
 
@@ -789,9 +709,11 @@ ambient extension and local Lipschitz regularity, and finite-energy polynomial
 metric LSI), and `e41ed2b` (uniform entropy continuity, degree-preserving
 pullbacks, polynomial convolution, and normalized averaging identities), and
 `b391128` (concentrating polynomial probability kernels, Banach-valued
-approximation, and uniform/entropy approximation of continuous SU observables).
+approximation, and uniform/entropy approximation of continuous SU observables),
+and `1e46e9a` (averaged local-slope energy control and the full SU(N) LSI
+for every locally Lipschitz real observable).
 `lake build` and the independent `Examples.lean`
-compilation pass. The recursive `Audit.lean` check passes for all 783 project
+compilation pass. The recursive `Audit.lean` check passes for all 792 project
 declarations, accepting only `propext`, `Classical.choice`, and `Quot.sound`.
 It prints the fully elaborated commutator-energy, curve-velocity, and
 exponential-speed, conjugation-derivative, and Killing-contraction, exact-coefficient, and real-orthonormal-energy theorems, exposes the Frobenius instances, and inspects the
@@ -804,5 +726,7 @@ conditional time-dependent Fisher results, the maximum principle, constructed
 affine and polynomial heat solutions, their regularity and Fisher decay, and
 actual U(N)/SU(N) connectedness, kernel constancy, polynomial equilibrium, and
 polynomial entropy inequalities, the actual local-slope comparison, ambient
-extension/regularity, and polynomial metric LSI above. They do not certify the full locally
-Lipschitz metric LSI.
+extension/regularity, polynomial convolution approximation, and the averaged
+energy bound. They also certify the full locally Lipschitz SU(N) metric LSI
+and its real-valued form, whose fully elaborated statements are printed.
+The larger U(N) theorem remains open.
