@@ -1,5 +1,8 @@
 import LogSobolev.Measure.Entropy
 import LogSobolev.Measure.ProductEntropy
+import LogSobolev.Measure.EntropyVariational
+import LogSobolev.Measure.ParametricEntropy
+import LogSobolev.Measure.ProductEntropySubadditivity
 import LogSobolev.Measure.LSI
 import LogSobolev.Measure.Interval
 import LogSobolev.Geometry.LocalSlope

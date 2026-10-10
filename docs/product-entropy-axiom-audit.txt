@@ -1,0 +1,66 @@
+Recursive axiom audit passed for 808 LogSobolev declarations.
+'LogSobolev.mul_log_le_mul_log_add_sub' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.integral_mul_log_le_entropy_of_integral_pos' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.integral_mul_log_le_entropy' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.continuous_parametric_entropy' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.entropy_marginal_le_integral_entropy' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.entropy_prod_le_integral_entropy_add' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.entropy_prod_le_integral_entropy_add_of_continuous_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'LogSobolev.entropy_prod_le_integral_entropy_add_of_continuous' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+theorem LogSobolev.entropy_prod_le_integral_entropy_add_of_continuous.{u_1, u_2} : ∀ {X : Type u_1} {Y : Type u_2}
+  [inst : MeasurableSpace X] [inst_1 : MeasurableSpace Y] {μ : MeasureTheory.Measure X} {ν : MeasureTheory.Measure Y}
+  [MeasureTheory.IsProbabilityMeasure μ] [MeasureTheory.IsProbabilityMeasure ν] {g : X × Y → ℝ} [inst_4 : MetricSpace X]
+  [inst_5 : MetricSpace Y] [CompactSpace X] [CompactSpace Y] [BorelSpace X] [BorelSpace Y],
+  Continuous g →
+    (∀ (p : X × Y), 0 ≤ g p) →
+      LogSobolev.entropy (μ.prod ν) g ≤
+        ∫ (x : X), LogSobolev.entropy ν fun y => g (x, y) ∂μ + ∫ (y : Y), LogSobolev.entropy μ fun x => g (x, y) ∂ν :=
+fun {X} {Y} [MeasurableSpace X] [MeasurableSpace Y] {μ} {ν} [MeasureTheory.IsProbabilityMeasure μ]
+    [MeasureTheory.IsProbabilityMeasure ν] {g} [MetricSpace X] [MetricSpace Y] [CompactSpace X] [CompactSpace Y]
+    [BorelSpace X] [BorelSpace Y] hg hn =>
+  have hleft :=
+    LogSobolev.continuous_parametric_entropy (Continuous.add (Continuous.comp hg continuous_snd) continuous_fst);
+  have hfirst :=
+    have he :=
+      LogSobolev.continuous_parametric_entropy
+        (Continuous.add (Continuous.comp hg (Continuous.prodMk (Continuous.snd continuous_fst) continuous_snd))
+          (Continuous.fst continuous_fst));
+    Eq.mp
+      (congrArg Continuous
+        (funext fun x =>
+          congrFun' (congrArg MeasureTheory.integral MeasureTheory.Measure.restrict_univ) fun y =>
+            LogSobolev.entropy ν fun y_1 => g (y, y_1) + x))
+      (continuous_parametric_integral_of_continuous he isCompact_univ);
+  have hsecond :=
+    have he :=
+      LogSobolev.continuous_parametric_entropy
+        (Continuous.add (Continuous.comp hg (Continuous.prodMk continuous_snd (Continuous.snd continuous_fst)))
+          (Continuous.fst continuous_fst));
+    Eq.mp
+      (congrArg Continuous
+        (funext fun x =>
+          congrFun' (congrArg MeasureTheory.integral MeasureTheory.Measure.restrict_univ) fun y =>
+            LogSobolev.entropy μ fun x_1 => g (x_1, y) + x))
+      (continuous_parametric_integral_of_continuous he isCompact_univ);
+  have heps :=
+    Filter.mp_mem self_mem_nhdsWithin
+      (Filter.univ_mem'
+        (id fun t ht =>
+          LogSobolev.entropy_prod_le_integral_entropy_add_of_continuous_pos (Continuous.add hg continuous_const)
+            fun p => add_pos_of_nonneg_of_pos (hn p) ht));
+  have h :=
+    le_of_tendsto_of_tendsto (Filter.Tendsto.mono_left (Continuous.continuousAt hleft) nhdsWithin_le_nhds)
+      (Filter.Tendsto.mono_left (Continuous.continuousAt (Continuous.add hfirst hsecond)) nhdsWithin_le_nhds) heps;
+  Eq.mp
+    (congr (congrArg LE.le (congrArg (LogSobolev.entropy (μ.prod ν)) (funext fun p => add_zero (g p))))
+      (congr
+        (congrArg HAdd.hAdd
+          (congrArg (MeasureTheory.integral μ)
+            (funext fun x => congrArg (LogSobolev.entropy ν) (funext fun y => add_zero (g (x, y))))))
+        (congrArg (MeasureTheory.integral ν)
+          (funext fun y => congrArg (LogSobolev.entropy μ) (funext fun x => add_zero (g (x, y)))))))
+    h

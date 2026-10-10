@@ -3,10 +3,11 @@ import LogSobolev.Geometry.CompactRegularity
 
 /-! # Conditional final transfer to U(N)
 
-The metric and measure-theoretic transfer steps are complete; the SU curvature
-and analytic arguments remain open.
+The metric and measure-theoretic transfer steps and SU(N) LSI are proved.
+The interval LSI and product metric-energy argument remain open.
 The source LSI below is an explicit, still-unproved analytic hypothesis. This
-module does not establish LSI on the interval, SU, their product, or U.
+module does not establish LSI on the interval, the product, or U.
+The SU result is proved separately in `SpecialUnitaryLSI.lean`.
 -/
 
 open Matrix MeasureTheory
