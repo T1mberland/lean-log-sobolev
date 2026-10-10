@@ -64,6 +64,37 @@ curve velocities without claiming a manifold atlas or Levi-Civita connection.
 Independent examples test arbitrary algebra elements and the determinant-one
 exponential of the non-skew trace-zero matrix `diag(1, -1)`.
 
+## Actual local exponential coordinates now proved
+
+`Unitary/MatrixExpDeterminant.lean:det_matrix_exp` proves
+`det(exp A) = Complex.exp(trace A)` for **every** complex matrix, by the
+determinant derivative and an integrating factor. The earlier trace-zero
+exponential theorem is now a specialization of this result.
+
+`Unitary/MatrixLocalExponential.lean` applies Mathlib's inverse function theorem
+to matrix exponential, whose strict derivative at zero is the identity.
+`matrixExpLocalHomeomorph` is a genuine ambient local homeomorphism, with zero
+in its source and identity in its target. Its inverse has identity strict
+derivative and every order of smoothness at identity.
+
+`exists_specialUnitary_exp_neighborhood` proves that on a sufficiently small
+open Frobenius neighborhood of zero, exponential is injective and
+`exp A ∈ SU` is equivalent to `A ∈ su`. For the unitary condition it uses
+adjoint compatibility, exponential inverses, and local injectivity; for the
+determinant condition it uses the proved determinant identity and scalar
+exponential injectivity in a strip around zero.
+
+`Unitary/SpecialUnitaryLocalCoordinates.lean:exists_specialUnitary_exp_homeomorph`
+then constructs a homeomorphism between an **open neighborhood of zero in su**
+and an **open neighborhood of identity in the actual matrix SU group**, whose
+forward map is matrix exponential. An independent example extracts generators
+for every SU(2) element in this open neighborhood. This establishes genuine
+local coordinates, without assuming an SU manifold instance.
+
+It does not yet install a smooth atlas, prove smooth transition maps, identify
+the manifold tangent bundle, or construct a Riemannian connection. Ambient
+inverse smoothness at identity alone does not discharge those obligations.
+
 ## Inner product, adjoint action, and real contraction
 
 `Unitary/SpecialUnitaryInner.lean` installs the real inner product
@@ -135,8 +166,9 @@ needed for its abstract LSI implication and cannot supply this missing proof.
 
 ## Remaining route to the theorem
 
-1. Upgrade the proved curve-velocity characterization to a manifold tangent
-   identification for the actual matrix SU group, and construct the Hilbert–Schmidt bi-invariant
+1. Extend the proved exponential local coordinates into a smooth atlas and
+   verify the transition maps. Identify the manifold tangent space with the
+   proved curve velocities, and construct the Hilbert–Schmidt bi-invariant
    Riemannian metric. Prove the geometric Ricci formula `Ric = −¼ Killing`;
    the now-proved Killing coefficient then yields the normalization `N/2`.
 2. Prove an applicable curvature-to-LSI criterion. A diffusion route needs a
@@ -160,12 +192,13 @@ or constant-arithmetic problem.
 
 Proof commits: `0f05569` (algebra), `339112a` (curves), and `5bf0ed6`
 (inner product, adjoint isometry, and real Killing contraction), followed by
-`5c6ebdb` (exact Killing coefficient and real orthonormal energy).
+`5c6ebdb` (exact Killing coefficient and real orthonormal energy), and
+`2387b3e` (determinant identity and actual local exponential coordinates).
 `lake build` and the independent `Examples.lean`
-compilation pass. The recursive `Audit.lean` check passes for all 306 project
+compilation pass. The recursive `Audit.lean` check passes for all 327 project
 declarations, accepting only `propext`, `Classical.choice`, and `Quot.sound`.
 It prints the fully elaborated commutator-energy, curve-velocity, and
 exponential-speed, conjugation-derivative, and Killing-contraction, exact-coefficient, and real-orthonormal-energy theorems, exposes the Frobenius instances, and inspects the
 Lie-algebra, trace-pairing, exponential-curve, and inner-product definitions.
 The full output is in [axiom-audit.txt](axiom-audit.txt). These checks certify
-the algebraic and curve results above, not an SU(N) LSI theorem.
+the algebraic, curve, and local-coordinate results above, not an SU(N) LSI theorem.

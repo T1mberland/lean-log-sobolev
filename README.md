@@ -27,6 +27,8 @@ Proved components include:
 * The real Hilbert–Schmidt inner product on the SU Lie algebra, isometric
   unitary conjugation, the exact Killing coefficient `−2N`, and the `2N`
   commutator-energy identity for every real orthonormal basis.
+* The full determinant-exponential identity and exponential homeomorphisms
+  between open identity neighborhoods in su(N) and the actual SU(N) group.
 * The normalized interval and its L² product with SU(N).
 * The paper's phase map into U(N), with the `sqrt(3)` Lipschitz bound.
 * **The exact short-interval Haar decomposition (Lemma 16)** for every positive N,
