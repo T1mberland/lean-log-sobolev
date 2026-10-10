@@ -292,3 +292,34 @@ set_option pp.all true in
 #check @LogSobolev.specialUnitaryLinearHeat_hasDerivAt
 set_option pp.all true in
 #check @LogSobolev.specialUnitaryLinearHeat_pos
+
+#print axioms LogSobolev.derivation_mem_submodule_pow
+#print axioms LogSobolev.specialUnitaryPolynomialSpace_finite
+#print axioms LogSobolev.specialUnitaryDerivEnd_mem_polynomial
+#print axioms LogSobolev.specialUnitaryLaplacianEnd_mem_polynomial
+#print axioms LogSobolev.specialUnitaryPolynomialHeat_add
+#print axioms LogSobolev.specialUnitaryPolynomialHeat_hasDerivAt_apply
+#print axioms LogSobolev.specialUnitaryPolynomialHeat_pos
+#print axioms LogSobolev.specialUnitaryPolynomialHeat_norm_le
+#print axioms LogSobolev.specialUnitaryPolynomialHeat_integral
+#print axioms LogSobolev.specialUnitaryPolynomialForwardHeat_clm_hasDerivAt
+#print axioms LogSobolev.specialUnitaryPolynomialForwardHeat_hasDerivAt_entropy
+#print axioms LogSobolev.specialUnitaryPolynomialForwardHeat_hasDerivAt_fisher
+#print axioms LogSobolev.specialUnitaryPolynomialForwardHeat_fisher_deriv_le
+#print axioms LogSobolev.le_exp_mul_of_deriv_le
+#print axioms LogSobolev.specialUnitaryPolynomialForwardHeat_fisher_le_exp
+#print LogSobolev.specialUnitaryAffineSpace
+#print LogSobolev.specialUnitaryPolynomialSpace
+#print LogSobolev.specialUnitaryPolynomialToContinuous
+#print LogSobolev.specialUnitaryPolynomialNormedAddCommGroup
+#print LogSobolev.specialUnitaryPolynomialLaplacian
+#print LogSobolev.specialUnitaryPolynomialHeat
+#print LogSobolev.specialUnitaryPolynomialForwardHeat
+set_option pp.all true in
+#check @LogSobolev.specialUnitaryPolynomialHeat_hasDerivAt_apply
+set_option pp.all true in
+#check @LogSobolev.specialUnitaryPolynomialHeat_integral
+set_option pp.all true in
+#check @LogSobolev.specialUnitaryPolynomialForwardHeat_hasDerivAt_fisher
+set_option pp.all true in
+#check @LogSobolev.specialUnitaryPolynomialForwardHeat_fisher_le_exp

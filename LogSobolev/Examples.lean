@@ -449,3 +449,72 @@ example (t : ℝ) (U : Matrix.specialUnitaryGroup (Fin 3) ℂ)
     HasDerivAt (fun r => specialUnitaryLinearHeat b l 2 r U)
       (specialUnitaryLaplacian b (specialUnitaryLinearHeat b l 2 t) U) t :=
   specialUnitaryLinearHeat_hasDerivAt _ l 2 t U
+
+-- A genuinely quadratic, strictly positive matrix observable on the actual SU(2).
+private noncomputable def quadraticSU2 : specialUnitaryPolynomialSpace (n := Fin 2) 2 := by
+  let l : Matrix (Fin 2) (Fin 2) ℂ →L[ℝ] ℝ := Complex.imCLM.comp
+    (LinearMap.toContinuousLinearMap (Matrix.entryLinearMap ℝ ℂ 0 0))
+  let g := specialUnitaryAffineMap (n := Fin 2) (2, l)
+  have hg : g ∈ specialUnitaryPolynomialSpace 1 := by
+    change g ∈ specialUnitaryAffineSpace ^ 1
+    rw [pow_one (specialUnitaryAffineSpace (n := Fin 2))]
+    exact ⟨(2, l), rfl⟩
+  exact ⟨g * g, specialUnitaryPolynomialSpace_mul_mem hg hg⟩
+
+private theorem quadraticSU2_apply (U : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    quadraticSU2.val U = (2 + (U.val 0 0).im) ^ 2 := by
+  change (2 + (U.val 0 0).im) * (2 + (U.val 0 0).im) = _
+  ring
+
+private theorem quadraticSU2_pos (U : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    0 < quadraticSU2.val U := by
+  rw [quadraticSU2_apply]
+  have hn : ‖U.val‖ = Real.sqrt 2 := by
+    simpa using unitary_norm (specialUnitaryInclusion U)
+  have hb := (Complex.abs_im_le_norm (U.val 0 0)).trans (norm_entry_le_frobenius U.val 0 0)
+  rw [hn] at hb
+  have hs := Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)
+  have ha := neg_abs_le (U.val 0 0).im
+  have h : 0 < 2 + (U.val 0 0).im := by nlinarith [Real.sqrt_nonneg (2 : ℝ)]
+  exact sq_pos_of_pos h
+
+-- Nonzero actual invariant derivative certifies that this test is not constant.
+example : ∃ A : specialUnitaryLieAlgebra (n := Fin 2),
+    specialUnitaryDeriv A quadraticSU2.val 1 = 4 := by
+  let A : specialUnitaryLieAlgebra (n := Fin 2) :=
+    ⟨Matrix.diagonal ![Complex.I, -Complex.I], by
+      constructor
+      · ext i j
+        fin_cases i <;> fin_cases j <;> simp [Matrix.diagonal]
+      · simp [Matrix.trace, Fin.sum_univ_two]⟩
+  let l : Matrix (Fin 2) (Fin 2) ℂ →L[ℝ] ℝ := Complex.imCLM.comp
+    (LinearMap.toContinuousLinearMap (Matrix.entryLinearMap ℝ ℂ 0 0))
+  let g := specialUnitaryAffineMap (n := Fin 2) (2, l)
+  refine ⟨A, ?_⟩
+  change specialUnitaryDeriv A (fun U => g U * g U) 1 = 4
+  have hd : specialUnitaryDeriv A (fun U => g U * g U) 1 =
+      g 1 * specialUnitaryDeriv A g 1 + g 1 * specialUnitaryDeriv A g 1 :=
+    congrFun (specialUnitaryDeriv_mul A g.contMDiff g.contMDiff) 1
+  rw [hd]
+  change (2 + l 1) * specialUnitaryDeriv A (fun U => 2 + l U.val) 1 +
+    (2 + l 1) * specialUnitaryDeriv A (fun U => 2 + l U.val) 1 = 4
+  rw [specialUnitaryDeriv_affine]
+  norm_num [l, A, Matrix.diagonal]
+
+-- Actual polynomial heat preserves its normalized Haar mass at every time.
+example (t : ℝ) :
+    let b := stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 2))
+    (∫ U, (specialUnitaryPolynomialHeat b 2 quadraticSU2 t).val U ∂specialUnitaryHaar (Fin 2)) =
+      ∫ U, quadraticSU2.val U ∂specialUnitaryHaar (Fin 2) :=
+  specialUnitaryPolynomialHeat_integral _ 2 quadraticSU2 t
+
+-- Exponential Fisher decay, rate exactly 2, on this concrete nonconstant positive test.
+example (t : ℝ) (ht : 0 ≤ t) :
+    let b := stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 2))
+    let P := specialUnitaryPolynomialForwardHeat b 2 quadraticSU2
+    (∫ U, specialUnitaryGamma b (P t).val (P t).val U / (P t).val U
+      ∂specialUnitaryHaar (Fin 2)) ≤
+      Real.exp (-2 * t) * (∫ U, specialUnitaryGamma b quadraticSU2.val quadraticSU2.val U /
+        quadraticSU2.val U ∂specialUnitaryHaar (Fin 2)) := by
+  simpa using specialUnitaryPolynomialForwardHeat_fisher_le_exp
+    (stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 2))) 2 quadraticSU2 quadraticSU2_pos ht

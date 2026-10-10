@@ -62,3 +62,10 @@ import LogSobolev.Geometry.CompactEvolutionMaximum
 import LogSobolev.Unitary.SpecialUnitaryMaximumPrinciple
 import LogSobolev.Unitary.SpecialUnitaryHeatBounds
 import LogSobolev.Unitary.SpecialUnitaryLinearHeat
+import LogSobolev.Geometry.DerivationSubmodulePowers
+import LogSobolev.Analysis.ExponentialDecay
+import LogSobolev.Unitary.SpecialUnitaryPolynomialSpace
+import LogSobolev.Unitary.SpecialUnitaryPolynomialNorm
+import LogSobolev.Unitary.SpecialUnitaryPolynomialHeat
+import LogSobolev.Unitary.SpecialUnitaryPolynomialHeatRegularity
+import LogSobolev.Unitary.SpecialUnitaryPolynomialDissipation
