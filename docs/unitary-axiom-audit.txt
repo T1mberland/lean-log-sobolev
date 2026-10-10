@@ -1,4 +1,4 @@
-Recursive axiom audit passed for 1017 LogSobolev declarations.
+Recursive axiom audit passed for 1079 LogSobolev declarations.
 'LogSobolev.intervalUniform_entropy_sq_le_of_ae_hasDerivAt' depends on axioms: [propext, Classical.choice, Quot.sound]
 'LogSobolev.specialUnitaryPolynomialFamily_deriv_measurable' depends on axioms: [propext, Classical.choice, Quot.sound]
 'LogSobolev.specialUnitaryPolynomialFamily_deriv_sq_integrable' depends on axioms: [propext,

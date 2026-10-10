@@ -129,3 +129,4 @@ import LogSobolev.Unitary.PolynomialPhaseEntropy
 import LogSobolev.Unitary.PhaseEntropyEnergy
 import LogSobolev.Unitary.PhaseEntropyTransport
 import LogSobolev.Unitary.UnitaryLSI
+import LogSobolev.Gaussian.LSI

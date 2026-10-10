@@ -1,4 +1,4 @@
-# Logarithmic Sobolev inequality on U(N) in Lean 4
+# Gaussian and unitary logarithmic Sobolev inequalities in Lean 4
 
 **Theorem 15 of Meckes–Meckes is proved for all locally Lipschitz real functions
 and every positive dimension, including N=1.**
@@ -39,6 +39,21 @@ SU(N) LSI with constant `2/N`, and an interval LSI with constant `L²/8`.
 General metric tensorization, the sharp interval constant, and the optional
 concentration corollary are not claimed.
 
+## Gaussian LSI
+
+`LogSobolev.gaussian_entropy_sq_le_of_contDiff` proves the sharp, dimension-free
+Gaussian inequality `Ent(f²) ≤ 2 ∫ ‖Df‖²` on `EuclideanSpace ℝ (Fin n)`,
+including dimension zero. It assumes `C¹` regularity, Gaussian L² moments of
+`f` and its derivative norm, and integrability of `f² log(f²)`.
+The compact-support corollary proves these integrability conditions automatically.
+
+The proof selectively ports the Apache-2.0 AI4SLT development to Lean 4.28,
+reuses this library's entropy and two-point inequality, and identifies the
+coordinate sum of squares with the **Euclidean** derivative norm. A corollary
+uses the same `slopeEnergy` as the unitary API. An all-locally-Lipschitz Gaussian
+`MetricLSI` theorem is **not** claimed. See [the Gaussian report](docs/GAUSSIAN.md)
+for precise scope, source attribution, verification, and remaining work.
+
 ## Build and verify
 
 Lean 4.28.0 and Mathlib are pinned in the toolchain and manifest.
@@ -48,20 +63,28 @@ lake exe cache get
 bash scripts/check.sh
 ```
 
-The check script builds the library, independently compiles seven client files,
+On memory-constrained machines, run `bash scripts/build-gaussian-sequential.sh`
+first to avoid compiling independent Gaussian branches concurrently.
+
+The check script builds the library, independently compiles eight client files,
 and audits the transitive dependencies of every project declaration. Only
 `propext`, `Classical.choice`, and `Quot.sound` are allowed. It saves the audit
-and full elaborated final theorem statements in `docs/unitary-axiom-audit.txt`.
+and full elaborated final theorem statements in `docs/unitary-axiom-audit.txt`
+and `docs/gaussian-axiom-audit.txt`.
 
 ## Sources and report
 
-* [Main theorem](LogSobolev/Unitary/UnitaryLSI.lean)
-* [Final mathematical report, validation, and commits](docs/REPORT.md)
+* [Unitary theorem](LogSobolev/Unitary/UnitaryLSI.lean)
+* [Gaussian theorem](LogSobolev/Gaussian/LSI.lean)
+* [Gaussian source audit and report](docs/GAUSSIAN.md)
+* [Independent Gaussian examples](LogSobolev/ExamplesGaussian.lean)
+* [Unitary proof report, validation, and commits](docs/REPORT.md)
 * [Declaration-level ecosystem and compatibility inspection](docs/ECOSYSTEM.md)
 * [Detailed SU proof](docs/SU_LSI.md)
 * [Independent final examples](LogSobolev/ExamplesUnitary.lean)
 * [Reference paper, Appendix, Theorem 15](https://arxiv.org/pdf/1210.2681)
 
-No external research library is imported. The small StatsMLlib entropy
-compatibility port retains attribution in its source. Historical milestone
+No external research library is added as a dependency. Selectively ported
+StatsMLlib and AI4SLT proofs retain their Apache-2.0 notices and attribution.
+Historical milestone
 reports are preserved in `docs/DEVELOPMENT_HISTORY.md`.
