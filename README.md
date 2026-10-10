@@ -1,158 +1,67 @@
-# Logarithmic Sobolev infrastructure for U(N)
+# Logarithmic Sobolev inequality on U(N) in Lean 4
 
-**Status: SU(N) and U(1) LSI are proved for all locally Lipschitz functions.
-The full U(N) Theorem 15 remains open.**
+**Theorem 15 of Meckes–Meckes is proved for all locally Lipschitz real functions
+and every positive dimension, including N=1.**
 
-This Lean 4.28.0 / Mathlib project develops components for the logarithmic
-Sobolev inequality in [Meckes–Meckes](https://arxiv.org/pdf/1210.2681).
-It uses Mathlib's actual matrix unitary and special unitary groups and the
-**unnormalized Frobenius (Hilbert–Schmidt) metric**.
+The theorem uses Mathlib's actual matrix unitary group, normalized Haar
+probability, and the **unnormalized Hilbert–Schmidt metric**. There are no
+assumed logarithmic Sobolev or curvature criteria in its dependency closure.
 
-Proved components include:
+```lean
+import LogSobolev
+open MeasureTheory LogSobolev
+open scoped Matrix.Norms.Frobenius NNReal
 
-* A locally Lipschitz interval LSI under actual normalized uniform measure,
-  with constant `L²/8` and the local metric slope. The proof extends the dyadic
-  entropy argument using absolute continuity and integrable derivatives.
-  This constant is not sharp.
-* U(1) LSI with constant `π²/2`, hence the requested constant `6`, for every
-  locally Lipschitz real observable under actual Haar and the HS metric.
-* SU polynomial regularization of locally Lipschitz U(N) observables gives a
-  polynomial-valued phase curve differentiable almost everywhere. Its joint
-  derivative, exact combined-flow speed, and integrated quadratic energy bound
-  are proved. SU convolution converges uniformly and in squared entropy. The
-  slice-entropy estimate and final U(N) assembly remain open.
-* Entropy continuity under uniform convergence on compact finite-measure spaces,
-  including squared observables with zeros and varying polynomial degree.
-* Explicit polynomial probability kernels on SU concentrate at identity and
-  approximate every continuous observable uniformly and in squared entropy.
-* Polynomial convolution on SU preserves degree; normalized averaging preserves
-  Haar mass and nonnegative normalized kernels preserve upper bounds.
-* Entropy transport, the product entropy chain rule with proved marginal
-  log-integrability, and binary entropy subadditivity for every nonnegative
-  continuous density on compact metric probability spaces, including zeros.
-* A real Gibbs entropy bound, parameter continuity, and an explicit-energy
-  LSI transport/scaling API.
-* The upper local metric slope: agreement with the punctured limsup,
-  finiteness for locally Lipschitz functions, Borel measurability, a Lipschitz
-  chain bound, and invariance under domain isometries.
-* Metric-LSI Lipschitz pushforward with the squared Lipschitz factor.
-* Square, log-moment and slope-energy integrability for **all locally Lipschitz
-  functions** on compact metric spaces, and the finite real-valued LSI form.
-* Exact Hilbert–Schmidt trace normalization and unitary multiplication isometries
-  at the norm level.
-* Compactness and Haar probability on U(N) and SU(N).
-* The traceless skew-Hermitian matrix Lie algebra, its trace pairing, and the
-  exact `2N` matrix commutator-energy identity (not yet a Ricci or LSI theorem).
-* Actual SU exponential curves, their trace-zero determinant identity, exact
-  Hilbert–Schmidt speed, and characterization of velocities at identity.
-* The real Hilbert–Schmidt inner product on the SU Lie algebra, isometric
-  unitary conjugation, the exact Killing coefficient `−2N`, and the `2N`
-  commutator-energy identity for every real orthonormal basis.
-* The full determinant-exponential identity and exponential homeomorphisms
-  between open identity neighborhoods in su(N) and the actual SU(N) group.
-* A proved smooth atlas on the actual matrix SU(N) group, with every translated
-  exponential chart transition verified on its domain. Smooth matrix inclusion,
-  multiplication, inversion, and exponential give an actual Lie group instance.
-  Its inclusion derivative is `A ↦ U A`, preserving the exact Frobenius norm.
-* Actual left-invariant SU fields and directional derivatives, local smooth
-  ambient extensions, preservation of smoothness, and the operator identity
-  `D_A D_B − D_B D_A = D_[A,B]` for every smooth SU test.
-* The exact `N/2` lower bound on second-derivative energy, and a constructed
-  sum-of-squares operator whose carré du champ is proved to be first-derivative
-  energy. Generator commutation, the Γ₂ identity, and `Γ₂ ≥ (N/2) Γ` are
-  now proved for all smooth real SU tests. The entropy inequality is proved
-  on polynomial tests below, followed by a proved extension to all locally Lipschitz tests.
-* Haar integration by parts for actual SU derivatives and the generator,
-  with symmetry, nonpositivity, and the integrated estimate
-  `(N/2) ∫ Γ(f,f) ≤ ∫ (Lf)²` for every smooth real test.
-* Scalar diffusion/logarithm chain rules, the logarithmic Haar energy identity,
-  and entropy differentiation on compact probability spaces. Entropy
-  dissipation is proved **for a supplied positive family satisfying the heat
-  equation at the specified time**; a general heat construction remains open.
-  The weighted logarithmic Γ₂ curvature bound is also proved.
-* The spatial Fisher dissipation identity and its exact `−N` bound. For
-  supplied time-dependent families with explicit joint-continuity and mixed
-  time/spatial derivative hypotheses, Fisher dissipation and `I′ ≤ −N I` are
-  proved. These hypotheses are now discharged for the constructed polynomial
-  heat flow below.
-* The actual generator maximum principle and preservation of initial bounds
-  for supplied classical heat solutions. An explicit heat solution is now
-  constructed for every affine matrix observable `c + l(U)`, with verified
-  initial value, PDE, smooth spatial slices, continuity, and preservation of
-  positivity.
-* Finite-dimensional spaces of polynomial matrix observables, invariant under
-  the actual generator. Its exponential constructs polynomial heat evolution
-  with the semigroup law, positivity, supremum-norm contraction, and normalized
-  Haar-mass conservation. All regularity needed for entropy and Fisher
-  differentiation is proved. For strictly positive polynomial data,
-  `I(Pₜ f) ≤ exp(−Nt) I(f)` holds for every `t ≥ 0`.
-* Connectedness of the actual U(N) and SU(N), proved using finite-spectrum
-  functional calculus and a continuous determinant-correcting retraction.
-  Smooth SU functions with zero Haar energy are proved equal to their Haar
-  mean; in particular, the actual Laplacian has only constants in its kernel.
-* Polynomial heat converges uniformly to its Haar mean and has vanishing limiting
-  entropy. The resulting **polynomial LSI is proved**:
-  `Ent(f²) ≤ (4/N) ∫ Γ(f,f)` for every real finite-degree polynomial observable,
-  with no positivity restriction on `f`.
-* Actual invariant derivative energy is proved bounded by the paper's squared
-  local Hilbert–Schmidt slope. Every polynomial has a global smooth ambient
-  extension and is locally Lipschitz, with finite slope energy. The polynomial
-  LSI now holds with the **actual local slope**, both in extended form with
-  constant `2/N` and in real-integral form with coefficient `4/N`.
-  Positive convolution and reverse Fatou now extend the bound to every locally
-  Lipschitz real function, including SU(1), with the exact constant `2/N`.
-* The normalized interval and its L² product with SU(N).
-* The paper's phase map into U(N), with the `sqrt(3)` Lipschitz bound.
-* **The exact short-interval Haar decomposition (Lemma 16)** for every positive N,
-  including N=1, proved from Haar invariance and periodic integration.
-* Conditional final transfer from an explicitly assumed product LSI with
-  constant `2/N` to U(N) with constant `6/N`.
-* A 1-Lipschitz diagonal coordinate that is not Haar-a.e. constant in every
-  positive dimension.
+example (N : ℕ) (hN : 0 < N) :
+    MetricLSI (unitaryHaar (Fin N)) (6 / (N : NNReal)) :=
+  unitary_metricLSI N hN
 
-`specialUnitary_metricLSI` in
-[`SpecialUnitaryLSI.lean`](LogSobolev/Unitary/SpecialUnitaryLSI.lean) proves the
-full SU(N) result for all positive dimensions. The real theorem has coefficient
-`4/N` and requires only local Lipschitz regularity.
+example (N : ℕ) (hN : 0 < N)
+    (f : Matrix.unitaryGroup (Fin N) ℂ → ℝ) (hf : LocallyLipschitz f) :
+    entropy (unitaryHaar (Fin N)) (fun U => f U ^ 2) ≤
+      (12 / (N : ℝ)) * ∫ U, (localSlope f U).toReal ^ 2 ∂unitaryHaar (Fin N) :=
+  unitary_entropy_sq_le_of_locallyLipschitz N hN hf
+```
 
-The U(N) inequality for N ≥ 2, the sharp interval constant,
-and L²-product metric tensorization remain open. The U(N) transfer still takes an explicit product `MetricLSI` assumption.
+`unitary_regular` establishes square, square-log, and squared-slope integrability.
+Independent examples include nonsmooth distance functions and a matrix coordinate
+proved not to be Haar-almost-everywhere constant.
 
-## Build and audit
+The proof constructs SU polynomial heat flow and proves its entropy inequality;
+uses a proved interval inequality; and regularizes U(N) functions by positive SU
+convolution. Exact central/traceless orthogonality controls the combined phase
+and SU energy. The resulting real coefficient is `π²/N`, which implies `12/N`.
+The proof includes the almost-everywhere differentiation and entropy-limit steps.
+
+Reusable infrastructure includes entropy subadditivity, Lipschitz pushforward,
+local-slope measurability and integrability, exact Haar decomposition, the full
+SU(N) LSI with constant `2/N`, and an interval LSI with constant `L²/8`.
+General metric tensorization, the sharp interval constant, and the optional
+concentration corollary are not claimed.
+
+## Build and verify
+
+Lean 4.28.0 and Mathlib are pinned in the toolchain and manifest.
 
 ```sh
 lake exe cache get
 bash scripts/check.sh
 ```
 
-`scripts/check.sh` builds the library and independently compiles the examples
-and recursive axiom audit. The audit rejects every axiom except `propext`,
-`Classical.choice`, and `Quot.sound`, in the transitive dependencies of every
-declaration in the `LogSobolev` namespace.
+The check script builds the library, independently compiles seven client files,
+and audits the transitive dependencies of every project declaration. Only
+`propext`, `Classical.choice`, and `Quot.sound` are allowed. It saves the audit
+and full elaborated final theorem statements in `docs/unitary-axiom-audit.txt`.
 
-When using the matrix metric, write:
+## Sources and report
 
-```lean
-import LogSobolev
-open LogSobolev
-open scoped Matrix.Norms.Frobenius
+* [Main theorem](LogSobolev/Unitary/UnitaryLSI.lean)
+* [Final mathematical report, validation, and commits](docs/REPORT.md)
+* [Declaration-level ecosystem and compatibility inspection](docs/ECOSYSTEM.md)
+* [Detailed SU proof](docs/SU_LSI.md)
+* [Independent final examples](LogSobolev/ExamplesUnitary.lean)
+* [Reference paper, Appendix, Theorem 15](https://arxiv.org/pdf/1210.2681)
 
-example : LipschitzWith ⟨Real.sqrt 3, Real.sqrt_nonneg 3⟩ (intervalPhaseMap 2) :=
-  intervalPhaseMap_lipschitz 2 (by decide)
-```
-
-See [the source audit](docs/ECOSYSTEM.md) for inspected versions, actual
-external theorem assumptions and the `markov-semigroups` trust-boundary findings.
-See [the mathematical report](docs/REPORT.md) for the exact scope and open goals,
-and [the completed SU proof](docs/SU_LSI.md) for the SU theorem and its verification.
-
-## Layout
-
-`Measure/` holds entropy, explicit-energy LSI, and normalized interval measure.
-`Geometry/` holds the metric slope, its measurability and integrability, and
-metric-LSI transport. `Unitary/` holds matrix normalization, Haar constructions,
-the phase map and nonconstant observables. `Audit.lean` and `Examples.lean` are
-independent validation files.
-
-The small entropy compatibility port is attributed in its source file. No
-external research library is imported; Mathlib is pinned in the manifest.
+No external research library is imported. The small StatsMLlib entropy
+compatibility port retains attribution in its source. Historical milestone
+reports are preserved in `docs/DEVELOPMENT_HISTORY.md`.
