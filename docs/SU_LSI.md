@@ -85,37 +85,47 @@ along an actual SU exponential curve with the matrix commutator.
 
 This uses Mathlib's Killing form (the trace of the composed adjoint maps).
 Basis independence and nonpositivity are proved, including for the standard
-orthonormal basis whose existence now follows from the finite-dimensional
-inner-product structure. The exact dimension factor remains to be proved:
+orthonormal basis supplied by the finite-dimensional inner-product structure.
 
-```lean
--- Still unproved, not a library declaration:
-∀ A : specialUnitaryLieAlgebra (n := Fin N),
-  killingForm ℝ (specialUnitaryLieAlgebra (n := Fin N)) A A =
-    -(2 * (N : ℝ)) * ‖A‖ ^ 2
-```
+## Exact Killing coefficient now proved
 
-The earlier complex matrix-unit identity does not itself prove this real
-contraction identity. A real-form/complexification argument or a verified
-orthonormal-basis calculation must connect the two. Only after that connection
-and the geometric curvature formula can the Ricci bound `N/2` be asserted.
+`Unitary/SpecialUnitaryKillingConstant.lean` closes the real contraction calculation:
 
-A concrete route to the remaining algebraic identity is to compute the real
-trace of `ad A ∘ ad A` on all complex matrices, then use Mathlib's
-`StarModule.decomposeProdAdjoint` to split into self-adjoint and skew-adjoint
-parts. Multiplication by i intertwines their adjoint actions. The range of a
-commutator is traceless, so `LinearMap.trace_restrict_eq_of_forall_mem` can
-identify the trace on the skew-adjoint part with the trace on su. These Mathlib
-APIs were inspected; this reduction has not yet been implemented.
+* `specialUnitary_killing_self_eq` proves `Killing(A,A) = −2N ‖A‖²_HS`.
+* `specialUnitary_killing_eq_inner` proves the full bilinear identity
+  `Killing(A,B) = −2N inner(A,B)`.
+* `specialUnitary_orthonormal_commutator_energy` proves
+  `Σᵢ ‖[A,bᵢ]‖²_HS = 2N ‖A‖²_HS` for every real orthonormal basis b.
+
+These are unconditional results for the actual traceless skew-Hermitian
+matrix Lie algebra, for every finite index type, including empty and singleton
+indices. No basis or curvature formula is assumed in their proofs.
+
+`Unitary/MatrixAdjointTrace.lean:matrix_real_trace_ad_sq` computes the trace
+on the full real vector space of complex matrices as `−4N ‖A‖²_HS`.
+`Unitary/MatrixRealForm.lean:matrix_real_trace_eq_twice_skew` uses Mathlib's
+`StarModule.decomposeProdAdjoint` and multiplication by i to show that a
+complex-linear star-commuting operator has full real trace twice its trace on
+the skew-adjoint subspace. Finally, commutators have traceless range, so
+`LinearMap.trace_restrict_eq_of_forall_mem` identifies that restricted trace
+with the actual Killing form of su. Thus the complex matrix-unit calculation
+is now connected to the real orthonormal contraction by proved trace identities.
+
+An independent example constructs `diag(i,−i)` in su(2) and proves its Killing
+square is `−8`; another checks the real-basis coefficient `6` in dimension three.
+
+For mathematical comparison, [Alexandrino–Bettiol, Chapter 2, Exercise 2.50 and
+Remark 2.34](https://www.lehman.edu/faculty/rbettiol/old_teaching/661files/Chap2.pdf)
+give the SU Killing normalization and the bi-invariant Ricci relation. The
+latter is still a geometric obligation here; the reference is not a Lean axiom.
 
 ## What these identities do not prove
 
-The complex matrix units Eij are **not** a real orthonormal basis of su(N).
-Thus the last displayed sum has not been declared to be Ricci curvature.
-The real orthonormal contraction is now expressed by the Killing form, but
-connecting its value to curvature still requires the real tangent-space and basis
-identifications and the Levi-Civita/curvature calculation for the bi-invariant
-metric. The algebraic dimension factor alone is insufficient.
+The real orthonormal contraction and its exact dimension factor are now proved.
+Interpreting one quarter of this contraction as Ricci curvature still requires
+the manifold tangent identification and the Levi-Civita/curvature calculation
+for the actual bi-invariant metric. No algebraic expression has been defined
+as the Ricci tensor to bypass that obligation.
 
 The inspected Mathlib checkout supplies general Lie-group and Riemannian
 interfaces, but no SU Lie-group instance or curvature-to-LSI theorem applicable
@@ -127,8 +137,8 @@ needed for its abstract LSI implication and cannot supply this missing proof.
 
 1. Upgrade the proved curve-velocity characterization to a manifold tangent
    identification for the actual matrix SU group, and construct the Hilbert–Schmidt bi-invariant
-   Riemannian metric. Relate the matrix-unit identity to the real orthonormal
-   tangent contraction and prove the Ricci bound with normalization `N/2`.
+   Riemannian metric. Prove the geometric Ricci formula `Ric = −¼ Killing`;
+   the now-proved Killing coefficient then yields the normalization `N/2`.
 2. Prove an applicable curvature-to-LSI criterion. A diffusion route needs a
    constructed heat semigroup, invariant probability identified with Haar,
    entropy dissipation, the gradient/Fisher-information estimate, and convergence
@@ -149,11 +159,13 @@ or constant-arithmetic problem.
 ## Verification
 
 Proof commits: `0f05569` (algebra), `339112a` (curves), and `5bf0ed6`
-(inner product, adjoint isometry, and real Killing contraction). `lake build` and the independent `Examples.lean`
-compilation pass. The recursive `Audit.lean` check passes for all 255 project
+(inner product, adjoint isometry, and real Killing contraction), followed by
+`5c6ebdb` (exact Killing coefficient and real orthonormal energy).
+`lake build` and the independent `Examples.lean`
+compilation pass. The recursive `Audit.lean` check passes for all 306 project
 declarations, accepting only `propext`, `Classical.choice`, and `Quot.sound`.
 It prints the fully elaborated commutator-energy, curve-velocity, and
-exponential-speed, conjugation-derivative, and Killing-contraction theorems, exposes the Frobenius instances, and inspects the
+exponential-speed, conjugation-derivative, and Killing-contraction, exact-coefficient, and real-orthonormal-energy theorems, exposes the Frobenius instances, and inspects the
 Lie-algebra, trace-pairing, exponential-curve, and inner-product definitions.
 The full output is in [axiom-audit.txt](axiom-audit.txt). These checks certify
 the algebraic and curve results above, not an SU(N) LSI theorem.

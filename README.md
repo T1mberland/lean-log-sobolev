@@ -25,7 +25,8 @@ Proved components include:
 * Actual SU exponential curves, their trace-zero determinant identity, exact
   Hilbert–Schmidt speed, and characterization of velocities at identity.
 * The real Hilbert–Schmidt inner product on the SU Lie algebra, isometric
-  unitary conjugation, and the Killing-form/real-orthonormal-energy identity.
+  unitary conjugation, the exact Killing coefficient `−2N`, and the `2N`
+  commutator-energy identity for every real orthonormal basis.
 * The normalized interval and its L² product with SU(N).
 * The paper's phase map into U(N), with the `sqrt(3)` Lipschitz bound.
 * **The exact short-interval Haar decomposition (Lemma 16)** for every positive N,

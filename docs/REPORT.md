@@ -39,7 +39,10 @@ All names below are in namespace `LogSobolev`.
 | `LogSobolev/Unitary/SpecialUnitaryCurves.lean` | `det_exp_smul_eq_one_of_trace_zero`, `mem_specialUnitaryLieAlgebra_iff_curve_velocity`, `specialUnitaryExpCurve_speed`, `specialUnitaryExpCurve_lipschitz` | Trace-zero exponentials have determinant one; actual SU curve velocities characterize the algebra, with exact Frobenius speeds and norm-preserving left translation. No manifold atlas or curvature theorem. |
 | `LogSobolev/Unitary/SpecialUnitaryInner.lean` | `specialUnitaryAlgebraInnerProductSpace`, `specialUnitary_ad_skew` | Real trace inner product compatible with the existing Frobenius norm, finite dimensionality, and skew-symmetry of the adjoint action. |
 | `LogSobolev/Unitary/SpecialUnitaryAdjoint.lean` | `specialUnitaryAdjointIsometry`, `specialUnitaryAdjoint_lie`, `specialUnitaryAdjoint_exp_derivative` | Actual unitary conjugation acts isometrically and preserves brackets; its derivative along an SU exponential curve is the matrix commutator. |
-| `LogSobolev/Unitary/SpecialUnitaryKilling.lean` | `specialUnitary_killing_self`, `specialUnitary_commutator_energy_basis_independent`, `specialUnitary_killing_self_nonpos` | Negative Killing form equals commutator energy over any real HS orthonormal basis. Its exact dimension factor and Ricci interpretation remain unproved. |
+| `LogSobolev/Unitary/SpecialUnitaryKilling.lean` | `specialUnitary_killing_self`, `specialUnitary_commutator_energy_basis_independent`, `specialUnitary_killing_self_nonpos` | Negative Killing form equals commutator energy over any real HS orthonormal basis. The Ricci interpretation remains unproved. |
+| `LogSobolev/Unitary/MatrixAdjointTrace.lean` | `matrix_real_trace`, `matrix_real_trace_ad_sq` | Full real trace of double adjoint is `−4N ‖A‖²` for traceless skew-Hermitian A. |
+| `LogSobolev/Unitary/MatrixRealForm.lean` | `matrixSkewDecompose`, `matrix_real_trace_eq_twice_skew` | A complex-linear star-commuting matrix operator has twice the real trace of its skew-adjoint restriction. |
+| `LogSobolev/Unitary/SpecialUnitaryKillingConstant.lean` | `specialUnitary_killing_self_eq`, `specialUnitary_killing_eq_inner`, `specialUnitary_orthonormal_commutator_energy` | Exact real Killing coefficient `−2N` and commutator energy coefficient `2N` for every real HS orthonormal basis. The Ricci formula and LSI are not asserted. |
 | `LogSobolev/Unitary/PhaseMap.lean` | `phaseMul_dist_le`, `phaseMap_lipschitz` | The full-line phase map has Lipschitz constant `sqrt(3)` for every positive N; no probability argument is needed. |
 | `LogSobolev/Measure/Interval.lean` | `intervalUniform_univ`, `map_intervalUniform` | Normalized Lebesgue measure on the Euclidean subtype `[0,L]` for `L>0`. |
 | `LogSobolev/Unitary/ProductDomain.lean` | `phaseDomainMeasure_probability`, `intervalPhaseMap_lipschitz` | The exact interval × SU domain and probability measure, and the restricted map's Lipschitz bound. |
@@ -162,21 +165,21 @@ the compact regularity side conditions. A verified Herbst argument is a later ta
 Verification performed on 2026-10-10 with Lean 4.28.0 and the pinned Mathlib
 commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
 
-* `lake build`: passed for the complete library (2870 dependency/build jobs,
+* `lake build`: passed for the complete library (2873 dependency/build jobs,
   primarily cached Mathlib artifacts).
 * `lake env lean LogSobolev/Examples.lean`: passed; the examples compile as an
   independent client importing the public root module.
 * `lake env lean LogSobolev/Audit.lean`: passed. The automated traversal checked
-  **255 declarations** in the `LogSobolev` namespace, including definitions,
+  **306 declarations** in the `LogSobolev` namespace, including definitions,
   instances, and generated auxiliaries. Every transitive axiom was one of
   `propext`, `Classical.choice`, or `Quot.sound`. No `sorryAx` or custom axiom
   was present in those dependency closures.
-* The audit also executes 52 `#print axioms` commands, prints the core
+* The audit also executes 58 `#print axioms` commands, prints the core
   definitions, and prints fully elaborated types for the trace normalization,
   phase-map Lipschitz theorem, U(N) regularity theorem, exact Haar identity,
   conditional final LSI transfer, product entropy chain rule, and SU algebra
   commutator energy, SU curve-velocity characterization, and exponential speed, the real Killing contraction, and the derivative of
-  conjugation. The elaborated
+  conjugation, the exact Killing coefficient, and the real orthonormal energy. The elaborated
   metric instances are explicitly Frobenius and `WithLp 2`.
 * Source scan found no proof omissions or custom axiom declarations;
   `git diff --check` passed.
@@ -216,6 +219,12 @@ Completed milestones:
   SU exponential curves, and the Killing-form contraction over a real
   orthonormal basis. Independent examples and all 255 declarations pass the
   recursive audit. The exact Killing coefficient, Ricci formula, and LSI are open.
+
+* `5c6ebdb`: exact real Killing coefficient `−2N` and real orthonormal
+  commutator energy `2N`, proved via full matrix trace, the two real adjoint
+  summands, and traceless-range restriction. The independent nonzero su(2)
+  example, complete build, and recursive 306-declaration audit pass.
+  The manifold Ricci formula and the analytic LSI remain open.
 
 The report and README are committed separately after these verified proof
 milestones; use `git log --oneline` to see the documentation commit as well.
