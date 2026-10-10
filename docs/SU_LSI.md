@@ -64,11 +64,56 @@ curve velocities without claiming a manifold atlas or Levi-Civita connection.
 Independent examples test arbitrary algebra elements and the determinant-one
 exponential of the non-skew trace-zero matrix `diag(1, -1)`.
 
+## Inner product, adjoint action, and real contraction
+
+`Unitary/SpecialUnitaryInner.lean` installs the real inner product
+`inner A B = -Re Tr(A B)` on the special unitary Lie algebra, with a proved
+compatibility equation for the existing Frobenius norm. Its finite-dimensional
+instance is inherited from the actual matrix submodule.
+`specialUnitary_ad_skew` proves skew-symmetry of the infinitesimal adjoint action.
+
+`Unitary/SpecialUnitaryAdjoint.lean` constructs `specialUnitaryAdjointIsometry`:
+conjugation by any actual unitary matrix is a real linear isometric equivalence
+of this algebra. It preserves the bracket and inner product.
+`specialUnitaryAdjoint_exp_derivative` identifies the derivative of conjugation
+along an actual SU exponential curve with the matrix commutator.
+
+`Unitary/SpecialUnitaryKilling.lean:specialUnitary_killing_self` proves, for
+**any real orthonormal basis** b of this algebra:
+
+`Killing(A,A) = − Σᵢ ‖[A,bᵢ]‖²_HS`.
+
+This uses Mathlib's Killing form (the trace of the composed adjoint maps).
+Basis independence and nonpositivity are proved, including for the standard
+orthonormal basis whose existence now follows from the finite-dimensional
+inner-product structure. The exact dimension factor remains to be proved:
+
+```lean
+-- Still unproved, not a library declaration:
+∀ A : specialUnitaryLieAlgebra (n := Fin N),
+  killingForm ℝ (specialUnitaryLieAlgebra (n := Fin N)) A A =
+    -(2 * (N : ℝ)) * ‖A‖ ^ 2
+```
+
+The earlier complex matrix-unit identity does not itself prove this real
+contraction identity. A real-form/complexification argument or a verified
+orthonormal-basis calculation must connect the two. Only after that connection
+and the geometric curvature formula can the Ricci bound `N/2` be asserted.
+
+A concrete route to the remaining algebraic identity is to compute the real
+trace of `ad A ∘ ad A` on all complex matrices, then use Mathlib's
+`StarModule.decomposeProdAdjoint` to split into self-adjoint and skew-adjoint
+parts. Multiplication by i intertwines their adjoint actions. The range of a
+commutator is traceless, so `LinearMap.trace_restrict_eq_of_forall_mem` can
+identify the trace on the skew-adjoint part with the trace on su. These Mathlib
+APIs were inspected; this reduction has not yet been implemented.
+
 ## What these identities do not prove
 
 The complex matrix units Eij are **not** a real orthonormal basis of su(N).
 Thus the last displayed sum has not been declared to be Ricci curvature.
-Connecting it to curvature requires the real tangent-space and basis
+The real orthonormal contraction is now expressed by the Killing form, but
+connecting its value to curvature still requires the real tangent-space and basis
 identifications and the Levi-Civita/curvature calculation for the bi-invariant
 metric. The algebraic dimension factor alone is insufficient.
 
@@ -103,11 +148,12 @@ or constant-arithmetic problem.
 
 ## Verification
 
-Proof commits: `0f05569` (algebra) and `339112a` (curves). `lake build` and the independent `Examples.lean`
-compilation pass. The recursive `Audit.lean` check passes for all 222 project
+Proof commits: `0f05569` (algebra), `339112a` (curves), and `5bf0ed6`
+(inner product, adjoint isometry, and real Killing contraction). `lake build` and the independent `Examples.lean`
+compilation pass. The recursive `Audit.lean` check passes for all 255 project
 declarations, accepting only `propext`, `Classical.choice`, and `Quot.sound`.
 It prints the fully elaborated commutator-energy, curve-velocity, and
-exponential-speed theorems, exposes the Frobenius instances, and inspects the
-Lie-algebra, trace-pairing, and exponential-curve definitions.
+exponential-speed, conjugation-derivative, and Killing-contraction theorems, exposes the Frobenius instances, and inspects the
+Lie-algebra, trace-pairing, exponential-curve, and inner-product definitions.
 The full output is in [axiom-audit.txt](axiom-audit.txt). These checks certify
 the algebraic and curve results above, not an SU(N) LSI theorem.

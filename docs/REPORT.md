@@ -37,6 +37,9 @@ All names below are in namespace `LogSobolev`.
 | `LogSobolev/Unitary/DeterminantDerivative.lean` | `hasDerivAt_det_at_one` | Entrywise differentiable matrix curves at identity have determinant derivative equal to trace. |
 | `LogSobolev/Unitary/UnitaryCurves.lean` | `skewAdjoint_iff_unitary_curve_velocity` | Skew-Hermitian matrices are exactly velocities at identity of actual unitary curves. |
 | `LogSobolev/Unitary/SpecialUnitaryCurves.lean` | `det_exp_smul_eq_one_of_trace_zero`, `mem_specialUnitaryLieAlgebra_iff_curve_velocity`, `specialUnitaryExpCurve_speed`, `specialUnitaryExpCurve_lipschitz` | Trace-zero exponentials have determinant one; actual SU curve velocities characterize the algebra, with exact Frobenius speeds and norm-preserving left translation. No manifold atlas or curvature theorem. |
+| `LogSobolev/Unitary/SpecialUnitaryInner.lean` | `specialUnitaryAlgebraInnerProductSpace`, `specialUnitary_ad_skew` | Real trace inner product compatible with the existing Frobenius norm, finite dimensionality, and skew-symmetry of the adjoint action. |
+| `LogSobolev/Unitary/SpecialUnitaryAdjoint.lean` | `specialUnitaryAdjointIsometry`, `specialUnitaryAdjoint_lie`, `specialUnitaryAdjoint_exp_derivative` | Actual unitary conjugation acts isometrically and preserves brackets; its derivative along an SU exponential curve is the matrix commutator. |
+| `LogSobolev/Unitary/SpecialUnitaryKilling.lean` | `specialUnitary_killing_self`, `specialUnitary_commutator_energy_basis_independent`, `specialUnitary_killing_self_nonpos` | Negative Killing form equals commutator energy over any real HS orthonormal basis. Its exact dimension factor and Ricci interpretation remain unproved. |
 | `LogSobolev/Unitary/PhaseMap.lean` | `phaseMul_dist_le`, `phaseMap_lipschitz` | The full-line phase map has Lipschitz constant `sqrt(3)` for every positive N; no probability argument is needed. |
 | `LogSobolev/Measure/Interval.lean` | `intervalUniform_univ`, `map_intervalUniform` | Normalized Lebesgue measure on the Euclidean subtype `[0,L]` for `L>0`. |
 | `LogSobolev/Unitary/ProductDomain.lean` | `phaseDomainMeasure_probability`, `intervalPhaseMap_lipschitz` | The exact interval × SU domain and probability measure, and the restricted map's Lipschitz bound. |
@@ -159,20 +162,21 @@ the compact regularity side conditions. A verified Herbst argument is a later ta
 Verification performed on 2026-10-10 with Lean 4.28.0 and the pinned Mathlib
 commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
 
-* `lake build`: passed for the complete library (2773 dependency/build jobs,
+* `lake build`: passed for the complete library (2870 dependency/build jobs,
   primarily cached Mathlib artifacts).
 * `lake env lean LogSobolev/Examples.lean`: passed; the examples compile as an
   independent client importing the public root module.
 * `lake env lean LogSobolev/Audit.lean`: passed. The automated traversal checked
-  **222 declarations** in the `LogSobolev` namespace, including definitions,
+  **255 declarations** in the `LogSobolev` namespace, including definitions,
   instances, and generated auxiliaries. Every transitive axiom was one of
   `propext`, `Classical.choice`, or `Quot.sound`. No `sorryAx` or custom axiom
   was present in those dependency closures.
-* The audit also executes 44 `#print axioms` commands, prints the core
+* The audit also executes 52 `#print axioms` commands, prints the core
   definitions, and prints fully elaborated types for the trace normalization,
   phase-map Lipschitz theorem, U(N) regularity theorem, exact Haar identity,
   conditional final LSI transfer, product entropy chain rule, and SU algebra
-  commutator energy, SU curve-velocity characterization, and exponential speed. The elaborated
+  commutator energy, SU curve-velocity characterization, and exponential speed, the real Killing contraction, and the derivative of
+  conjugation. The elaborated
   metric instances are explicitly Frobenius and `WithLp 2`.
 * Source scan found no proof omissions or custom axiom declarations;
   `git diff --check` passed.
@@ -206,6 +210,12 @@ Completed milestones:
   Frobenius speed and Lipschitz bound, and norm-preserving velocity translation.
   Independent examples and the expanded 222-declaration recursive audit pass.
   These results do not establish Ricci curvature or SU LSI.
+
+* `5bf0ed6`: the Frobenius-compatible real inner-product structure on su,
+  isometric unitary conjugation preserving the bracket, its derivative along
+  SU exponential curves, and the Killing-form contraction over a real
+  orthonormal basis. Independent examples and all 255 declarations pass the
+  recursive audit. The exact Killing coefficient, Ricci formula, and LSI are open.
 
 The report and README are committed separately after these verified proof
 milestones; use `git log --oneline` to see the documentation commit as well.
