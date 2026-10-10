@@ -98,3 +98,24 @@ example : ‖(Matrix.diagonal ![Complex.I, -Complex.I] :
     Matrix (Fin 2) (Fin 2) ℂ)‖ ^ 2 = 2 := by
   rw [frobenius_norm_sq]
   norm_num [Fin.sum_univ_two, Matrix.diagonal]
+
+-- Every algebra element is realized by an actual SU curve, with the exact speed.
+example (A : specialUnitaryLieAlgebra (n := Fin 3)) :
+    ∃ γ : ℝ → Matrix.specialUnitaryGroup (Fin 3) ℂ,
+      γ 0 = 1 ∧ HasDerivAt (fun t => (γ t).val) A.val 0 :=
+  (mem_specialUnitaryLieAlgebra_iff_curve_velocity A.val).mp A.prop
+
+example (A : specialUnitaryLieAlgebra (n := Fin 2)) (t : ℝ) :
+    ‖deriv (fun s => (specialUnitaryExpCurve A s).val) t‖ = ‖A.val‖ :=
+  specialUnitaryExpCurve_speed A t
+
+-- The determinant lemma also applies to trace-zero matrices that are not skew.
+example (t : ℝ) :
+    Matrix.det (NormedSpace.exp (t •
+      (Matrix.diagonal ![(1 : ℂ), -1] : Matrix (Fin 2) (Fin 2) ℂ))) = 1 := by
+  apply det_exp_smul_eq_one_of_trace_zero
+  simp [Matrix.trace, Fin.sum_univ_two]
+
+example (A : specialUnitaryLieAlgebra (n := Fin 2)) :
+    LipschitzWith ‖A.val‖₊ (specialUnitaryExpCurve A) :=
+  specialUnitaryExpCurve_lipschitz A

@@ -19,3 +19,6 @@ import LogSobolev.Unitary.LSITransfer
 import LogSobolev.Unitary.SpecialUnitaryAlgebra
 import LogSobolev.Unitary.MatrixCasimir
 import LogSobolev.Unitary.SpecialUnitaryCasimir
+import LogSobolev.Unitary.DeterminantDerivative
+import LogSobolev.Unitary.UnitaryCurves
+import LogSobolev.Unitary.SpecialUnitaryCurves

@@ -90,3 +90,15 @@ set_option pp.all true in
 #check LogSobolev.specialUnitary_commutator_energy
 #print LogSobolev.specialUnitaryLieAlgebra
 #print LogSobolev.negTracePair
+
+#print axioms LogSobolev.hasDerivAt_det_at_one
+#print axioms LogSobolev.det_exp_smul_eq_one_of_trace_zero
+#print axioms LogSobolev.mem_specialUnitaryLieAlgebra_iff_curve_velocity
+#print axioms LogSobolev.specialUnitaryExpCurve_speed
+#print axioms LogSobolev.specialUnitary_curve_velocity_leftTranslate
+#print axioms LogSobolev.specialUnitaryExpCurve_lipschitz
+#print LogSobolev.specialUnitaryExpCurve
+set_option pp.all true in
+#check LogSobolev.mem_specialUnitaryLieAlgebra_iff_curve_velocity
+set_option pp.all true in
+#check LogSobolev.specialUnitaryExpCurve_speed
