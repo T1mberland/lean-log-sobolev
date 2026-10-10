@@ -252,3 +252,41 @@ example : ∃ A B : specialUnitaryLieAlgebra (n := Fin 2),
   norm_num [A, B, Matrix.mul_apply, Fin.sum_univ_two, Matrix.diagonal,
     Matrix.vecHead, Matrix.vecTail]
   ring
+
+-- No basis-existence hypothesis: instantiate Mathlib's real orthonormal basis of su(2).
+example {f : Matrix.specialUnitaryGroup (Fin 2) ℂ → ℝ}
+    {U : Matrix.specialUnitaryGroup (Fin 2) ℂ}
+    (hf : ContMDiffAt 𝓘(ℝ, specialUnitaryLieAlgebra (n := Fin 2)) 𝓘(ℝ) ∞ f U) :
+    let b := stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 2))
+    (∑ i, (specialUnitaryDeriv (b i) f U) ^ 2) ≤
+      ∑ i, ∑ j, (specialUnitaryDeriv (b i) (specialUnitaryDeriv (b j) f) U) ^ 2 := by
+  simpa using specialUnitary_second_derivative_energy_lower_bound
+    (stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 2))) hf
+
+-- The generator-defined carré du champ is strictly positive on a concrete SU(2) test.
+example : ∃ A : specialUnitaryLieAlgebra (n := Fin 2),
+    ∃ f : Matrix.specialUnitaryGroup (Fin 2) ℂ → ℝ,
+      ContMDiff 𝓘(ℝ, specialUnitaryLieAlgebra (n := Fin 2)) 𝓘(ℝ) ∞ f ∧
+      specialUnitaryGamma (fun _ : Unit => A) f f 1 = 1 := by
+  let A : specialUnitaryLieAlgebra (n := Fin 2) :=
+    ⟨Matrix.diagonal ![Complex.I, -Complex.I], by
+      constructor
+      · ext i j
+        fin_cases i <;> fin_cases j <;> simp [Matrix.diagonal]
+      · simp [Matrix.trace, Fin.sum_univ_two]⟩
+  let l : Matrix (Fin 2) (Fin 2) ℂ →L[ℝ] ℝ := Complex.imCLM.comp
+    (LinearMap.toContinuousLinearMap (Matrix.entryLinearMap ℝ ℂ 0 0))
+  let f : Matrix.specialUnitaryGroup (Fin 2) ℂ → ℝ := fun U => l U.val
+  have hf : ContMDiff 𝓘(ℝ, specialUnitaryLieAlgebra (n := Fin 2)) 𝓘(ℝ) ∞ f :=
+    l.contMDiff.comp specialUnitary_val_contMDiff
+  refine ⟨A, f, hf, ?_⟩
+  rw [specialUnitaryGamma_eq _ hf hf]
+  simp only [Fintype.sum_unique]
+  have hd : specialUnitaryDeriv A f 1 = 1 := by
+    change specialUnitaryDeriv A (fun U => l U.val) 1 = 1
+    rw [specialUnitaryDeriv_of_ambient A 1 l.differentiableAt]
+    unfold rightMulDeriv
+    rw [l.hasFDerivAt.fderiv]
+    norm_num [l, A, Matrix.diagonal]
+  rw [hd]
+  norm_num

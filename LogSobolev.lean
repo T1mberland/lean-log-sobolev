@@ -41,3 +41,6 @@ import LogSobolev.Geometry.AlgebraVectorFields
 import LogSobolev.Unitary.SpecialUnitaryInvariantFields
 import LogSobolev.Unitary.SpecialUnitarySmoothExtension
 import LogSobolev.Unitary.SpecialUnitaryDifferentialOperators
+import LogSobolev.Geometry.SecondOrderArray
+import LogSobolev.Unitary.SpecialUnitarySecondOrder
+import LogSobolev.Unitary.SpecialUnitaryGenerator

@@ -5,18 +5,22 @@ import Lean.Util.CollectAxioms
 
 This checks every declaration under `LogSobolev`, including definitions,
 instances and generated auxiliary declarations, not merely selected theorems.
-Only Mathlib's three usual foundational axioms are allowed.
+Only Mathlib's three usual foundational axioms are allowed. The core Lean
+collector shares its visited set across roots, so each transitive dependency is
+traversed once; all project declarations are still submitted as roots.
 -/
 
 open Lean in
 run_cmd do
   let env ← getEnv
   let mut count := 0
+  let mut state : CollectAxioms.State := {}
   for (name, _) in env.constants.toList do
     if (`LogSobolev).isPrefixOf name then
       count := count + 1
-      let axioms ← collectAxioms name
-      for ax in axioms do
+      let (_, next) := ((CollectAxioms.collect name).run env).run state
+      state := next
+      for ax in state.axioms do
         unless #[``propext, ``Classical.choice, ``Quot.sound].contains ax do
           throwError "Unapproved axiom {ax} in the dependency closure of {name}"
   logInfo m!"Recursive axiom audit passed for {count} LogSobolev declarations."
@@ -185,3 +189,17 @@ set_option pp.all true in
 #check LogSobolev.specialUnitary_exists_local_smooth_extension
 set_option pp.all true in
 #check LogSobolev.specialUnitaryDeriv_commutator
+
+#print axioms LogSobolev.sum_sq_sub_transpose_le
+#print axioms LogSobolev.specialUnitary_dual_commutator_energy
+#print axioms LogSobolev.specialUnitary_second_derivative_energy_lower_bound
+#print axioms LogSobolev.specialUnitaryDeriv_twice_mul
+#print axioms LogSobolev.specialUnitaryLaplacian_contMDiff
+#print axioms LogSobolev.specialUnitaryGamma_eq
+#print axioms LogSobolev.specialUnitaryGamma_nonneg
+#print LogSobolev.specialUnitaryLaplacian
+#print LogSobolev.specialUnitaryGamma
+set_option pp.all true in
+#check LogSobolev.specialUnitary_second_derivative_energy_lower_bound
+set_option pp.all true in
+#check LogSobolev.specialUnitaryGamma_eq
