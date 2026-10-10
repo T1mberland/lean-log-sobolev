@@ -44,3 +44,7 @@ import LogSobolev.Unitary.SpecialUnitaryDifferentialOperators
 import LogSobolev.Geometry.SecondOrderArray
 import LogSobolev.Unitary.SpecialUnitarySecondOrder
 import LogSobolev.Unitary.SpecialUnitaryGenerator
+import LogSobolev.Geometry.CasimirCommutation
+import LogSobolev.Unitary.SpecialUnitaryOperatorAlgebra
+import LogSobolev.Unitary.SpecialUnitaryGeneratorCommutation
+import LogSobolev.Unitary.SpecialUnitaryGammaTwo

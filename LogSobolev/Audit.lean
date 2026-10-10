@@ -203,3 +203,18 @@ set_option pp.all true in
 #check LogSobolev.specialUnitary_second_derivative_energy_lower_bound
 set_option pp.all true in
 #check LogSobolev.specialUnitaryGamma_eq
+
+#print axioms LogSobolev.sum_squares_commute_of_skew_coefficients
+#print axioms LogSobolev.specialUnitaryDerivRepresentation
+#print axioms LogSobolev.specialUnitaryDerivEnd_commutator
+#print axioms LogSobolev.specialUnitaryCasimir_commute
+#print axioms LogSobolev.specialUnitaryLaplacian_deriv
+#print axioms LogSobolev.specialUnitaryGammaTwo_eq
+#print axioms LogSobolev.specialUnitaryGammaTwo_lower_bound
+#print LogSobolev.specialUnitarySmoothFunctions
+#print LogSobolev.specialUnitaryDerivEnd
+#print LogSobolev.specialUnitaryGammaTwo
+set_option pp.all true in
+#check LogSobolev.specialUnitaryLaplacian_deriv
+set_option pp.all true in
+#check LogSobolev.specialUnitaryGammaTwo_lower_bound

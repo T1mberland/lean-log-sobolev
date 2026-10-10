@@ -1,4 +1,4 @@
-Recursive axiom audit passed for 439 LogSobolev declarations.
+Recursive axiom audit passed for 465 LogSobolev declarations.
 'LogSobolev.entropy_nonneg' depends on axioms: [propext, Classical.choice, Quot.sound]
 'LogSobolev.integrable_marginal_mul_log' depends on axioms: [propext, Classical.choice, Quot.sound]
 'LogSobolev.integrable_slice_entropy' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -14584,3 +14584,1625 @@ LogSobolev.specialUnitaryGamma_eq.{u_1, u_2} {n : Type u_1} [Fintype.{u_1} n] [D
             (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)
             (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))
           (b i) g U))
+'LogSobolev.sum_squares_commute_of_skew_coefficients' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.specialUnitaryDerivRepresentation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.specialUnitaryDerivEnd_commutator' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.specialUnitaryCasimir_commute' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.specialUnitaryLaplacian_deriv' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.specialUnitaryGammaTwo_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.specialUnitaryGammaTwo_lower_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+@[reducible] def LogSobolev.specialUnitarySmoothFunctions.{u_1} : (n : Type u_1) →
+  [Fintype n] → [DecidableEq n] → Type (max u_1 0) :=
+fun n [Fintype n] [DecidableEq n] =>
+  ContMDiffMap (modelWithCornersSelf ℝ ↥LogSobolev.specialUnitaryLieAlgebra) (modelWithCornersSelf ℝ ℝ)
+    ↥(Matrix.specialUnitaryGroup n ℂ) ℝ ↑⊤
+def LogSobolev.specialUnitaryDerivEnd.{u_1} : {n : Type u_1} →
+  [inst : Fintype n] →
+    [inst_1 : DecidableEq n] →
+      ↥LogSobolev.specialUnitaryLieAlgebra → Module.End ℝ (LogSobolev.specialUnitarySmoothFunctions n) :=
+fun {n} [Fintype n] [DecidableEq n] A =>
+  { toFun := fun f => ⟨LogSobolev.specialUnitaryDeriv A ⇑f, ⋯⟩, map_add' := ⋯, map_smul' := ⋯ }
+def LogSobolev.specialUnitaryGammaTwo.{u_1, u_2} : {n : Type u_1} →
+  [inst : Fintype n] →
+    [inst_1 : DecidableEq n] →
+      {ι : Type u_2} →
+        [Fintype ι] →
+          (ι → ↥LogSobolev.specialUnitaryLieAlgebra) →
+            (↥(Matrix.specialUnitaryGroup n ℂ) → ℝ) → ↥(Matrix.specialUnitaryGroup n ℂ) → ℝ :=
+fun {n} [Fintype n] [DecidableEq n] {ι} [Fintype ι] b f U =>
+  (LogSobolev.specialUnitaryLaplacian b (LogSobolev.specialUnitaryGamma b f f) U -
+      2 * LogSobolev.specialUnitaryGamma b f (LogSobolev.specialUnitaryLaplacian b f) U) /
+    2
+LogSobolev.specialUnitaryLaplacian_deriv.{u_1, u_2} {n : Type u_1} [Fintype.{u_1} n] [DecidableEq.{u_1 + 1} n]
+  {ι : Type u_2} [Fintype.{u_2} ι]
+  (b :
+    @OrthonormalBasis.{u_2, 0, u_1} ι Real Real.instRCLike
+      (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+        @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+          (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+            (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+            (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+              (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                  (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                    (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                      (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                  (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+          (@SetLike.instMembership.{u_1, u_1}
+            (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+              (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+              (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                  (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                  (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                    (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                      (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                        (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                    (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+            (Matrix.{u_1, u_1, 0} n n Complex)
+            (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+              (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+              (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                  (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                  (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                    (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                      (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                        (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                    (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+          (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+      (@LogSobolev.specialUnitaryAlgebraNormedAddCommGroup.{u_1} n inst✝ inst✝¹)
+      (@LogSobolev.specialUnitaryAlgebraInnerProductSpace.{u_1} n inst✝ inst✝¹) inst✝²)
+  (A :
+    @Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+      @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+        (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+          (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+          (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+            (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+              (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+              (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                  (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                    (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+        (@SetLike.instMembership.{u_1, u_1}
+          (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+            (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+            (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+              (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                  (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                    (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                      (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                  (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+          (Matrix.{u_1, u_1, 0} n n Complex)
+          (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+            (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+            (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+              (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                  (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                    (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                      (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                  (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+        (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+  {f :
+    (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+        @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+          (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                  (@Semiring.toNonAssocSemiring.{0} Complex
+                    (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                  inst✝ inst✝¹))))
+          (@SetLike.instMembership.{u_1, u_1}
+            (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    inst✝ inst✝¹))))
+            (Matrix.{u_1, u_1, 0} n n Complex)
+            (@Submonoid.instSetLike.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    inst✝ inst✝¹)))))
+          (@Matrix.specialUnitaryGroup.{u_1, 0} n inst✝¹ inst✝ Complex Complex.commRing Complex.instStarRing) x) →
+      Real}
+  (hf :
+    @ContMDiff.{0, u_1, u_1, u_1, 0, 0, 0} Real
+      (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField)
+      (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+        @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+          (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+            (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+            (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+              (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                  (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                    (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                      (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                  (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+          (@SetLike.instMembership.{u_1, u_1}
+            (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+              (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+              (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                  (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                  (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                    (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                      (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                        (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                    (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+            (Matrix.{u_1, u_1, 0} n n Complex)
+            (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+              (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+              (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                  (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                  (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                    (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                      (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                        (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                    (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+          (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+      (@LogSobolev.specialUnitaryAlgebraNormedAddCommGroup.{u_1} n inst✝ inst✝¹)
+      (@LogSobolev.specialUnitaryAlgebraNormedSpace.{u_1} n inst✝ inst✝¹)
+      (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+        @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+          (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+            (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+            (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+              (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                  (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                    (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                      (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                  (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+          (@SetLike.instMembership.{u_1, u_1}
+            (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+              (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+              (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                  (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                  (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                    (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                      (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                        (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                    (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+            (Matrix.{u_1, u_1, 0} n n Complex)
+            (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+              (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+              (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                  (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                  (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                    (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                      (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                        (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                    (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+          (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+      (@UniformSpace.toTopologicalSpace.{u_1}
+        (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+          @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+              (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+              (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                  (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                  (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                    (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                      (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                        (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                    (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+            (@SetLike.instMembership.{u_1, u_1}
+              (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                  (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                    (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                    (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                      (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                        (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                          (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                      (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+              (Matrix.{u_1, u_1, 0} n n Complex)
+              (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                  (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                    (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                    (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                      (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                        (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                          (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                      (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+            (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+        (@PseudoMetricSpace.toUniformSpace.{u_1}
+          (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+            @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                  (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                    (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                    (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                      (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                        (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                          (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                      (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+              (@SetLike.instMembership.{u_1, u_1}
+                (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                (Matrix.{u_1, u_1, 0} n n Complex)
+                (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+              (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+          (@SeminormedAddCommGroup.toPseudoMetricSpace.{u_1}
+            (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+              @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                (@SetLike.instMembership.{u_1, u_1}
+                  (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                    (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                    (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                      (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                        (@CommRing.toCommSemiring.{0} Real Real.commRing)
+                        (@Ring.toSemiring.{0} Complex Complex.instRing)
+                        (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                          (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                            (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                              (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                          (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                  (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                    (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                    (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                      (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                        (@CommRing.toCommSemiring.{0} Real Real.commRing)
+                        (@Ring.toSemiring.{0} Complex Complex.instRing)
+                        (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                          (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                            (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                              (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                          (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+                (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+            (@NormedAddCommGroup.toSeminormedAddCommGroup.{u_1}
+              (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+                @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                    (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                    (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                      (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                        (@CommRing.toCommSemiring.{0} Real Real.commRing)
+                        (@Ring.toSemiring.{0} Complex Complex.instRing)
+                        (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                          (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                            (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                              (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                          (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                  (@SetLike.instMembership.{u_1, u_1}
+                    (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                      (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                        (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                      (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                        (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                        (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                          (@CommRing.toCommSemiring.{0} Real Real.commRing)
+                          (@Ring.toSemiring.{0} Complex Complex.instRing)
+                          (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                            (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                              (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                                (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                            (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                    (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                      (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                        (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                      (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                        (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                        (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                          (@CommRing.toCommSemiring.{0} Real Real.commRing)
+                          (@Ring.toSemiring.{0} Complex Complex.instRing)
+                          (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                            (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                              (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                                (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                            (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+                  (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+              (@LogSobolev.specialUnitaryAlgebraNormedAddCommGroup.{u_1} n inst✝ inst✝¹)))))
+      (@modelWithCornersSelf.{0, u_1} Real
+        (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField)
+        (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+          @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+              (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+              (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                  (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                  (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                    (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                      (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                        (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                    (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+            (@SetLike.instMembership.{u_1, u_1}
+              (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                  (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                    (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                    (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                      (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                        (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                          (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                      (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+              (Matrix.{u_1, u_1, 0} n n Complex)
+              (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                  (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                    (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                    (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                      (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                        (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                          (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                      (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+            (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+        (@LogSobolev.specialUnitaryAlgebraNormedAddCommGroup.{u_1} n inst✝ inst✝¹)
+        (@LogSobolev.specialUnitaryAlgebraNormedSpace.{u_1} n inst✝ inst✝¹))
+      (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+        @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+          (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                  (@Semiring.toNonAssocSemiring.{0} Complex
+                    (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                  inst✝ inst✝¹))))
+          (@SetLike.instMembership.{u_1, u_1}
+            (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    inst✝ inst✝¹))))
+            (Matrix.{u_1, u_1, 0} n n Complex)
+            (@Submonoid.instSetLike.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    inst✝ inst✝¹)))))
+          (@Matrix.specialUnitaryGroup.{u_1, 0} n inst✝¹ inst✝ Complex Complex.commRing Complex.instStarRing) x)
+      (@instTopologicalSpaceSubtype.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+        (fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+          @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    inst✝ inst✝¹))))
+            (@SetLike.instMembership.{u_1, u_1}
+              (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                      (@Semiring.toNonAssocSemiring.{0} Complex
+                        (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                      inst✝ inst✝¹))))
+              (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Submonoid.instSetLike.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                      (@Semiring.toNonAssocSemiring.{0} Complex
+                        (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                      inst✝ inst✝¹)))))
+            (@Matrix.specialUnitaryGroup.{u_1, 0} n inst✝¹ inst✝ Complex Complex.commRing Complex.instStarRing) x)
+        (@instTopologicalSpaceMatrix.{u_1, u_1, 0} n n Complex
+          (@UniformSpace.toTopologicalSpace.{0} Complex
+            (@PseudoMetricSpace.toUniformSpace.{0} Complex
+              (@SeminormedRing.toPseudoMetricSpace.{0} Complex
+                (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                  (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                    (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField))))))))
+      (@LogSobolev.specialUnitaryChartedSpace.{u_1} n inst✝ inst✝¹) Real Real.normedAddCommGroup
+      (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike
+        (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)
+        (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))
+      Real
+      (@UniformSpace.toTopologicalSpace.{0} Real
+        (@PseudoMetricSpace.toUniformSpace.{0} Real
+          (@SeminormedAddCommGroup.toPseudoMetricSpace.{0} Real
+            (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup))))
+      (@modelWithCornersSelf.{0, 0} Real
+        (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField) Real Real.normedAddCommGroup
+        (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike
+          (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)
+          (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike)))
+      Real
+      (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+      (@chartedSpaceSelf.{0} Real
+        (@UniformSpace.toTopologicalSpace.{0} Real
+          (@PseudoMetricSpace.toUniformSpace.{0} Real
+            (@SeminormedAddCommGroup.toPseudoMetricSpace.{0} Real
+              (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)))))
+      (@WithTop.some.{0} ENat (@Top.top.{0} ENat instTopENat)) f) :
+  @Eq.{u_1 + 1}
+    ((U :
+        @Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+          @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    inst✝ inst✝¹))))
+            (@SetLike.instMembership.{u_1, u_1}
+              (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                      (@Semiring.toNonAssocSemiring.{0} Complex
+                        (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                      inst✝ inst✝¹))))
+              (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Submonoid.instSetLike.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                      (@Semiring.toNonAssocSemiring.{0} Complex
+                        (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                      inst✝ inst✝¹)))))
+            (@Matrix.specialUnitaryGroup.{u_1, 0} n inst✝¹ inst✝ Complex Complex.commRing Complex.instStarRing) x) →
+      Real)
+    (@LogSobolev.specialUnitaryLaplacian.{u_1, u_2} n inst✝ inst✝¹ ι inst✝²
+      (@DFunLike.coe.{max (u_1 + 1) (u_2 + 1), u_2 + 1, u_1 + 1}
+        (@OrthonormalBasis.{u_2, 0, u_1} ι Real Real.instRCLike
+          (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+            @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                  (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                    (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                    (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                      (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                        (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                          (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                      (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+              (@SetLike.instMembership.{u_1, u_1}
+                (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                (Matrix.{u_1, u_1, 0} n n Complex)
+                (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+              (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+          (@LogSobolev.specialUnitaryAlgebraNormedAddCommGroup.{u_1} n inst✝ inst✝¹)
+          (@LogSobolev.specialUnitaryAlgebraInnerProductSpace.{u_1} n inst✝ inst✝¹) inst✝²)
+        ι
+        (fun (x : ι) =>
+          @Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+            @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                  (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                    (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                    (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                      (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                        (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                          (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                      (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+              (@SetLike.instMembership.{u_1, u_1}
+                (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                (Matrix.{u_1, u_1, 0} n n Complex)
+                (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+              (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+        (@OrthonormalBasis.instFunLike.{u_2, 0, u_1} ι Real Real.instRCLike
+          (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+            @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                  (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                    (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                    (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                      (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                        (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                          (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                      (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+              (@SetLike.instMembership.{u_1, u_1}
+                (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                (Matrix.{u_1, u_1, 0} n n Complex)
+                (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+              (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+          (@LogSobolev.specialUnitaryAlgebraNormedAddCommGroup.{u_1} n inst✝ inst✝¹)
+          (@LogSobolev.specialUnitaryAlgebraInnerProductSpace.{u_1} n inst✝ inst✝¹) inst✝²)
+        b)
+      (@LogSobolev.specialUnitaryDeriv.{u_1, 0} n inst✝ inst✝¹ Real Real.normedAddCommGroup
+        (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike
+          (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)
+          (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))
+        A f))
+    (@LogSobolev.specialUnitaryDeriv.{u_1, 0} n inst✝ inst✝¹ Real Real.normedAddCommGroup
+      (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike
+        (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)
+        (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))
+      A
+      (@LogSobolev.specialUnitaryLaplacian.{u_1, u_2} n inst✝ inst✝¹ ι inst✝²
+        (@DFunLike.coe.{max (u_1 + 1) (u_2 + 1), u_2 + 1, u_1 + 1}
+          (@OrthonormalBasis.{u_2, 0, u_1} ι Real Real.instRCLike
+            (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+              @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                (@SetLike.instMembership.{u_1, u_1}
+                  (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                    (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                    (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                      (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                        (@CommRing.toCommSemiring.{0} Real Real.commRing)
+                        (@Ring.toSemiring.{0} Complex Complex.instRing)
+                        (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                          (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                            (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                              (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                          (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                  (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                    (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                    (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                      (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                        (@CommRing.toCommSemiring.{0} Real Real.commRing)
+                        (@Ring.toSemiring.{0} Complex Complex.instRing)
+                        (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                          (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                            (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                              (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                          (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+                (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+            (@LogSobolev.specialUnitaryAlgebraNormedAddCommGroup.{u_1} n inst✝ inst✝¹)
+            (@LogSobolev.specialUnitaryAlgebraInnerProductSpace.{u_1} n inst✝ inst✝¹) inst✝²)
+          ι
+          (fun (x : ι) =>
+            @Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+              @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                (@SetLike.instMembership.{u_1, u_1}
+                  (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                    (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                    (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                      (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                        (@CommRing.toCommSemiring.{0} Real Real.commRing)
+                        (@Ring.toSemiring.{0} Complex Complex.instRing)
+                        (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                          (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                            (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                              (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                          (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                  (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                    (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                    (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                      (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                        (@CommRing.toCommSemiring.{0} Real Real.commRing)
+                        (@Ring.toSemiring.{0} Complex Complex.instRing)
+                        (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                          (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                            (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                              (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                          (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+                (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+          (@OrthonormalBasis.instFunLike.{u_2, 0, u_1} ι Real Real.instRCLike
+            (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+              @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                (@SetLike.instMembership.{u_1, u_1}
+                  (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                    (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                    (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                      (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                        (@CommRing.toCommSemiring.{0} Real Real.commRing)
+                        (@Ring.toSemiring.{0} Complex Complex.instRing)
+                        (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                          (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                            (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                              (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                          (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                  (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                    (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                    (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                      (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                        (@CommRing.toCommSemiring.{0} Real Real.commRing)
+                        (@Ring.toSemiring.{0} Complex Complex.instRing)
+                        (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                          (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                            (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                              (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                          (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+                (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+            (@LogSobolev.specialUnitaryAlgebraNormedAddCommGroup.{u_1} n inst✝ inst✝¹)
+            (@LogSobolev.specialUnitaryAlgebraInnerProductSpace.{u_1} n inst✝ inst✝¹) inst✝²)
+          b)
+        f))
+LogSobolev.specialUnitaryGammaTwo_lower_bound.{u_1, u_2} {n : Type u_1} [Fintype.{u_1} n] [DecidableEq.{u_1 + 1} n]
+  {ι : Type u_2} [Fintype.{u_2} ι]
+  (b :
+    @OrthonormalBasis.{u_2, 0, u_1} ι Real Real.instRCLike
+      (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+        @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+          (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+            (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+            (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+              (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                  (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                    (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                      (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                  (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+          (@SetLike.instMembership.{u_1, u_1}
+            (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+              (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+              (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                  (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                  (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                    (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                      (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                        (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                    (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+            (Matrix.{u_1, u_1, 0} n n Complex)
+            (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+              (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+              (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                  (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                  (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                    (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                      (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                        (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                    (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+          (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+      (@LogSobolev.specialUnitaryAlgebraNormedAddCommGroup.{u_1} n inst✝ inst✝¹)
+      (@LogSobolev.specialUnitaryAlgebraInnerProductSpace.{u_1} n inst✝ inst✝¹) inst✝²)
+  {f :
+    (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+        @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+          (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                  (@Semiring.toNonAssocSemiring.{0} Complex
+                    (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                  inst✝ inst✝¹))))
+          (@SetLike.instMembership.{u_1, u_1}
+            (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    inst✝ inst✝¹))))
+            (Matrix.{u_1, u_1, 0} n n Complex)
+            (@Submonoid.instSetLike.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    inst✝ inst✝¹)))))
+          (@Matrix.specialUnitaryGroup.{u_1, 0} n inst✝¹ inst✝ Complex Complex.commRing Complex.instStarRing) x) →
+      Real}
+  (hf :
+    @ContMDiff.{0, u_1, u_1, u_1, 0, 0, 0} Real
+      (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField)
+      (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+        @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+          (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+            (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+            (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+              (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                  (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                    (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                      (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                  (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+          (@SetLike.instMembership.{u_1, u_1}
+            (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+              (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+              (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                  (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                  (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                    (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                      (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                        (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                    (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+            (Matrix.{u_1, u_1, 0} n n Complex)
+            (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+              (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+              (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                  (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                  (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                    (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                      (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                        (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                    (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+          (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+      (@LogSobolev.specialUnitaryAlgebraNormedAddCommGroup.{u_1} n inst✝ inst✝¹)
+      (@LogSobolev.specialUnitaryAlgebraNormedSpace.{u_1} n inst✝ inst✝¹)
+      (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+        @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+          (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+            (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+            (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+              (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                  (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                    (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                      (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                  (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+          (@SetLike.instMembership.{u_1, u_1}
+            (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+              (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+              (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                  (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                  (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                    (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                      (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                        (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                    (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+            (Matrix.{u_1, u_1, 0} n n Complex)
+            (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+              (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+              (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                  (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                  (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                    (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                      (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                        (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                    (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+          (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+      (@UniformSpace.toTopologicalSpace.{u_1}
+        (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+          @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+              (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+              (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                  (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                  (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                    (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                      (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                        (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                    (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+            (@SetLike.instMembership.{u_1, u_1}
+              (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                  (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                    (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                    (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                      (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                        (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                          (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                      (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+              (Matrix.{u_1, u_1, 0} n n Complex)
+              (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                  (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                    (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                    (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                      (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                        (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                          (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                      (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+            (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+        (@PseudoMetricSpace.toUniformSpace.{u_1}
+          (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+            @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                  (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                    (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                    (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                      (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                        (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                          (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                      (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+              (@SetLike.instMembership.{u_1, u_1}
+                (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                (Matrix.{u_1, u_1, 0} n n Complex)
+                (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+              (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+          (@SeminormedAddCommGroup.toPseudoMetricSpace.{u_1}
+            (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+              @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                (@SetLike.instMembership.{u_1, u_1}
+                  (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                    (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                    (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                      (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                        (@CommRing.toCommSemiring.{0} Real Real.commRing)
+                        (@Ring.toSemiring.{0} Complex Complex.instRing)
+                        (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                          (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                            (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                              (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                          (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                  (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                    (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                    (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                      (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                        (@CommRing.toCommSemiring.{0} Real Real.commRing)
+                        (@Ring.toSemiring.{0} Complex Complex.instRing)
+                        (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                          (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                            (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                              (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                          (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+                (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+            (@NormedAddCommGroup.toSeminormedAddCommGroup.{u_1}
+              (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+                @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                    (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                    (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                      (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                        (@CommRing.toCommSemiring.{0} Real Real.commRing)
+                        (@Ring.toSemiring.{0} Complex Complex.instRing)
+                        (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                          (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                            (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                              (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                          (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                  (@SetLike.instMembership.{u_1, u_1}
+                    (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                      (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                        (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                      (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                        (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                        (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                          (@CommRing.toCommSemiring.{0} Real Real.commRing)
+                          (@Ring.toSemiring.{0} Complex Complex.instRing)
+                          (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                            (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                              (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                                (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                            (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                    (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                      (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                        (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                      (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                        (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                        (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                          (@CommRing.toCommSemiring.{0} Real Real.commRing)
+                          (@Ring.toSemiring.{0} Complex Complex.instRing)
+                          (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                            (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                              (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                                (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                            (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+                  (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+              (@LogSobolev.specialUnitaryAlgebraNormedAddCommGroup.{u_1} n inst✝ inst✝¹)))))
+      (@modelWithCornersSelf.{0, u_1} Real
+        (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField)
+        (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+          @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+              (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+              (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                  (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                  (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                    (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                      (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                        (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                    (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+            (@SetLike.instMembership.{u_1, u_1}
+              (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                  (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                    (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                    (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                      (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                        (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                          (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                      (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+              (Matrix.{u_1, u_1, 0} n n Complex)
+              (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                  (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                    (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                    (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                      (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                        (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                          (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                      (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+            (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+        (@LogSobolev.specialUnitaryAlgebraNormedAddCommGroup.{u_1} n inst✝ inst✝¹)
+        (@LogSobolev.specialUnitaryAlgebraNormedSpace.{u_1} n inst✝ inst✝¹))
+      (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+        @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+          (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                  (@Semiring.toNonAssocSemiring.{0} Complex
+                    (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                  inst✝ inst✝¹))))
+          (@SetLike.instMembership.{u_1, u_1}
+            (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    inst✝ inst✝¹))))
+            (Matrix.{u_1, u_1, 0} n n Complex)
+            (@Submonoid.instSetLike.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    inst✝ inst✝¹)))))
+          (@Matrix.specialUnitaryGroup.{u_1, 0} n inst✝¹ inst✝ Complex Complex.commRing Complex.instStarRing) x)
+      (@instTopologicalSpaceSubtype.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+        (fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+          @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    inst✝ inst✝¹))))
+            (@SetLike.instMembership.{u_1, u_1}
+              (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                      (@Semiring.toNonAssocSemiring.{0} Complex
+                        (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                      inst✝ inst✝¹))))
+              (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Submonoid.instSetLike.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                      (@Semiring.toNonAssocSemiring.{0} Complex
+                        (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                      inst✝ inst✝¹)))))
+            (@Matrix.specialUnitaryGroup.{u_1, 0} n inst✝¹ inst✝ Complex Complex.commRing Complex.instStarRing) x)
+        (@instTopologicalSpaceMatrix.{u_1, u_1, 0} n n Complex
+          (@UniformSpace.toTopologicalSpace.{0} Complex
+            (@PseudoMetricSpace.toUniformSpace.{0} Complex
+              (@SeminormedRing.toPseudoMetricSpace.{0} Complex
+                (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                  (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                    (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField))))))))
+      (@LogSobolev.specialUnitaryChartedSpace.{u_1} n inst✝ inst✝¹) Real Real.normedAddCommGroup
+      (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike
+        (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)
+        (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))
+      Real
+      (@UniformSpace.toTopologicalSpace.{0} Real
+        (@PseudoMetricSpace.toUniformSpace.{0} Real
+          (@SeminormedAddCommGroup.toPseudoMetricSpace.{0} Real
+            (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup))))
+      (@modelWithCornersSelf.{0, 0} Real
+        (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField) Real Real.normedAddCommGroup
+        (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike
+          (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)
+          (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike)))
+      Real
+      (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+      (@chartedSpaceSelf.{0} Real
+        (@UniformSpace.toTopologicalSpace.{0} Real
+          (@PseudoMetricSpace.toUniformSpace.{0} Real
+            (@SeminormedAddCommGroup.toPseudoMetricSpace.{0} Real
+              (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)))))
+      (@WithTop.some.{0} ENat (@Top.top.{0} ENat instTopENat)) f)
+  (U :
+    @Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+      @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+        (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+          (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                (@Semiring.toNonAssocSemiring.{0} Complex
+                  (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                inst✝ inst✝¹))))
+        (@SetLike.instMembership.{u_1, u_1}
+          (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                  (@Semiring.toNonAssocSemiring.{0} Complex
+                    (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                  inst✝ inst✝¹))))
+          (Matrix.{u_1, u_1, 0} n n Complex)
+          (@Submonoid.instSetLike.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                  (@Semiring.toNonAssocSemiring.{0} Complex
+                    (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                  inst✝ inst✝¹)))))
+        (@Matrix.specialUnitaryGroup.{u_1, 0} n inst✝¹ inst✝ Complex Complex.commRing Complex.instStarRing) x) :
+  @LE.le.{0} Real Real.instLE
+    (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+      (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+        (@Nat.cast.{0} Real Real.instNatCast (@Fintype.card.{u_1} n inst✝))
+        (@OfNat.ofNat.{0} Real (nat_lit 2)
+          (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast
+            (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))
+              (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))))))))
+      (@LogSobolev.specialUnitaryGamma.{u_1, u_2} n inst✝ inst✝¹ ι inst✝²
+        (@DFunLike.coe.{max (u_1 + 1) (u_2 + 1), u_2 + 1, u_1 + 1}
+          (@OrthonormalBasis.{u_2, 0, u_1} ι Real Real.instRCLike
+            (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+              @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                (@SetLike.instMembership.{u_1, u_1}
+                  (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                    (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                    (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                      (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                        (@CommRing.toCommSemiring.{0} Real Real.commRing)
+                        (@Ring.toSemiring.{0} Complex Complex.instRing)
+                        (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                          (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                            (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                              (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                          (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                  (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                    (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                    (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                      (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                        (@CommRing.toCommSemiring.{0} Real Real.commRing)
+                        (@Ring.toSemiring.{0} Complex Complex.instRing)
+                        (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                          (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                            (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                              (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                          (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+                (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+            (@LogSobolev.specialUnitaryAlgebraNormedAddCommGroup.{u_1} n inst✝ inst✝¹)
+            (@LogSobolev.specialUnitaryAlgebraInnerProductSpace.{u_1} n inst✝ inst✝¹) inst✝²)
+          ι
+          (fun (x : ι) =>
+            @Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+              @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                (@SetLike.instMembership.{u_1, u_1}
+                  (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                    (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                    (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                      (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                        (@CommRing.toCommSemiring.{0} Real Real.commRing)
+                        (@Ring.toSemiring.{0} Complex Complex.instRing)
+                        (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                          (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                            (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                              (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                          (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                  (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                    (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                    (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                      (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                        (@CommRing.toCommSemiring.{0} Real Real.commRing)
+                        (@Ring.toSemiring.{0} Complex Complex.instRing)
+                        (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                          (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                            (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                              (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                          (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+                (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+          (@OrthonormalBasis.instFunLike.{u_2, 0, u_1} ι Real Real.instRCLike
+            (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+              @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                (@SetLike.instMembership.{u_1, u_1}
+                  (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                    (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                    (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                      (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                        (@CommRing.toCommSemiring.{0} Real Real.commRing)
+                        (@Ring.toSemiring.{0} Complex Complex.instRing)
+                        (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                          (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                            (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                              (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                          (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                  (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                    (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                    (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                      (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                        (@CommRing.toCommSemiring.{0} Real Real.commRing)
+                        (@Ring.toSemiring.{0} Complex Complex.instRing)
+                        (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                          (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                            (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                              (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                          (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+                (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+            (@LogSobolev.specialUnitaryAlgebraNormedAddCommGroup.{u_1} n inst✝ inst✝¹)
+            (@LogSobolev.specialUnitaryAlgebraInnerProductSpace.{u_1} n inst✝ inst✝¹) inst✝²)
+          b)
+        f f U))
+    (@LogSobolev.specialUnitaryGammaTwo.{u_1, u_2} n inst✝ inst✝¹ ι inst✝²
+      (@DFunLike.coe.{max (u_1 + 1) (u_2 + 1), u_2 + 1, u_1 + 1}
+        (@OrthonormalBasis.{u_2, 0, u_1} ι Real Real.instRCLike
+          (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+            @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                  (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                    (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                    (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                      (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                        (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                          (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                      (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+              (@SetLike.instMembership.{u_1, u_1}
+                (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                (Matrix.{u_1, u_1, 0} n n Complex)
+                (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+              (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+          (@LogSobolev.specialUnitaryAlgebraNormedAddCommGroup.{u_1} n inst✝ inst✝¹)
+          (@LogSobolev.specialUnitaryAlgebraInnerProductSpace.{u_1} n inst✝ inst✝¹) inst✝²)
+        ι
+        (fun (x : ι) =>
+          @Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+            @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                  (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                    (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                    (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                      (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                        (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                          (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                      (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+              (@SetLike.instMembership.{u_1, u_1}
+                (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                (Matrix.{u_1, u_1, 0} n n Complex)
+                (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+              (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+        (@OrthonormalBasis.instFunLike.{u_2, 0, u_1} ι Real Real.instRCLike
+          (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+            @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                  (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                    (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                    (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                      (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                        (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                          (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                      (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+              (@SetLike.instMembership.{u_1, u_1}
+                (@LieSubalgebra.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike)))))
+                (Matrix.{u_1, u_1, 0} n n Complex)
+                (@LieSubalgebra.instSetLike.{0, u_1} Real (Matrix.{u_1, u_1, 0} n n Complex) Real.commRing
+                  (@LieRing.ofAssociativeRing.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing))
+                  (@LieAlgebra.ofAssociativeAlgebra.{0, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.instRing.{0, u_1} n Complex inst✝ inst✝¹ Complex.instRing) Real Real.commRing
+                    (@Matrix.instAlgebra.{u_1, 0, 0} n Real Complex inst✝ inst✝¹
+                      (@CommRing.toCommSemiring.{0} Real Real.commRing) (@Ring.toSemiring.{0} Complex Complex.instRing)
+                      (@NormedAlgebra.toAlgebra.{0, 0} Real Complex Real.normedField
+                        (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                          (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField)))
+                        (@RCLike.toNormedAlgebra.{0} Complex Complex.instRCLike))))))
+              (@LogSobolev.specialUnitaryLieAlgebra.{u_1} n inst✝ inst✝¹) x)
+          (@LogSobolev.specialUnitaryAlgebraNormedAddCommGroup.{u_1} n inst✝ inst✝¹)
+          (@LogSobolev.specialUnitaryAlgebraInnerProductSpace.{u_1} n inst✝ inst✝¹) inst✝²)
+        b)
+      f U)

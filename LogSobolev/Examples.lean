@@ -290,3 +290,28 @@ example : ∃ A : specialUnitaryLieAlgebra (n := Fin 2),
     norm_num [l, A, Matrix.diagonal]
   rw [hd]
   norm_num
+
+-- The SU(3) differential curvature estimate, expanded into its actual generator formula.
+example {f : Matrix.specialUnitaryGroup (Fin 3) ℂ → ℝ}
+    (hf : ContMDiff 𝓘(ℝ, specialUnitaryLieAlgebra (n := Fin 3)) 𝓘(ℝ) ∞ f)
+    (U : Matrix.specialUnitaryGroup (Fin 3) ℂ) :
+    let b := stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 3))
+    3 * specialUnitaryGamma b f f U ≤
+      specialUnitaryLaplacian b (specialUnitaryGamma b f f) U -
+        2 * specialUnitaryGamma b f (specialUnitaryLaplacian b f) U := by
+  dsimp only
+  have h := specialUnitaryGammaTwo_lower_bound
+    (stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 3))) hf U
+  norm_num only [Fintype.card_fin, Nat.cast_ofNat, specialUnitaryGammaTwo] at h
+  linarith
+
+-- The actual operator commutation also applies to iterated generators.
+example {ι : Type*} [Fintype ι]
+    (b : OrthonormalBasis ι ℝ (specialUnitaryLieAlgebra (n := Fin 2)))
+    (A : specialUnitaryLieAlgebra (n := Fin 2))
+    {f : Matrix.specialUnitaryGroup (Fin 2) ℂ → ℝ}
+    (hf : ContMDiff 𝓘(ℝ, specialUnitaryLieAlgebra (n := Fin 2)) 𝓘(ℝ) ∞ f) :
+    specialUnitaryLaplacian b (specialUnitaryLaplacian b (specialUnitaryDeriv A f)) =
+      specialUnitaryDeriv A (specialUnitaryLaplacian b (specialUnitaryLaplacian b f)) := by
+  rw [specialUnitaryLaplacian_deriv b A hf]
+  exact specialUnitaryLaplacian_deriv b A (specialUnitaryLaplacian_contMDiff b hf)
