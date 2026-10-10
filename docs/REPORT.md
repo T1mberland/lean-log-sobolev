@@ -1,0 +1,172 @@
+# Mathematical report
+
+## Result and limits
+
+This is a **partial formalization**, not a proof of Meckes–Meckes Theorem 15.
+There is no theorem claiming the `6/N` LSI on U(N), even for smooth functions or
+for N=1. No interval or SU(N) LSI has been assumed as an axiom or installed in a
+typeclass. The development proves the metric/measure foundations and general
+transport and regularity results described below.
+
+The principal unfinished step is analytic/geometric: obtaining SU(N)'s LSI
+from a proved curvature calculation and a proved diffusion criterion. The
+interval/circle LSI and the appropriate tensorization argument are also
+substantial analytic obligations. Short-interval Haar decomposition is a
+separate measure-theoretic obligation. These are mathematical missing proofs,
+not merely unresolved Lean syntax or typeclass errors.
+
+## Proved declarations
+
+All names below are in namespace `LogSobolev`.
+
+| Source | Main declarations | Precise scope |
+|---|---|---|
+| `LogSobolev/Measure/Entropy.lean` | `entropy_nonneg`, `entropy_map` | Jensen with integrability; entropy commutes with measurable pushforward. |
+| `LogSobolev/Measure/LSI.lean` | `HasEnergyLSI.map`, `.mono`, `.scale_energy` | Abstract implications with explicitly supplied source LSI, test class and energy comparison; not LSI existence. |
+| `LogSobolev/Geometry/LocalSlope.lean` | `localSlope_eq_limsup_nhdsNE`, `localSlope_lt_top`, `localSlope_comp_le`, `localSlope_comp_isometryEquiv` | Actual upper local metric slope, including collapsed points under a map and isolated points. |
+| `LogSobolev/Geometry/SlopeMeasurable.lean` | `localSlope_eq_iInf_iSup_probe`, `measurable_localSlope` | Borel measurability for every continuous real function on a metric space; no separability assumption. |
+| `LogSobolev/Geometry/MetricLSI.lean` | `slopeEnergy_comp_le`, `MetricLSI.map`, `.map_isometryEquiv` | The squared-slope integral and LSI pushforward with factor `K²`. Locally Lipschitz tests have explicit entropy integrability; infinite energy is allowed. |
+| `LogSobolev/Geometry/CompactRegularity.lean` | `integrable_sq_of_locallyLipschitz`, `integrable_sq_log_of_locallyLipschitz`, `integrable_localSlope_sq`, `slopeEnergy_eq_ofReal_integral`, `MetricLSI.real_form` | All requisite integrability for locally Lipschitz functions under a finite Borel measure on a compact metric space. The last theorem is conditional on LSI. |
+| `LogSobolev/Unitary/HilbertSchmidt.lean` | `frobenius_norm_sq_eq_trace`, `unitary_norm`, `norm_unitary_mul`, `norm_mul_unitary` | `‖A‖² = Tr(A* A)`, `‖U‖ = sqrt(card n)`, and invariance under unitary multiplication. |
+| `LogSobolev/Unitary/Haar.lean` | `unitaryCompactSpace`, `unitaryHaar`, `eq_unitaryHaar` | Haar probability on Mathlib's actual matrix unitary group, with uniqueness among left-invariant probability measures and right invariance. |
+| `LogSobolev/Unitary/SpecialUnitary.lean` | `specialUnitaryInclusion_isometry`, `specialUnitaryCompactSpace`, `specialUnitaryHaar` | Actual SU group, closed/compact, isometrically included in U, with normalized Haar measure. No curvature result. |
+| `LogSobolev/Unitary/PhaseMap.lean` | `phaseMul_dist_le`, `phaseMap_lipschitz` | The full-line phase map has Lipschitz constant `sqrt(3)` for every positive N; no probability argument is needed. |
+| `LogSobolev/Measure/Interval.lean` | `intervalUniform_univ`, `map_intervalUniform` | Normalized Lebesgue measure on the Euclidean subtype `[0,L]` for `L>0`. |
+| `LogSobolev/Unitary/ProductDomain.lean` | `phaseDomainMeasure_probability`, `intervalPhaseMap_lipschitz` | The exact interval × SU domain and probability measure, and the restricted map's Lipschitz bound. No equality of its pushforward with Haar. |
+| `LogSobolev/Unitary/Observables.lean` | `entryReal_lipschitz`, `entryReal_not_ae_constant`, `unitary_regular` | A meaningful nonconstant test in each positive dimension, and all integrability requirements for every locally Lipschitz U(N) observable. |
+
+## Convention and semantic checks
+
+* The group is `Matrix.unitaryGroup (Fin N) ℂ`, not an abstract type satisfying
+  an assumed LSI. SU is `Matrix.specialUnitaryGroup (Fin N) ℂ`.
+* `unitaryHaar` and `specialUnitaryHaar` are `Measure.haarMeasure ⊤`, after
+  proving compactness. Their total masses are proved to be one.
+* `Matrix.Norms.Frobenius` is open at elaboration of every matrix-metric result.
+  The trace identity and the identity-matrix norm example exclude division by N
+  and exclude the operator norm. `WithLp 2` explicitly supplies the L² product
+  metric; the ordinary maximum product metric is not substituted.
+* `localSlope` has values in `ℝ≥0∞`. Its definition is the limsup of the absolute
+  difference quotient, with denominator the actual metric distance. Its
+  equality to the punctured-neighborhood definition is proved. It is finite
+  on all locally Lipschitz tests. `toReal` is used for the real energy only
+  after that finiteness is established.
+* `MetricLSI` uses `2C`. `MetricLSI.real_form` recovers the ordinary finite
+  integral inequality on compact spaces, with all integrability established.
+  A future constant `6/N` therefore has coefficient `12/N`.
+* `phaseMap_apply` gives the actual exponential matrix formula. The interval
+  length is `π * sqrt(2/N)`. Its positivity and probability normalization need
+  `N>0`. The metric proof works for N=1 too, but is **not** a proof of its LSI.
+* The real diagonal coordinate separates `I` from `-I`, is 1-Lipschitz, and is
+  not a.e. constant under Haar. This checks that the admissible class contains
+  nonconstant functions. It does not by itself prove their entropy inequality.
+
+## Exact remaining statements
+
+The following are **unproved goals**, not library declarations. They use the
+definitions already implemented. Open `MeasureTheory`, `LogSobolev`, and the
+scopes `NNReal` and `Matrix.Norms.Frobenius`.
+
+The main target is:
+
+```lean
+∀ (N : ℕ), 0 < N →
+  MetricLSI (unitaryHaar (Fin N)) (6 / (N : ℝ≥0))
+```
+
+Equivalently for the intended applications, the desired real inequality is:
+
+```lean
+∀ (N : ℕ), 0 < N →
+  ∀ f : Matrix.unitaryGroup (Fin N) ℂ → ℝ, LocallyLipschitz f →
+    entropy (unitaryHaar (Fin N)) (fun U => f U ^ 2) ≤
+      (12 / (N : ℝ)) *
+        ∫ U, (localSlope f U).toReal ^ 2 ∂unitaryHaar (Fin N)
+```
+
+The reference route still needs these statements:
+
+```lean
+-- SU(N), with exactly the unnormalized metric and Haar probability:
+∀ (N : ℕ), 2 ≤ N →
+  MetricLSI (specialUnitaryHaar (Fin N)) (2 / (N : ℝ≥0))
+
+-- The Euclidean interval, all locally Lipschitz finite-entropy tests:
+∀ (N : ℕ), 0 < N →
+  MetricLSI (intervalUniform (phaseIntervalLength N)) (2 / (N : ℝ≥0))
+
+-- Tensorization for this L² metric and the actual product probability:
+∀ (N : ℕ), 2 ≤ N →
+  MetricLSI (intervalUniform (phaseIntervalLength N)) (2 / (N : ℝ≥0)) →
+  MetricLSI (specialUnitaryHaar (Fin N)) (2 / (N : ℝ≥0)) →
+  MetricLSI (phaseDomainMeasure N) (2 / (N : ℝ≥0))
+
+-- Lemma 16, expressed on the constructed interval domain:
+∀ (N : ℕ), 0 < N →
+  Measure.map (intervalPhaseMap N) (phaseDomainMeasure N) = unitaryHaar (Fin N)
+
+-- The remaining separate N=1 analytic case:
+MetricLSI (unitaryHaar (Fin 1)) 6
+```
+
+None of these is a hypothesis hidden in the proved geometric or regularity
+results. In particular, `phaseDomainMeasure_probability` proves only that the
+source measure is probability, not that its image is Haar.
+
+## Shortest sound continuation
+
+Keep the existing Mathlib matrix groups and norm. First close the independent
+short-interval Haar decomposition by verified phase translation and SU central
+root-of-unity invariance, followed by `eq_unitaryHaar`.
+
+For analysis, port the inspected finite-product entropy subadditivity rather
+than redeveloping it. Prove the required gradient-to-local-slope identification
+and tensorization in the manifold/interval setting; the inspected Gaussian
+tensorization is not immediately that theorem. Prove a one-dimensional
+circle/interval LSI and scaling, including the circle case for N=1.
+
+The SU step needs a concrete diffusion or Riemannian development: the
+Hilbert–Schmidt bi-invariant geometry, Ricci normalization, entropy dissipation,
+curvature-to-Fisher-information decay, equilibrium convergence, and any smooth
+approximation needed to obtain locally Lipschitz functions. The abstract
+`markov-semigroups` class does not eliminate these obligations. Its assumed
+entropy decay must not be passed off as a proved curvature criterion.
+
+Once these ingredients exist, use `MetricLSI.map` and
+`intervalPhaseMap_lipschitz`; `MetricLSI.real_form` already removes the compact
+regularity side conditions. A verified Herbst argument is a later task.
+
+## Verification and commits
+
+Verification performed on 2026-10-10 with Lean 4.28.0 and the pinned Mathlib
+commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
+
+* `lake build`: passed for the complete library (2710 dependency/build jobs,
+  primarily cached Mathlib artifacts).
+* `lake env lean LogSobolev/Examples.lean`: passed; the examples compile as an
+  independent client importing the public root module.
+* `lake env lean LogSobolev/Audit.lean`: passed. The automated traversal checked
+  **124 declarations** in the `LogSobolev` namespace, including definitions,
+  instances, and generated auxiliaries. Every transitive axiom was one of
+  `propext`, `Classical.choice`, or `Quot.sound`. No `sorryAx` or custom axiom
+  was present in those dependency closures.
+* The audit also executes 23 `#print axioms` commands, prints the core
+  definitions, and prints fully elaborated types for the trace normalization,
+  phase-map Lipschitz theorem and U(N) regularity theorem. The elaborated
+  metric instances are explicitly Frobenius and `WithLp 2`.
+* Source scan found no proof omissions or custom axiom declarations;
+  `git diff --check` passed.
+
+The complete output is preserved in [axiom-audit.txt](axiom-audit.txt).
+See `scripts/check.sh` for the repeatable commands. This audit certifies the
+proved partial results; there is no final U(N) LSI theorem to audit yet.
+
+Completed milestones:
+
+* `d774e93`: ecosystem audit, pinned project, entropy transport and
+  Hilbert–Schmidt normalization.
+* `a8ce6ef`: metric-slope measurability and transport, compact regularity,
+  normalized Haar/interval/product measures, the phase-map estimate,
+  nonconstant observables, independent examples and the recursive axiom audit.
+
+The report and README are committed separately after these verified proof
+milestones; use `git log --oneline` to see the documentation commit as well.
