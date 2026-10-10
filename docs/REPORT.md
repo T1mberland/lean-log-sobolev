@@ -23,8 +23,13 @@ entropy. Reverse Fatou and Jensen control the approximants' differential energy
 by the original locally Lipschitz function's local-slope energy. Passing to the
 limit proves the full metric result without an assumed Bakry–Émery criterion.
 
-For the larger U(N) objective, the remaining obligations are the interval/circle
-LSI, the appropriate L²-product tensorization, and the U(1) case. The short-interval
+A C¹ interval inequality is also proved: normalized uniform measure on `[0,L]`
+satisfies `Ent(f²) ≤ (L²/4) ∫ f′²` for restrictions of real continuously
+differentiable functions. Its LSI constant is `L²/8`, not the sharp `L²/π²`.
+Signs and zeros are allowed.
+
+For the larger U(N) objective, the remaining obligations are a sufficient
+locally Lipschitz extension, the product/tangent energy argument, and the U(1) case. The short-interval
 Haar decomposition and Lipschitz transfer are already proved. This SU result
 is not presented as a complete proof of Theorem 15 on U(N).
 
@@ -39,6 +44,13 @@ All names below are in namespace `LogSobolev`.
 | `LogSobolev/Measure/EntropyVariational.lean` | `integral_mul_log_le_entropy` | Gibbs bound for a positive normalized reference density with explicit cross-log integrability; zero mass allowed. |
 | `LogSobolev/Measure/ParametricEntropy.lean` | `continuous_parametric_entropy` | Joint continuity on a compact integration space implies continuous entropy, including zeros. |
 | `LogSobolev/Measure/ProductEntropySubadditivity.lean` | `entropy_prod_le_integral_entropy_add_of_continuous` | Joint entropy is bounded by the sum of averaged slice entropies for every continuous nonnegative density on compact metric probability spaces. All integrability is proved; this is entropy subadditivity, not metric-LSI tensorization. |
+| `LogSobolev/Analysis/TwoPointEntropy.lean` | `TwoPoint.sq_entropy_le` | Sharp balanced two-point bound for arbitrary real values. Compatible port of StatsMLlib's positive-density proof, extended to zeros and signed observables. |
+| `LogSobolev/Measure/FiniteUniform.lean` | `integral_uniformOn_univ`, `uniformOn_univ_prod`, `entropy_uniformOn_equiv` | Arithmetic-average formulas and product/bijection invariance for Mathlib finite uniform measures. |
+| `LogSobolev/Analysis/DyadicEntropy.lean`, `DyadicEnergy.lean`, `DyadicLSI.lean` | `uniformGridEntropy_double_le`, `discreteWeightedEnergy_double_le`, `uniformGridEntropy_pow_two_le_unweighted` | Proved entropy recursion and exact path weights give `Ent_m(f²) ≤ (m/4) Σ(f(i+1)−f(i))²` for `m=2^n`. |
+| `LogSobolev/Analysis/UniformGridLimit.lean` | `uniformGridAverage_error_le`, `tendsto_uniformGridAverage_pow_two` | A modulus-of-continuity estimate and convergence of actual dyadic samples to the unit-interval integral. |
+| `LogSobolev/Analysis/IntervalSquareIncrement.lean` | `interval_integral_sq_le`, `sum_sq_uniform_increments_le` | Cauchy–Schwarz and the exact mesh-factor bound on squared increments of C¹ functions. |
+| `LogSobolev/Analysis/UnitIntervalLSI.lean` | `unitInterval_entropy_sq_le_of_hasDerivAt` | Proved unit-interval entropy inequality with real coefficient `1/4`, using a verified discrete-to-continuum limit. |
+| `LogSobolev/Measure/IntervalIntegral.lean`, `LogSobolev/Analysis/IntervalLSI.lean` | `entropy_intervalUniform_eq_unit`, `intervalUniform_entropy_sq_le_of_hasDerivAt` | Exact normalized-measure rescaling and the C¹ bound with coefficient `L²/4`. Full locally Lipschitz interval LSI is not yet proved. |
 | `LogSobolev/Measure/LSI.lean` | `HasEnergyLSI.map`, `.mono`, `.scale_energy` | Abstract implications with explicitly supplied source LSI, test class and energy comparison; not LSI existence. |
 | `LogSobolev/Geometry/LocalSlope.lean` | `localSlope_eq_limsup_nhdsNE`, `localSlope_lt_top`, `localSlope_comp_le`, `localSlope_comp_isometryEquiv` | Actual upper local metric slope, including collapsed points under a map and isolated points. |
 | `LogSobolev/Geometry/SlopeMeasurable.lean` | `localSlope_eq_iInf_iSup_probe`, `measurable_localSlope` | Borel measurability for every continuous real function on a metric space; no separability assumption. |
@@ -269,7 +281,21 @@ differentiating a marginal square root. The remaining tensorization obligation
 is to compare the sum of the coordinate energies with the full L²-product
 energy. This is not an automatic pointwise inequality for arbitrary nonsmooth
 functions; a smooth approximation or almost-everywhere argument is still needed.
-The interval/circle LSI and its scaling are also still unproved.
+The new C¹ interval bound supplies one possible alternative to the sharp
+interval route. At the paper's length its constant is `π²/(4N)`, so merely
+combining it with the existing global `sqrt(3)` Lipschitz transfer is insufficient.
+A proposed continuation is to use orthogonality of the central phase direction
+and the traceless SU directions: the weighted smooth energy would then have
+coefficient at most `π²/N < 12/N`. This comparison and the extension to arbitrary
+locally Lipschitz U(N) observables are **not yet formalized**. The original sharp
+interval and metric tensorization statements above also remain unproved.
+
+For the interval extension, pinned Mathlib provides
+`LipschitzOnWith.absolutelyContinuousOnInterval` and
+`AbsolutelyContinuousOnInterval.integral_deriv_eq_sub`. These offer a direct
+route from the grid argument to nonsmooth Lipschitz functions, after upgrading
+the squared-integral estimate to integrable derivatives and comparing derivatives
+to the local slope. These are next proof obligations, not imported LSI assertions.
 
 The [completed SU proof](SU_LSI.md) supplies the `2/N` factor unconditionally,
 including locally Lipschitz tests. Its route uses actual sum-of-squares Γ₂ and
@@ -290,11 +316,20 @@ milestones supersede earlier open obligations.
 Verification performed on 2026-10-10 with Lean 4.28.0 and the pinned Mathlib
 commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
 
-* `lake build`: passed for the complete library (3118 dependency/build jobs,
+* `lake build`: passed for the complete library (3128 dependency/build jobs,
   primarily cached Mathlib artifacts).
 * `lake env lean LogSobolev/Examples.lean`: passed; the examples compile as an
   independent client importing the public root module.
-* `lake env lean LogSobolev/ExamplesProductEntropy.lean`: passed, including
+* `lake env lean LogSobolev/ExamplesInterval.lean`: passed, including arbitrary
+  signed dyadic samples and a nonconstant centered linear interval observable
+  with a zero, plus its square and log-moment integrability.
+* `lake env lean LogSobolev/AuditInterval.lean`: passed at `3680ea6`; all
+  **922 declarations** and their recursive dependencies use only `propext`,
+  `Classical.choice`, and `Quot.sound`. Twenty selected axiom prints, the fully
+  elaborated C¹ interval theorem, and the measure/entropy/energy definitions
+  are recorded in [interval-axiom-audit.txt](interval-axiom-audit.txt).
+* `lake env lean LogSobolev/ExamplesProductEntropy.lean`: passed again after
+  weakening unnecessary metric assumptions in the subadditivity theorem, including
   squared functions with zeros and a joint interval/SU(2) distance observable.
 * `lake env lean LogSobolev/AuditProductEntropy.lean`: passed at `7a5ed75`;
   all **808 declarations** and their recursive dependencies use only the three
@@ -557,6 +592,18 @@ Completed milestones:
   assumptions from the compact conclusion. Build (3118 jobs), independent
   square/interval/SU(2) examples, and an 808-declaration recursive axiom audit
   pass. No interval LSI or metric-energy tensorization is asserted here.
+
+* `3680ea6`: compatible port of StatsMLlib's two-point upper bound, extended to
+  signed values and zeros. Finite uniform-measure identities and binary entropy
+  decomposition combine with exact weighted path-energy estimates to prove
+  the dyadic grid LSI. A verified Riemann-sum limit and squared-increment bound
+  give the unit-interval C¹ inequality; exact normalized-measure scaling proves
+  `intervalUniform_entropy_sq_le_of_hasDerivAt`, with coefficient `L²/4` and
+  LSI constant `L²/8`. The interval is the actual Euclidean subtype and its
+  actual normalized Lebesgue probability. Full build (3128 jobs), independent
+  interval and product examples, and the 922-declaration recursive audit pass.
+  All twenty selected axiom prints use only standard foundational axioms.
+  The full locally Lipschitz extension and U(N) energy assembly remain open.
 
 The report and README are committed separately after these verified proof
 milestones; use `git log --oneline` to see the documentation commit as well.

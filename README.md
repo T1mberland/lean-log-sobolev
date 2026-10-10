@@ -10,6 +10,10 @@ It uses Mathlib's actual matrix unitary and special unitary groups and the
 
 Proved components include:
 
+* A proved C¹ interval inequality under actual normalized uniform measure:
+  `Ent(f²) ≤ (L²/4) ∫ f′²`, obtained from two-point entropy, dyadic weighted
+  path energies, and a verified continuum limit. This gives constant `L²/8`;
+  it is not the sharp interval constant or a locally Lipschitz interval result.
 * Entropy continuity under uniform convergence on compact finite-measure spaces,
   including squared observables with zeros and varying polynomial degree.
 * Explicit polynomial probability kernels on SU concentrate at identity and
@@ -104,8 +108,8 @@ Proved components include:
 full SU(N) result for all positive dimensions. The real theorem has coefficient
 `4/N` and requires only local Lipschitz regularity.
 
-The U(N), interval, and circle inequalities and L²-product tensorization remain
-open. The U(N) transfer still takes an explicit product `MetricLSI` assumption.
+The U(N) and circle inequalities, the full locally Lipschitz interval inequality,
+and L²-product metric tensorization remain open. The U(N) transfer still takes an explicit product `MetricLSI` assumption.
 
 ## Build and audit
 

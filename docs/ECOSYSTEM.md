@@ -81,7 +81,11 @@ gaussian_logSobolev_W12_pi` (and `SLT/GaussianLSI/TensorizedGLSI.lean`) assumes
 `MemW12GaussianPi`, differentiability, continuous coordinate derivatives, and an
 integrable squared-function log moment. Its energy is a sum of squared partial
 derivatives, and its measure is the standard product Gaussian. It does not
-establish the interval or SU(N) result. The compact-support and one-dimensional
+establish the interval or SU(N) result. The positive-density two-point upper bound in
+`Probability/Concentration/LogSobolev/TwoPoint.lean` is now ported (with attribution)
+to `LogSobolev/Analysis/TwoPointEntropy.lean`; unused lower-bound arguments were
+omitted, and zero/signed cases were added by verified limits. This requires no
+external dependency or toolchain upgrade. The compact-support and one-dimensional
 Gaussian LSI files also have substantial, concrete analytic proofs worth reusing
 in a future Gaussian route. No full dependency-closure audit of these external
 theorems was run, since they are not imported here.
