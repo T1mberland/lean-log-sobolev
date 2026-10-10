@@ -1,0 +1,673 @@
+Recursive axiom audit passed for 124 LogSobolev declarations.
+'LogSobolev.entropy_nonneg' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.entropy_map' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.HasEnergyLSI.map' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.localSlope_eq_limsup_nhdsNE' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.localSlope_lt_top' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.localSlope_comp_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.localSlope_comp_isometryEquiv' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.measurable_localSlope' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.MetricLSI.map' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.integrable_localSlope_sq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.MetricLSI.real_form' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.frobenius_norm_sq_eq_trace' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.norm_unitary_mul' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.norm_mul_unitary' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.eq_unitaryHaar' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.specialUnitaryHaar' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.phaseMap_lipschitz' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.entryReal_not_ae_constant' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.unitary_regular' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.intervalUniform_univ' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.map_intervalUniform' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.phaseDomainMeasure_probability' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.intervalPhaseMap_lipschitz' depends on axioms: [propext, Classical.choice, Quot.sound]
+def LogSobolev.entropy.{u_1} : {X : Type u_1} → [inst : MeasurableSpace X] → MeasureTheory.Measure X → (X → ℝ) → ℝ :=
+fun {X} [MeasurableSpace X] μ g =>
+  ∫ (x : X), g x * Real.log (g x) ∂μ - (∫ (x : X), g x ∂μ) * Real.log (∫ (x : X), g x ∂μ)
+def LogSobolev.localSlope.{u_1} : {X : Type u_1} → [MetricSpace X] → (X → ℝ) → X → ENNReal :=
+fun {X} [MetricSpace X] f x => Filter.limsup (fun y => ENNReal.ofReal (dist (f y) (f x) / dist y x)) (nhds x)
+def LogSobolev.slopeEnergy.{u_1} : {X : Type u_1} →
+  [MetricSpace X] → [inst : MeasurableSpace X] → MeasureTheory.Measure X → (X → ℝ) → ENNReal :=
+fun {X} [MetricSpace X] [MeasurableSpace X] μ f => ∫⁻ (x : X), LogSobolev.localSlope f x ^ 2 ∂μ
+def LogSobolev.MetricLSI.{u_1} : {X : Type u_1} →
+  [MetricSpace X] → [inst : MeasurableSpace X] → MeasureTheory.Measure X → NNReal → Prop :=
+fun {X} [MetricSpace X] [MeasurableSpace X] μ C =>
+  ∀ (f : X → ℝ),
+    LocallyLipschitz f →
+      MeasureTheory.Integrable (fun x => f x ^ 2) μ →
+        MeasureTheory.Integrable (fun x => f x ^ 2 * Real.log (f x ^ 2)) μ →
+          ENNReal.ofReal (LogSobolev.entropy μ fun x => f x ^ 2) ≤ 2 * ↑C * LogSobolev.slopeEnergy μ f
+def LogSobolev.unitaryHaar.{u_2} : (n : Type u_2) →
+  [inst : Fintype n] → [inst_1 : DecidableEq n] → MeasureTheory.Measure ↥(Matrix.unitaryGroup n ℂ) :=
+fun n [Fintype n] [DecidableEq n] => MeasureTheory.Measure.haarMeasure ⊤
+def LogSobolev.phaseMap : (N : ℕ) →
+  WithLp 2 (ℝ × ↥(Matrix.specialUnitaryGroup (Fin N) ℂ)) → ↥(Matrix.unitaryGroup (Fin N) ℂ) :=
+fun N p => LogSobolev.phaseMul (√(2 / ↑N)) p.fst ⟨↑p.snd, ⋯⟩
+def LogSobolev.intervalUniform : (L : ℝ) → MeasureTheory.Measure ↑(Set.Icc 0 L) :=
+fun L => (ENNReal.ofReal L)⁻¹ • MeasureTheory.Measure.comap Subtype.val MeasureTheory.volume
+def LogSobolev.phaseDomainMeasure : (N : ℕ) → MeasureTheory.Measure (LogSobolev.PhaseDomain N) :=
+fun N =>
+  MeasureTheory.Measure.map (WithLp.toLp 2)
+    ((LogSobolev.intervalUniform (LogSobolev.phaseIntervalLength N)).prod (LogSobolev.specialUnitaryHaar (Fin N)))
+LogSobolev.frobenius_norm_sq_eq_trace.{u_1} {n : Type u_1} [Fintype.{u_1} n] [DecidableEq.{u_1 + 1} n]
+  (A : Matrix.{u_1, u_1, 0} n n Complex) :
+  @Eq.{1} Complex
+    (Complex.ofReal
+      (@HPow.hPow.{0, 0, 0} Real Nat Real (@instHPow.{0, 0} Real Nat (@Monoid.toNatPow.{0} Real Real.instMonoid))
+        (@Norm.norm.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+          (@NormedRing.toNorm.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@Matrix.frobeniusNormedRing.{u_1, 0} n Complex inst✝ Complex.instRCLike inst✝¹))
+          A)
+        (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))
+    (@Matrix.trace.{u_1, 0} n Complex inst✝
+      (@ESeminormedAddCommMonoid.toAddCommMonoid.{0} Complex
+        (@UniformSpace.toTopologicalSpace.{0} Complex
+          (@PseudoMetricSpace.toUniformSpace.{0} Complex
+            (@SeminormedRing.toPseudoMetricSpace.{0} Complex
+              (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                  (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField))))))
+        (@ENormedAddCommMonoid.toESeminormedAddCommMonoid.{0} Complex
+          (@UniformSpace.toTopologicalSpace.{0} Complex
+            (@PseudoMetricSpace.toUniformSpace.{0} Complex
+              (@SeminormedRing.toPseudoMetricSpace.{0} Complex
+                (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                  (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                    (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField))))))
+          (@NormedAddCommGroup.toENormedAddCommMonoid.{0} Complex Complex.instNormedAddCommGroup)))
+      (@HMul.hMul.{u_1, u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex) (Matrix.{u_1, u_1, 0} n n Complex)
+        (Matrix.{u_1, u_1, 0} n n Complex)
+        (@Matrix.instHMulOfFintypeOfMulOfAddCommMonoid.{0, u_1, u_1, u_1} n n n Complex inst✝ Complex.instMul
+          (@ESeminormedAddCommMonoid.toAddCommMonoid.{0} Complex
+            (@UniformSpace.toTopologicalSpace.{0} Complex
+              (@PseudoMetricSpace.toUniformSpace.{0} Complex
+                (@SeminormedRing.toPseudoMetricSpace.{0} Complex
+                  (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                    (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                      (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField))))))
+            (@ENormedAddCommMonoid.toESeminormedAddCommMonoid.{0} Complex
+              (@UniformSpace.toTopologicalSpace.{0} Complex
+                (@PseudoMetricSpace.toUniformSpace.{0} Complex
+                  (@SeminormedRing.toPseudoMetricSpace.{0} Complex
+                    (@SeminormedCommRing.toSeminormedRing.{0} Complex
+                      (@NormedCommRing.toSeminormedCommRing.{0} Complex
+                        (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField))))))
+              (@NormedAddCommGroup.toENormedAddCommMonoid.{0} Complex Complex.instNormedAddCommGroup))))
+        (@Star.star.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+          (@Matrix.instStar.{0, u_1} n Complex
+            (@InvolutiveStar.toStar.{0} Complex
+              (@StarAddMonoid.toInvolutiveStar.{0} Complex
+                (@AddCommMonoid.toAddMonoid.{0} Complex
+                  (@NonUnitalNonAssocSemiring.toAddCommMonoid.{0} Complex
+                    (@NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} Complex
+                      (@NonUnitalNonAssocCommRing.toNonUnitalNonAssocRing.{0} Complex
+                        (@NonUnitalCommRing.toNonUnitalNonAssocCommRing.{0} Complex
+                          (@NonUnitalNormedCommRing.toNonUnitalCommRing.{0} Complex
+                            (@NormedCommRing.toNonUnitalNormedCommRing.{0} Complex
+                              (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField))))))))
+                (@StarRing.toStarAddMonoid.{0} Complex
+                  (@NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} Complex
+                    (@NonUnitalNonAssocCommRing.toNonUnitalNonAssocRing.{0} Complex
+                      (@NonUnitalCommRing.toNonUnitalNonAssocCommRing.{0} Complex
+                        (@NonUnitalNormedCommRing.toNonUnitalCommRing.{0} Complex
+                          (@NormedCommRing.toNonUnitalNormedCommRing.{0} Complex
+                            (@NormedField.toNormedCommRing.{0} Complex Complex.instNormedField))))))
+                  Complex.instStarRing))))
+          A)
+        A))
+LogSobolev.phaseMap_lipschitz (N : Nat)
+  (hN : @LT.lt.{0} Nat instLTNat (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) N) :
+  @LipschitzWith.{0, 0}
+    (WithLp.{0}
+      (@OfNat.ofNat.{0} ENNReal (nat_lit 2)
+        (@instOfNatAtLeastTwo.{0} ENNReal (nat_lit 2)
+          (@AddMonoidWithOne.toNatCast.{0} ENNReal
+            (@AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal instAddCommMonoidWithOneENNReal))
+          (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))
+            (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))))))
+      (Prod.{0, 0} Real
+        (@Subtype.{1} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex) fun (x : Matrix.{0, 0, 0} (Fin N) (Fin N) Complex) =>
+          @Membership.mem.{0, 0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+            (@Submonoid.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+              (@MulZeroOneClass.toMulOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                  (@Matrix.nonAssocSemiring.{0, 0} (Fin N) Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    (Fin.fintype N) (instDecidableEqFin N)))))
+            (@SetLike.instMembership.{0, 0}
+              (@Submonoid.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                (@MulZeroOneClass.toMulOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                  (@NonAssocSemiring.toMulZeroOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                    (@Matrix.nonAssocSemiring.{0, 0} (Fin N) Complex
+                      (@Semiring.toNonAssocSemiring.{0} Complex
+                        (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                      (Fin.fintype N) (instDecidableEqFin N)))))
+              (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+              (@Submonoid.instSetLike.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                (@MulZeroOneClass.toMulOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                  (@NonAssocSemiring.toMulZeroOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                    (@Matrix.nonAssocSemiring.{0, 0} (Fin N) Complex
+                      (@Semiring.toNonAssocSemiring.{0} Complex
+                        (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                      (Fin.fintype N) (instDecidableEqFin N))))))
+            (@Matrix.specialUnitaryGroup.{0, 0} (Fin N) (instDecidableEqFin N) (Fin.fintype N) Complex Complex.commRing
+              Complex.instStarRing)
+            x)))
+    (@Subtype.{1} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex) fun (x : Matrix.{0, 0, 0} (Fin N) (Fin N) Complex) =>
+      @Membership.mem.{0, 0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+        (@Submonoid.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+          (@MulZeroOneClass.toMulOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+            (@NonAssocSemiring.toMulZeroOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+              (@Matrix.nonAssocSemiring.{0, 0} (Fin N) Complex
+                (@Semiring.toNonAssocSemiring.{0} Complex
+                  (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                (Fin.fintype N) (instDecidableEqFin N)))))
+        (@SetLike.instMembership.{0, 0}
+          (@Submonoid.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+            (@MulZeroOneClass.toMulOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+              (@NonAssocSemiring.toMulZeroOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                (@Matrix.nonAssocSemiring.{0, 0} (Fin N) Complex
+                  (@Semiring.toNonAssocSemiring.{0} Complex
+                    (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                  (Fin.fintype N) (instDecidableEqFin N)))))
+          (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+          (@Submonoid.instSetLike.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+            (@MulZeroOneClass.toMulOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+              (@NonAssocSemiring.toMulZeroOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                (@Matrix.nonAssocSemiring.{0, 0} (Fin N) Complex
+                  (@Semiring.toNonAssocSemiring.{0} Complex
+                    (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                  (Fin.fintype N) (instDecidableEqFin N))))))
+        (@Matrix.unitaryGroup.{0, 0} (Fin N) (instDecidableEqFin N) (Fin.fintype N) Complex Complex.commRing
+          Complex.instStarRing)
+        x)
+    (@WithLp.instProdPseudoEMetricSpace.{0, 0}
+      (@OfNat.ofNat.{0} ENNReal (nat_lit 2)
+        (@instOfNatAtLeastTwo.{0} ENNReal (nat_lit 2)
+          (@AddMonoidWithOne.toNatCast.{0} ENNReal
+            (@AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal instAddCommMonoidWithOneENNReal))
+          (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))
+            (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))))))
+      Real
+      (@Subtype.{1} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex) fun (x : Matrix.{0, 0, 0} (Fin N) (Fin N) Complex) =>
+        @Membership.mem.{0, 0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+          (@Submonoid.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+            (@MulZeroOneClass.toMulOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+              (@NonAssocSemiring.toMulZeroOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                (@Matrix.nonAssocSemiring.{0, 0} (Fin N) Complex
+                  (@Semiring.toNonAssocSemiring.{0} Complex
+                    (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                  (Fin.fintype N) (instDecidableEqFin N)))))
+          (@SetLike.instMembership.{0, 0}
+            (@Submonoid.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+              (@MulZeroOneClass.toMulOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                  (@Matrix.nonAssocSemiring.{0, 0} (Fin N) Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    (Fin.fintype N) (instDecidableEqFin N)))))
+            (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+            (@Submonoid.instSetLike.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+              (@MulZeroOneClass.toMulOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                  (@Matrix.nonAssocSemiring.{0, 0} (Fin N) Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    (Fin.fintype N) (instDecidableEqFin N))))))
+          (@Matrix.specialUnitaryGroup.{0, 0} (Fin N) (instDecidableEqFin N) (Fin.fintype N) Complex Complex.commRing
+            Complex.instStarRing)
+          x)
+      fact_one_le_two_ennreal
+      (@EMetricSpace.toPseudoEMetricSpace.{0} Real (@MetricSpace.toEMetricSpace.{0} Real Real.metricSpace))
+      (@instPseudoEMetricSpaceSubtype.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+        (fun (x : Matrix.{0, 0, 0} (Fin N) (Fin N) Complex) =>
+          @Membership.mem.{0, 0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+            (@Submonoid.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+              (@MulZeroOneClass.toMulOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                  (@Matrix.nonAssocSemiring.{0, 0} (Fin N) Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    (Fin.fintype N) (instDecidableEqFin N)))))
+            (@SetLike.instMembership.{0, 0}
+              (@Submonoid.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                (@MulZeroOneClass.toMulOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                  (@NonAssocSemiring.toMulZeroOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                    (@Matrix.nonAssocSemiring.{0, 0} (Fin N) Complex
+                      (@Semiring.toNonAssocSemiring.{0} Complex
+                        (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                      (Fin.fintype N) (instDecidableEqFin N)))))
+              (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+              (@Submonoid.instSetLike.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                (@MulZeroOneClass.toMulOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                  (@NonAssocSemiring.toMulZeroOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                    (@Matrix.nonAssocSemiring.{0, 0} (Fin N) Complex
+                      (@Semiring.toNonAssocSemiring.{0} Complex
+                        (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                      (Fin.fintype N) (instDecidableEqFin N))))))
+            (@Matrix.specialUnitaryGroup.{0, 0} (Fin N) (instDecidableEqFin N) (Fin.fintype N) Complex Complex.commRing
+              Complex.instStarRing)
+            x)
+        (@EMetricSpace.toPseudoEMetricSpace.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+          (@MetricSpace.toEMetricSpace.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+            (@NormedRing.toMetricSpace.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+              (@Matrix.frobeniusNormedRing.{0, 0} (Fin N) Complex (Fin.fintype N) Complex.instRCLike
+                (instDecidableEqFin N)))))))
+    (@instPseudoEMetricSpaceSubtype.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+      (fun (x : Matrix.{0, 0, 0} (Fin N) (Fin N) Complex) =>
+        @Membership.mem.{0, 0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+          (@Submonoid.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+            (@MulZeroOneClass.toMulOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+              (@NonAssocSemiring.toMulZeroOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                (@Matrix.nonAssocSemiring.{0, 0} (Fin N) Complex
+                  (@Semiring.toNonAssocSemiring.{0} Complex
+                    (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                  (Fin.fintype N) (instDecidableEqFin N)))))
+          (@SetLike.instMembership.{0, 0}
+            (@Submonoid.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+              (@MulZeroOneClass.toMulOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                  (@Matrix.nonAssocSemiring.{0, 0} (Fin N) Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    (Fin.fintype N) (instDecidableEqFin N)))))
+            (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+            (@Submonoid.instSetLike.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+              (@MulZeroOneClass.toMulOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+                  (@Matrix.nonAssocSemiring.{0, 0} (Fin N) Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    (Fin.fintype N) (instDecidableEqFin N))))))
+          (@Matrix.unitaryGroup.{0, 0} (Fin N) (instDecidableEqFin N) (Fin.fintype N) Complex Complex.commRing
+            Complex.instStarRing)
+          x)
+      (@EMetricSpace.toPseudoEMetricSpace.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+        (@MetricSpace.toEMetricSpace.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+          (@NormedRing.toMetricSpace.{0} (Matrix.{0, 0, 0} (Fin N) (Fin N) Complex)
+            (@Matrix.frobeniusNormedRing.{0, 0} (Fin N) Complex (Fin.fintype N) Complex.instRCLike
+              (instDecidableEqFin N))))))
+    (@Subtype.mk.{1} Real
+      (fun (r : Real) =>
+        @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) r)
+      (Real.sqrt
+        (@OfNat.ofNat.{0} Real (nat_lit 3)
+          (@instOfNatAtLeastTwo.{0} Real (nat_lit 3) Real.instNatCast
+            (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))
+              (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))))))
+      (Real.sqrt_nonneg
+        (@OfNat.ofNat.{0} Real (nat_lit 3)
+          (@instOfNatAtLeastTwo.{0} Real (nat_lit 3) Real.instNatCast
+            (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))
+              (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))))))
+    (LogSobolev.phaseMap N)
+LogSobolev.unitary_regular.{u_1} {n : Type u_1} [Fintype.{u_1} n] [DecidableEq.{u_1 + 1} n]
+  {f :
+    (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+        @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+          (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                  (@Semiring.toNonAssocSemiring.{0} Complex
+                    (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                  inst✝ inst✝¹))))
+          (@SetLike.instMembership.{u_1, u_1}
+            (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    inst✝ inst✝¹))))
+            (Matrix.{u_1, u_1, 0} n n Complex)
+            (@Submonoid.instSetLike.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    inst✝ inst✝¹)))))
+          (@Matrix.unitaryGroup.{u_1, 0} n inst✝¹ inst✝ Complex Complex.commRing Complex.instStarRing) x) →
+      Real}
+  (hf :
+    @LocallyLipschitz.{u_1, 0}
+      (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+        @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+          (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                  (@Semiring.toNonAssocSemiring.{0} Complex
+                    (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                  inst✝ inst✝¹))))
+          (@SetLike.instMembership.{u_1, u_1}
+            (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    inst✝ inst✝¹))))
+            (Matrix.{u_1, u_1, 0} n n Complex)
+            (@Submonoid.instSetLike.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    inst✝ inst✝¹)))))
+          (@Matrix.unitaryGroup.{u_1, 0} n inst✝¹ inst✝ Complex Complex.commRing Complex.instStarRing) x)
+      Real
+      (@instPseudoEMetricSpaceSubtype.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+        (fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+          @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    inst✝ inst✝¹))))
+            (@SetLike.instMembership.{u_1, u_1}
+              (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                      (@Semiring.toNonAssocSemiring.{0} Complex
+                        (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                      inst✝ inst✝¹))))
+              (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Submonoid.instSetLike.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                      (@Semiring.toNonAssocSemiring.{0} Complex
+                        (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                      inst✝ inst✝¹)))))
+            (@Matrix.unitaryGroup.{u_1, 0} n inst✝¹ inst✝ Complex Complex.commRing Complex.instStarRing) x)
+        (@EMetricSpace.toPseudoEMetricSpace.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+          (@MetricSpace.toEMetricSpace.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@NormedRing.toMetricSpace.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Matrix.frobeniusNormedRing.{u_1, 0} n Complex inst✝ Complex.instRCLike inst✝¹)))))
+      (@EMetricSpace.toPseudoEMetricSpace.{0} Real (@MetricSpace.toEMetricSpace.{0} Real Real.metricSpace)) f) :
+  And
+    (@MeasureTheory.Integrable.{0, u_1} Real
+      (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+      (@SeminormedAddGroup.toContinuousENorm.{0} Real
+        (@SeminormedAddCommGroup.toSeminormedAddGroup.{0} Real
+          (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real
+            (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real
+              (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real
+                (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing))))))
+      (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+        @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+          (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                  (@Semiring.toNonAssocSemiring.{0} Complex
+                    (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                  inst✝ inst✝¹))))
+          (@SetLike.instMembership.{u_1, u_1}
+            (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    inst✝ inst✝¹))))
+            (Matrix.{u_1, u_1, 0} n n Complex)
+            (@Submonoid.instSetLike.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    inst✝ inst✝¹)))))
+          (@Matrix.unitaryGroup.{u_1, 0} n inst✝¹ inst✝ Complex Complex.commRing Complex.instStarRing) x)
+      (@LogSobolev.unitaryMeasurableSpace.{u_1} n inst✝ inst✝¹)
+      (fun
+          (U :
+            @Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+              @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                        (@Semiring.toNonAssocSemiring.{0} Complex
+                          (@CommSemiring.toSemiring.{0} Complex
+                            (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                        inst✝ inst✝¹))))
+                (@SetLike.instMembership.{u_1, u_1}
+                  (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                        (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                          (@Semiring.toNonAssocSemiring.{0} Complex
+                            (@CommSemiring.toSemiring.{0} Complex
+                              (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                          inst✝ inst✝¹))))
+                  (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Submonoid.instSetLike.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                        (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                          (@Semiring.toNonAssocSemiring.{0} Complex
+                            (@CommSemiring.toSemiring.{0} Complex
+                              (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                          inst✝ inst✝¹)))))
+                (@Matrix.unitaryGroup.{u_1, 0} n inst✝¹ inst✝ Complex Complex.commRing Complex.instStarRing) x) =>
+        @HPow.hPow.{0, 0, 0} Real Nat Real (@instHPow.{0, 0} Real Nat (@Monoid.toNatPow.{0} Real Real.instMonoid)) (f U)
+          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))
+      (@LogSobolev.unitaryHaar.{u_1} n inst✝ inst✝¹))
+    (And
+      (@MeasureTheory.Integrable.{0, u_1} Real
+        (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+        (@SeminormedAddGroup.toContinuousENorm.{0} Real
+          (@SeminormedAddCommGroup.toSeminormedAddGroup.{0} Real
+            (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real
+              (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real
+                (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real
+                  (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing))))))
+        (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+          @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    inst✝ inst✝¹))))
+            (@SetLike.instMembership.{u_1, u_1}
+              (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                      (@Semiring.toNonAssocSemiring.{0} Complex
+                        (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                      inst✝ inst✝¹))))
+              (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Submonoid.instSetLike.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                      (@Semiring.toNonAssocSemiring.{0} Complex
+                        (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                      inst✝ inst✝¹)))))
+            (@Matrix.unitaryGroup.{u_1, 0} n inst✝¹ inst✝ Complex Complex.commRing Complex.instStarRing) x)
+        (@LogSobolev.unitaryMeasurableSpace.{u_1} n inst✝ inst✝¹)
+        (fun
+            (U :
+              @Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+                @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                        (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                          (@Semiring.toNonAssocSemiring.{0} Complex
+                            (@CommSemiring.toSemiring.{0} Complex
+                              (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                          inst✝ inst✝¹))))
+                  (@SetLike.instMembership.{u_1, u_1}
+                    (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                        (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                          (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                            (@Semiring.toNonAssocSemiring.{0} Complex
+                              (@CommSemiring.toSemiring.{0} Complex
+                                (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                            inst✝ inst✝¹))))
+                    (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Submonoid.instSetLike.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                        (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                          (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                            (@Semiring.toNonAssocSemiring.{0} Complex
+                              (@CommSemiring.toSemiring.{0} Complex
+                                (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                            inst✝ inst✝¹)))))
+                  (@Matrix.unitaryGroup.{u_1, 0} n inst✝¹ inst✝ Complex Complex.commRing Complex.instStarRing) x) =>
+          @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+            (@HPow.hPow.{0, 0, 0} Real Nat Real (@instHPow.{0, 0} Real Nat (@Monoid.toNatPow.{0} Real Real.instMonoid))
+              (f U) (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))
+            (Real.log
+              (@HPow.hPow.{0, 0, 0} Real Nat Real
+                (@instHPow.{0, 0} Real Nat (@Monoid.toNatPow.{0} Real Real.instMonoid)) (f U)
+                (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))))
+        (@LogSobolev.unitaryHaar.{u_1} n inst✝ inst✝¹))
+      (@MeasureTheory.Integrable.{0, u_1} Real
+        (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+        (@SeminormedAddGroup.toContinuousENorm.{0} Real
+          (@SeminormedAddCommGroup.toSeminormedAddGroup.{0} Real
+            (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real
+              (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real
+                (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real
+                  (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing))))))
+        (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+          @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+            (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+              (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                    (@Semiring.toNonAssocSemiring.{0} Complex
+                      (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                    inst✝ inst✝¹))))
+            (@SetLike.instMembership.{u_1, u_1}
+              (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                      (@Semiring.toNonAssocSemiring.{0} Complex
+                        (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                      inst✝ inst✝¹))))
+              (Matrix.{u_1, u_1, 0} n n Complex)
+              (@Submonoid.instSetLike.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                      (@Semiring.toNonAssocSemiring.{0} Complex
+                        (@CommSemiring.toSemiring.{0} Complex (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                      inst✝ inst✝¹)))))
+            (@Matrix.unitaryGroup.{u_1, 0} n inst✝¹ inst✝ Complex Complex.commRing Complex.instStarRing) x)
+        (@LogSobolev.unitaryMeasurableSpace.{u_1} n inst✝ inst✝¹)
+        (fun
+            (U :
+              @Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+                @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                        (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                          (@Semiring.toNonAssocSemiring.{0} Complex
+                            (@CommSemiring.toSemiring.{0} Complex
+                              (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                          inst✝ inst✝¹))))
+                  (@SetLike.instMembership.{u_1, u_1}
+                    (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                        (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                          (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                            (@Semiring.toNonAssocSemiring.{0} Complex
+                              (@CommSemiring.toSemiring.{0} Complex
+                                (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                            inst✝ inst✝¹))))
+                    (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Submonoid.instSetLike.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                        (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                          (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                            (@Semiring.toNonAssocSemiring.{0} Complex
+                              (@CommSemiring.toSemiring.{0} Complex
+                                (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                            inst✝ inst✝¹)))))
+                  (@Matrix.unitaryGroup.{u_1, 0} n inst✝¹ inst✝ Complex Complex.commRing Complex.instStarRing) x) =>
+          @HPow.hPow.{0, 0, 0} Real Nat Real (@instHPow.{0, 0} Real Nat (@Monoid.toNatPow.{0} Real Real.instMonoid))
+            (ENNReal.toReal
+              (@LogSobolev.localSlope.{u_1}
+                (@Subtype.{u_1 + 1} (Matrix.{u_1, u_1, 0} n n Complex) fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+                  @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                        (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                          (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                            (@Semiring.toNonAssocSemiring.{0} Complex
+                              (@CommSemiring.toSemiring.{0} Complex
+                                (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                            inst✝ inst✝¹))))
+                    (@SetLike.instMembership.{u_1, u_1}
+                      (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                        (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                          (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                            (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                              (@Semiring.toNonAssocSemiring.{0} Complex
+                                (@CommSemiring.toSemiring.{0} Complex
+                                  (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                              inst✝ inst✝¹))))
+                      (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Submonoid.instSetLike.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                        (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                          (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                            (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                              (@Semiring.toNonAssocSemiring.{0} Complex
+                                (@CommSemiring.toSemiring.{0} Complex
+                                  (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                              inst✝ inst✝¹)))))
+                    (@Matrix.unitaryGroup.{u_1, 0} n inst✝¹ inst✝ Complex Complex.commRing Complex.instStarRing) x)
+                (@Subtype.metricSpace.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                  (fun (x : Matrix.{u_1, u_1, 0} n n Complex) =>
+                    @Membership.mem.{u_1, u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                      (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                        (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                          (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                            (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                              (@Semiring.toNonAssocSemiring.{0} Complex
+                                (@CommSemiring.toSemiring.{0} Complex
+                                  (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                              inst✝ inst✝¹))))
+                      (@SetLike.instMembership.{u_1, u_1}
+                        (@Submonoid.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                          (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                            (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                              (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                                (@Semiring.toNonAssocSemiring.{0} Complex
+                                  (@CommSemiring.toSemiring.{0} Complex
+                                    (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                                inst✝ inst✝¹))))
+                        (Matrix.{u_1, u_1, 0} n n Complex)
+                        (@Submonoid.instSetLike.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                          (@MulZeroOneClass.toMulOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                            (@NonAssocSemiring.toMulZeroOneClass.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                              (@Matrix.nonAssocSemiring.{0, u_1} n Complex
+                                (@Semiring.toNonAssocSemiring.{0} Complex
+                                  (@CommSemiring.toSemiring.{0} Complex
+                                    (@CommRing.toCommSemiring.{0} Complex Complex.commRing)))
+                                inst✝ inst✝¹)))))
+                      (@Matrix.unitaryGroup.{u_1, 0} n inst✝¹ inst✝ Complex Complex.commRing Complex.instStarRing) x)
+                  (@NormedRing.toMetricSpace.{u_1} (Matrix.{u_1, u_1, 0} n n Complex)
+                    (@Matrix.frobeniusNormedRing.{u_1, 0} n Complex inst✝ Complex.instRCLike inst✝¹)))
+                f U))
+            (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))
+        (@LogSobolev.unitaryHaar.{u_1} n inst✝ inst✝¹)))

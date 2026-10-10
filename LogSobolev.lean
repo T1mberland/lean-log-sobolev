@@ -1,1 +1,13 @@
 import LogSobolev.Measure.Entropy
+import LogSobolev.Measure.LSI
+import LogSobolev.Measure.Interval
+import LogSobolev.Geometry.LocalSlope
+import LogSobolev.Geometry.SlopeMeasurable
+import LogSobolev.Geometry.MetricLSI
+import LogSobolev.Geometry.CompactRegularity
+import LogSobolev.Unitary.HilbertSchmidt
+import LogSobolev.Unitary.Haar
+import LogSobolev.Unitary.SpecialUnitary
+import LogSobolev.Unitary.PhaseMap
+import LogSobolev.Unitary.Observables
+import LogSobolev.Unitary.ProductDomain

@@ -33,7 +33,7 @@ theorem frobenius_norm_sq (A : Matrix n n ℂ) :
 theorem frobenius_norm_sq_eq_trace (A : Matrix n n ℂ) :
     ((‖A‖ ^ 2 : ℝ) : ℂ) = Matrix.trace (star A * A) := by
   rw [frobenius_norm_sq, Matrix.trace]
-  simp only [Matrix.mul_apply, Matrix.star_apply, Complex.ofReal_sum, Complex.ofReal_pow]
+  simp only [Complex.ofReal_sum, Complex.ofReal_pow]
   rw [Finset.sum_comm]
   apply Finset.sum_congr rfl
   intro i _
