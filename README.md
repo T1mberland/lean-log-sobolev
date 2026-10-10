@@ -29,6 +29,8 @@ Proved components include:
   commutator-energy identity for every real orthonormal basis.
 * The full determinant-exponential identity and exponential homeomorphisms
   between open identity neighborhoods in su(N) and the actual SU(N) group.
+* A proved smooth atlas on the actual matrix SU(N) group, with every translated
+  exponential chart transition verified on its domain.
 * The normalized interval and its L² product with SU(N).
 * The paper's phase map into U(N), with the `sqrt(3)` Lipschitz bound.
 * **The exact short-interval Haar decomposition (Lemma 16)** for every positive N,

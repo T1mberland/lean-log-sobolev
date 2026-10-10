@@ -45,7 +45,10 @@ All names below are in namespace `LogSobolev`.
 | `LogSobolev/Unitary/SpecialUnitaryKillingConstant.lean` | `specialUnitary_killing_self_eq`, `specialUnitary_killing_eq_inner`, `specialUnitary_orthonormal_commutator_energy` | Exact real Killing coefficient `−2N` and commutator energy coefficient `2N` for every real HS orthonormal basis. The Ricci formula and LSI are not asserted. |
 | `LogSobolev/Unitary/MatrixExpDeterminant.lean` | `hasDerivAt_det_exp_smul`, `det_matrix_exp` | Determinant-exponential identity for all complex matrices, proved by scalar ODE and integrating factor. |
 | `LogSobolev/Unitary/MatrixLocalExponential.lean` | `matrixExpLocalHomeomorph`, `matrixLog_hasStrictFDerivAt_one`, `matrixLog_contDiffAt_one`, `exists_specialUnitary_exp_neighborhood` | Actual ambient local inverse and its smoothness at identity; near zero the SU constraint is equivalent to membership in su. |
-| `LogSobolev/Unitary/SpecialUnitaryLocalCoordinates.lean` | `exists_specialUnitary_exp_homeomorph` | Exponential is a homeomorphism between genuine open identity neighborhoods in the real algebra and the actual matrix SU group. A smooth atlas and curvature are still unproved. |
+| `LogSobolev/Unitary/SpecialUnitaryLocalCoordinates.lean` | `exists_specialUnitary_exp_homeomorph` | Exponential is a homeomorphism between genuine open identity neighborhoods in the real algebra and the actual matrix SU group. Smooth compatibility is supplied by the later manifold module; curvature is still unproved. |
+| `LogSobolev/Unitary/SpecialUnitaryAnalyticNeighborhood.lean` | `exists_specialUnitary_analytic_exp` | SU-compatible ambient exponential chart with analytic inverse at every target point. |
+| `LogSobolev/Unitary/SpecialUnitaryChart.lean` | `specialUnitaryExpChart`, `specialUnitaryChartedSpace` | Actual SU/su partial homeomorphism and a translated covering atlas on the existing group topology. |
+| `LogSobolev/Unitary/SpecialUnitaryManifold.lean` | `specialUnitary_chart_transition_contDiffOn`, `specialUnitaryIsManifold` | Every atlas transition is smooth; the actual matrix group is a smooth real manifold modeled on su with its Frobenius norm. Lie-group operations, tangent metric, curvature, and LSI are not asserted. |
 | `LogSobolev/Unitary/PhaseMap.lean` | `phaseMul_dist_le`, `phaseMap_lipschitz` | The full-line phase map has Lipschitz constant `sqrt(3)` for every positive N; no probability argument is needed. |
 | `LogSobolev/Measure/Interval.lean` | `intervalUniform_univ`, `map_intervalUniform` | Normalized Lebesgue measure on the Euclidean subtype `[0,L]` for `L>0`. |
 | `LogSobolev/Unitary/ProductDomain.lean` | `phaseDomainMeasure_probability`, `intervalPhaseMap_lipschitz` | The exact interval × SU domain and probability measure, and the restricted map's Lipschitz bound. |
@@ -168,22 +171,22 @@ the compact regularity side conditions. A verified Herbst argument is a later ta
 Verification performed on 2026-10-10 with Lean 4.28.0 and the pinned Mathlib
 commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
 
-* `lake build`: passed for the complete library (2877 dependency/build jobs,
+* `lake build`: passed for the complete library (2885 dependency/build jobs,
   primarily cached Mathlib artifacts).
 * `lake env lean LogSobolev/Examples.lean`: passed; the examples compile as an
   independent client importing the public root module.
 * `lake env lean LogSobolev/Audit.lean`: passed. The automated traversal checked
-  **327 declarations** in the `LogSobolev` namespace, including definitions,
+  **380 declarations** in the `LogSobolev` namespace, including definitions,
   instances, and generated auxiliaries. Every transitive axiom was one of
   `propext`, `Classical.choice`, or `Quot.sound`. No `sorryAx` or custom axiom
   was present in those dependency closures.
-* The audit also executes 64 `#print axioms` commands, prints the core
+* The audit also executes 70 `#print axioms` commands, prints the core
   definitions, and prints fully elaborated types for the trace normalization,
   phase-map Lipschitz theorem, U(N) regularity theorem, exact Haar identity,
   conditional final LSI transfer, product entropy chain rule, and SU algebra
   commutator energy, SU curve-velocity characterization, and exponential speed, the real Killing contraction, and the derivative of
   conjugation, the exact Killing coefficient, the real orthonormal energy, the actual SU local
-  coordinates, and smoothness of the ambient inverse. The elaborated
+  coordinates, smoothness of the ambient inverse, and the actual smooth atlas. The elaborated
   metric instances are explicitly Frobenius and `WithLp 2`.
 * Source scan found no proof omissions or custom axiom declarations;
   `git diff --check` passed.
@@ -236,6 +239,13 @@ Completed milestones:
   neighborhoods in su and SU. The old trace-zero determinant proof now uses
   the general identity. Build, independent examples, and all 327 declarations
   pass the recursive audit. A smooth atlas, curvature, and LSI remain open.
+
+* `78fea3b`: SU-compatible ambient neighborhoods with analytic inverse throughout,
+  a totalized exponential/logarithm partial homeomorphism, a translated atlas
+  on the original SU topology, and the proved `IsManifold` instance. Every
+  transition is smooth on its source. Build, independent examples, and the
+  380-declaration recursive audit pass. Smooth group operations, tangent metric,
+  curvature, and the analytic LSI remain open.
 
 The report and README are committed separately after these verified proof
 milestones; use `git log --oneline` to see the documentation commit as well.

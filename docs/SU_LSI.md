@@ -91,9 +91,39 @@ forward map is matrix exponential. An independent example extracts generators
 for every SU(2) element in this open neighborhood. This establishes genuine
 local coordinates, without assuming an SU manifold instance.
 
-It does not yet install a smooth atlas, prove smooth transition maps, identify
-the manifold tangent bundle, or construct a Riemannian connection. Ambient
-inverse smoothness at identity alone does not discharge those obligations.
+The later smooth-atlas construction below uses these coordinates. This local
+homeomorphism result alone does not identify the tangent metric or connection.
+
+## Smooth atlas now proved
+
+`Unitary/SpecialUnitaryAnalyticNeighborhood.lean` shrinks the ambient chart to
+an open neighborhood where its inverse is analytic at every target point.
+The SU/su correspondence is preserved under this restriction.
+
+`Unitary/SpecialUnitaryChart.lean:specialUnitaryExpChart` packages the actual
+exponential/logarithm pair as an `OpenPartialHomeomorph` from su to SU.
+Its source contains zero and its target contains identity. Translating its
+inverse by group multiplication defines `specialUnitaryChartAt U` with U in
+its source, for every actual SU element U. `specialUnitaryChartedSpace` installs
+this covering atlas on the **existing** matrix-group topology.
+
+`Unitary/SpecialUnitaryManifold.lean:specialUnitaryIsManifold` proves
+
+```lean
+IsManifold 𝓘(ℝ, specialUnitaryLieAlgebra (n := n)) ∞
+  (Matrix.specialUnitaryGroup n ℂ)
+```
+
+The proof verifies every atlas transition on its actual source. A transition
+is the restriction of `A ↦ projection(log(V⁻¹ U exp A))`, where `projection`
+is a proved continuous linear left inverse of the su inclusion. This projection
+is only a device for extending the coordinate expression into the model space;
+it is not asserted to be an orthogonal or Riemannian projection. On overlaps,
+the logarithm already lies in su and the projection fixes it.
+
+Thus the smooth-atlas obligation is closed. Smooth group operations, the
+identification of the tangent metric with ambient Hilbert–Schmidt velocities,
+the connection/curvature formula, and the analytic LSI argument are still open.
 
 ## Inner product, adjoint action, and real contraction
 
@@ -166,9 +196,9 @@ needed for its abstract LSI implication and cannot supply this missing proof.
 
 ## Remaining route to the theorem
 
-1. Extend the proved exponential local coordinates into a smooth atlas and
-   verify the transition maps. Identify the manifold tangent space with the
-   proved curve velocities, and construct the Hilbert–Schmidt bi-invariant
+1. Prove smooth multiplication and inversion for the installed atlas. Identify
+   its tangent vectors with the proved ambient curve velocities, and construct
+   the Hilbert–Schmidt bi-invariant
    Riemannian metric. Prove the geometric Ricci formula `Ric = −¼ Killing`;
    the now-proved Killing coefficient then yields the normalization `N/2`.
 2. Prove an applicable curvature-to-LSI criterion. A diffusion route needs a
@@ -193,12 +223,13 @@ or constant-arithmetic problem.
 Proof commits: `0f05569` (algebra), `339112a` (curves), and `5bf0ed6`
 (inner product, adjoint isometry, and real Killing contraction), followed by
 `5c6ebdb` (exact Killing coefficient and real orthonormal energy), and
-`2387b3e` (determinant identity and actual local exponential coordinates).
+`2387b3e` (determinant identity and actual local exponential coordinates), and
+`78fea3b` (smooth translated exponential atlas).
 `lake build` and the independent `Examples.lean`
-compilation pass. The recursive `Audit.lean` check passes for all 327 project
+compilation pass. The recursive `Audit.lean` check passes for all 380 project
 declarations, accepting only `propext`, `Classical.choice`, and `Quot.sound`.
 It prints the fully elaborated commutator-energy, curve-velocity, and
 exponential-speed, conjugation-derivative, and Killing-contraction, exact-coefficient, and real-orthonormal-energy theorems, exposes the Frobenius instances, and inspects the
 Lie-algebra, trace-pairing, exponential-curve, and inner-product definitions.
 The full output is in [axiom-audit.txt](axiom-audit.txt). These checks certify
-the algebraic, curve, and local-coordinate results above, not an SU(N) LSI theorem.
+the algebraic, curve, local-coordinate, and smooth-atlas results above, not an SU(N) LSI theorem.
