@@ -73,6 +73,11 @@ All names below are in namespace `LogSobolev`.
 | `LogSobolev/Unitary/SpecialUnitaryEntropyDissipation.lean` | `specialUnitary_hasDerivAt_entropy`, `specialUnitary_entropy_deriv_nonpos`, `specialUnitary_weighted_gammaTwo_log_lower_bound` | Entropy dissipation for an explicitly supplied positive differentiable family in the actual heat direction; weighted logarithmic Γ₂ estimate. No heat existence or Fisher time-decay theorem is asserted. |
 | `LogSobolev/Unitary/SpecialUnitaryFisherIdentity.lean` | `specialUnitary_fisher_variation_identity`, `specialUnitary_fisher_variation_le` | Spatial Fisher variation equals `−2 ∫ f Γ₂(log f)` and is at most `−N I(f)` for positive smooth tests and an HS orthonormal basis. No time family is needed. |
 | `LogSobolev/Unitary/SpecialUnitaryFisherDifferentiation.lean` | `specialUnitary_hasDerivAt_fisher`, `specialUnitary_hasDerivAt_fisher_of_heat`, `specialUnitary_fisher_deriv_le` | Conditional Fisher derivative and dissipation for supplied families with explicit joint-continuity and mixed-derivative hypotheses. Proves `I′ ≤ −N I` in the heat direction; no heat construction or exponential decay is claimed. |
+| `LogSobolev/Geometry/SecondDerivativeExtrema.lean` | `secondDerivative_nonneg_of_isLocalMin`, `secondDerivative_nonpos_of_isLocalMax` | Necessary second-derivative signs at extrema, proved from Mathlib's derivative test. |
+| `LogSobolev/Geometry/CompactEvolutionMaximum.lean` | `nonneg_of_compact_minimum_principle` | Positivity preservation for a supplied evolution on a compact space whose time derivative is nonnegative at spatial minima. |
+| `LogSobolev/Unitary/SpecialUnitaryMaximumPrinciple.lean` | `specialUnitary_laplacian_nonneg_at_min`, `specialUnitary_laplacian_nonpos_at_max` | The actual SU generator has the required signs at local extrema, via verified exponential curves. |
+| `LogSobolev/Unitary/SpecialUnitaryHeatBounds.lean` | `specialUnitary_heat_lower_bound`, `specialUnitary_heat_upper_bound`, `specialUnitary_heat_nonneg` | Supplied classical solutions of the actual SU heat equation preserve initial bounds; positivity is a conclusion. |
+| `LogSobolev/Unitary/SpecialUnitaryLinearHeat.lean` | `specialUnitaryLinearHeat`, `specialUnitaryLaplacian_affine`, `specialUnitaryLinearHeat_hasDerivAt`, `specialUnitaryLinearHeat_pos` | Actual constructed heat solution `c+l(U exp(t ∑ bᵢ²))` for affine matrix observables. Initial value, PDE, continuity, smooth spatial slices, bounds and forward strict positivity are proved. No general heat construction or LSI is asserted. |
 | `LogSobolev/Unitary/PhaseMap.lean` | `phaseMul_dist_le`, `phaseMap_lipschitz` | The full-line phase map has Lipschitz constant `sqrt(3)` for every positive N; no probability argument is needed. |
 | `LogSobolev/Measure/Interval.lean` | `intervalUniform_univ`, `map_intervalUniform` | Normalized Lebesgue measure on the Euclidean subtype `[0,L]` for `L>0`. |
 | `LogSobolev/Unitary/ProductDomain.lean` | `phaseDomainMeasure_probability`, `intervalPhaseMap_lipschitz` | The exact interval × SU domain and probability measure, and the restricted map's Lipschitz bound. |
@@ -187,8 +192,10 @@ second-derivative sum, and `Γ₂ ≥ (N/2)Γ` is proved for every smooth real t
 This avoids needing a geometric Ricci theorem for the current operator route.
 Haar integration by parts and the integrated Γ₂ identity are now proved.
 The entropy-dissipation formula for a supplied positive differentiable family
-in the heat direction is also proved. The SU step still needs a constructed
-diffusion with the explicit mixed-derivative regularity, integration of the
+in the heat direction is also proved. Heat solutions are now explicitly
+constructed for affine matrix observables, with proved preservation of bounds.
+The SU step still needs a general diffusion with the explicit mixed-derivative
+regularity, integration of the
 proved conditional Fisher differential inequality, and equilibrium convergence
 with proved ergodicity. Energy identification and approximation are required to
 obtain locally Lipschitz functions. The abstract
@@ -204,16 +211,16 @@ the compact regularity side conditions. A verified Herbst argument is a later ta
 Verification performed on 2026-10-10 with Lean 4.28.0 and the pinned Mathlib
 commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
 
-* `lake build`: passed for the complete library (2949 dependency/build jobs,
+* `lake build`: passed for the complete library (2956 dependency/build jobs,
   primarily cached Mathlib artifacts).
 * `lake env lean LogSobolev/Examples.lean`: passed; the examples compile as an
   independent client importing the public root module.
 * `lake env lean LogSobolev/Audit.lean`: passed. The automated traversal checked
-  **523 declarations** in the `LogSobolev` namespace, including definitions,
+  **552 declarations** in the `LogSobolev` namespace, including definitions,
   instances, and generated auxiliaries. Every transitive axiom was one of
   `propext`, `Classical.choice`, or `Quot.sound`. No `sorryAx` or custom axiom
   was present in those dependency closures.
-* The audit also executes 130 `#print axioms` commands, prints the core
+* The audit also executes 145 `#print axioms` commands, prints the core
   definitions, and prints fully elaborated types for the trace normalization,
   phase-map Lipschitz theorem, U(N) regularity theorem, exact Haar identity,
   conditional final LSI transfer, product entropy chain rule, and SU algebra
@@ -227,7 +234,8 @@ commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
   estimate, scalar diffusion chain rule, entropy differentiation with changing
   mass, conditional entropy dissipation, weighted logarithmic Γ₂, the spatial
   Fisher identity, and the conditional Fisher differential inequality with all
-  mixed-derivative hypotheses exposed. The elaborated
+  mixed-derivative hypotheses exposed, the actual generator maximum principle,
+  bound preservation, and the constructed affine heat equation and positivity. The elaborated
   metric instances are explicitly Frobenius and `WithLp 2`.
 * The recursive audit now shares Lean's core collector visited set across all
   project roots. At milestone `6cb53ac`, an independent-root baseline run and
@@ -355,6 +363,17 @@ Completed milestones:
   The mixed derivative hypotheses still need to be established for a
   constructed heat family. Heat existence, integrated decay, convergence,
   energy identification, and the locally Lipschitz LSI remain open.
+
+* `60361a5`: necessary second-derivative sign at extrema, a reusable compact
+  evolution minimum principle, the actual SU generator maximum principle,
+  and preservation of initial heat bounds. Constructs actual heat solutions
+  for every affine matrix observable as `c+l(U exp(t ∑ bᵢ²))`, with proved
+  initial value, PDE, joint continuity, smooth spatial slices, and forward
+  positivity. Build (2956 jobs), independent nonconstant positive SU(2) and
+  direct SU(3) PDE examples, and the 552-declaration recursive audit pass.
+  All 145 explicit axiom checks use only standard foundational axioms.
+  Heat construction beyond affine observables, required general regularity,
+  convergence, and the locally Lipschitz LSI remain open.
 
 The report and README are committed separately after these verified proof
 milestones; use `git log --oneline` to see the documentation commit as well.

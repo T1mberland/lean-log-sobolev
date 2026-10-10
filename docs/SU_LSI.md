@@ -373,7 +373,7 @@ proves `specialUnitary_weighted_gammaTwo_log_lower_bound`:
 
 This supplies the curvature part of the Fisher-information argument. The
 spatial dissipation identity and a conditional time-derivative theorem are now
-proved below. Heat existence, its required regularity, exponential decay and
+proved below. General heat existence, its required regularity, exponential decay and
 equilibrium convergence remain open.
 
 ## Fisher dissipation now proved under explicit regularity
@@ -401,17 +401,66 @@ With the additional heat-direction equality `Q_t = L F_t`,
 
 For positive families, `specialUnitary_fisher_deriv_le` proves `I′(t) ≤ −N I(t)`.
 These are **conditional theorems about supplied regular families**. A heat
-family satisfying their hypotheses has not been constructed; the mixed
-derivative identity has not yet been deduced from a joint smoothness theorem.
+family satisfying their hypotheses for arbitrary smooth initial data has not
+been constructed. The affine construction below proves the PDE and forward
+positivity but has not yet been connected to all mixed-derivative hypotheses;
+the general mixed derivative identity has not yet been deduced from joint
+smoothness.
 An independent exponential-rescaling example discharges every differentiation
 hypothesis for a time-dependent family, without asserting it solves the heat
 equation.
 
+## Maximum principle and an actual affine heat construction
+
+`Geometry/SecondDerivativeExtrema.lean` proves the necessary second-derivative
+sign at local extrema from Mathlib's derivative test.
+`Unitary/SpecialUnitaryMaximumPrinciple.lean` applies it along the actual curves
+`U exp(tA)`. It proves vanishing of invariant first derivatives at minima,
+nonnegativity of each second invariant derivative there, and
+`specialUnitary_laplacian_nonneg_at_min` / `specialUnitary_laplacian_nonpos_at_max`.
+These are the actual constructed differential operators, for any finite family
+of directions; no abstract positive-generator axiom is used.
+
+`Geometry/CompactEvolutionMaximum.lean:nonneg_of_compact_minimum_principle`
+proves positivity preservation on a compact space from the derivative sign at
+spatial minima. It minimizes on a compact space-time rectangle and uses a
+positive linear time perturbation. No measure structure is needed.
+`Unitary/SpecialUnitaryHeatBounds.lean` specializes this to the actual SU heat
+equation: `specialUnitary_heat_lower_bound`, `specialUnitary_heat_upper_bound`,
+and `specialUnitary_heat_nonneg`. These theorems assume a classical solution
+but **derive**, rather than assume, preservation of bounds.
+
+`Unitary/SpecialUnitaryLinearHeat.lean` now constructs actual solutions for
+affine matrix observables. For a real continuous linear functional `l` on
+matrices, a scalar `c`, and `S = ∑ i, (b i)²`, define
+
+`specialUnitaryLinearHeat b l c t U = c + l(U exp(t S))`.
+
+`specialUnitaryLaplacian_affine` proves `L(c+l(U)) = l(U S)`.
+`specialUnitaryLinearHeat_zero` proves the exact initial value, and
+`specialUnitaryLinearHeat_hasDerivAt` proves `∂ₜ F_t = L F_t` **without a heat
+solution or PDE hypothesis**. Joint continuity and smoothness of every spatial
+slice are proved. Initial lower and upper bounds are preserved, and
+`specialUnitaryLinearHeat_pos` proves strict positivity at all forward times
+from strictly positive affine initial data. An independent SU(2) example uses
+the nonconstant positive density `2 + Im(U₀₀)`; an SU(3) example checks the
+actual PDE with the canonical real HS orthonormal basis.
+
+This is a construction on the affine matrix-observable class only. It does not
+prove heat existence on all smooth functions, equilibration, LSI for this class,
+or extension to locally Lipschitz tests. A concrete next route is to extend
+from affine observables to finite-degree polynomial spaces invariant under `L`,
+exponentiate the finite-dimensional restricted generators, and prove the
+required approximation and regularity. Mathlib's inspected
+`RingTheory/MvPolynomial/Basic.lean` already proves `Module.Finite` for
+`restrictTotalDegree` with finitely many variables. The invariant restriction,
+heat evolution on those spaces, and extension are not yet formalized.
+
 ## Remaining route to the theorem
 
 The sum-of-squares route now has its exact differential estimate
-`Γ₂ ≥ (N/2) Γ`. The remaining central task is analytic: construct the diffusion
-for this operator and prove the entropy argument, with invariant measure equal
+`Γ₂ ≥ (N/2) Γ`. The remaining central task is analytic: extend the affine heat
+construction to the full test class and prove the entropy argument, with invariant measure equal
 to the already-defined normalized Haar probability. Haar integration by parts
 is now proved, as is the entropy-dissipation formula for a supplied positive
 regular family in the heat direction. Required steps include semigroup
@@ -482,9 +531,11 @@ commutation and the exact generator-defined Γ₂ identity and bound), and
 `0c520e8` (scalar/logarithmic diffusion calculus, compact entropy
 differentiation, conditional entropy dissipation, and weighted logarithmic Γ₂),
 and `d6c3cc6` (spatial Fisher identity and conditional time-dependent Fisher
-dissipation with explicit mixed-derivative hypotheses).
+dissipation with explicit mixed-derivative hypotheses), and `60361a5` (actual
+generator maximum principle, preservation of heat bounds, and constructed
+positive affine heat solutions).
 `lake build` and the independent `Examples.lean`
-compilation pass. The recursive `Audit.lean` check passes for all 523 project
+compilation pass. The recursive `Audit.lean` check passes for all 552 project
 declarations, accepting only `propext`, `Classical.choice`, and `Quot.sound`.
 It prints the fully elaborated commutator-energy, curve-velocity, and
 exponential-speed, conjugation-derivative, and Killing-contraction, exact-coefficient, and real-orthonormal-energy theorems, exposes the Frobenius instances, and inspects the
@@ -493,5 +544,6 @@ The full output is in [axiom-audit.txt](axiom-audit.txt). These checks certify
 the algebraic, curve, local-coordinate, smooth Lie-group, tangent-derivative,
 smooth differential-operator, second-order energy, generator, Γ₂, and Haar
 integration, logarithmic chain-rule, entropy-differentiation, and spatial and
-conditional time-dependent Fisher results
+conditional time-dependent Fisher results, the maximum principle, and the
+constructed affine heat solutions
 above, not an SU(N) LSI theorem.
