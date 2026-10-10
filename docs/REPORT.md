@@ -34,6 +34,9 @@ All names below are in namespace `LogSobolev`.
 | `LogSobolev/Unitary/SpecialUnitaryAlgebra.lean` | `specialUnitaryLieAlgebra`, `negTracePair_lie`, `negTracePair_self`, `specialUnitary_negTracePair_pos` | Real traceless skew-Hermitian Lie subalgebra and positive, invariant trace pairing with the exact Frobenius diagonal. No manifold tangent identification. |
 | `LogSobolev/Unitary/MatrixCasimir.lean` | `sum_matrixUnits_double_lie`, `sum_matrixUnits_double_lie_of_trace_zero` | Algebraic identity `Σ[Eij,[Eji,A]] = 2N A − 2 Tr(A) I` over any commutative ring. |
 | `LogSobolev/Unitary/SpecialUnitaryCasimir.lean` | `sum_matrixUnits_lie_norm_sq`, `specialUnitary_commutator_energy` | The matrix-unit commutator-energy sum is `2N ‖A‖²` on the traceless skew-Hermitian subalgebra. Matrix units are not a real tangent basis; this does not yet prove Ricci or LSI. |
+| `LogSobolev/Unitary/DeterminantDerivative.lean` | `hasDerivAt_det_at_one` | Entrywise differentiable matrix curves at identity have determinant derivative equal to trace. |
+| `LogSobolev/Unitary/UnitaryCurves.lean` | `skewAdjoint_iff_unitary_curve_velocity` | Skew-Hermitian matrices are exactly velocities at identity of actual unitary curves. |
+| `LogSobolev/Unitary/SpecialUnitaryCurves.lean` | `det_exp_smul_eq_one_of_trace_zero`, `mem_specialUnitaryLieAlgebra_iff_curve_velocity`, `specialUnitaryExpCurve_speed`, `specialUnitaryExpCurve_lipschitz` | Trace-zero exponentials have determinant one; actual SU curve velocities characterize the algebra, with exact Frobenius speeds and norm-preserving left translation. No manifold atlas or curvature theorem. |
 | `LogSobolev/Unitary/PhaseMap.lean` | `phaseMul_dist_le`, `phaseMap_lipschitz` | The full-line phase map has Lipschitz constant `sqrt(3)` for every positive N; no probability argument is needed. |
 | `LogSobolev/Measure/Interval.lean` | `intervalUniform_univ`, `map_intervalUniform` | Normalized Lebesgue measure on the Euclidean subtype `[0,L]` for `L>0`. |
 | `LogSobolev/Unitary/ProductDomain.lean` | `phaseDomainMeasure_probability`, `intervalPhaseMap_lipschitz` | The exact interval × SU domain and probability measure, and the restricted map's Lipschitz bound. |
@@ -156,20 +159,20 @@ the compact regularity side conditions. A verified Herbst argument is a later ta
 Verification performed on 2026-10-10 with Lean 4.28.0 and the pinned Mathlib
 commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
 
-* `lake build`: passed for the complete library (2766 dependency/build jobs,
+* `lake build`: passed for the complete library (2773 dependency/build jobs,
   primarily cached Mathlib artifacts).
 * `lake env lean LogSobolev/Examples.lean`: passed; the examples compile as an
   independent client importing the public root module.
 * `lake env lean LogSobolev/Audit.lean`: passed. The automated traversal checked
-  **194 declarations** in the `LogSobolev` namespace, including definitions,
+  **222 declarations** in the `LogSobolev` namespace, including definitions,
   instances, and generated auxiliaries. Every transitive axiom was one of
   `propext`, `Classical.choice`, or `Quot.sound`. No `sorryAx` or custom axiom
   was present in those dependency closures.
-* The audit also executes 38 `#print axioms` commands, prints the core
+* The audit also executes 44 `#print axioms` commands, prints the core
   definitions, and prints fully elaborated types for the trace normalization,
   phase-map Lipschitz theorem, U(N) regularity theorem, exact Haar identity,
   conditional final LSI transfer, product entropy chain rule, and SU algebra
-  commutator energy. The elaborated
+  commutator energy, SU curve-velocity characterization, and exponential speed. The elaborated
   metric instances are explicitly Frobenius and `WithLp 2`.
 * Source scan found no proof omissions or custom axiom declarations;
   `git diff --check` passed.
@@ -197,6 +200,12 @@ Completed milestones:
   trace pairing, general matrix-unit double-commutator identity, and exact
   `2N` Frobenius commutator energy; normalization examples and the expanded
   194-declaration audit. The SU LSI and Ricci interpretation remain unproved.
+
+* `339112a`: determinant derivative at identity, trace-zero exponential determinant,
+  actual U/SU curve-velocity characterizations, SU exponential curves with exact
+  Frobenius speed and Lipschitz bound, and norm-preserving velocity translation.
+  Independent examples and the expanded 222-declaration recursive audit pass.
+  These results do not establish Ricci curvature or SU LSI.
 
 The report and README are committed separately after these verified proof
 milestones; use `git log --oneline` to see the documentation commit as well.

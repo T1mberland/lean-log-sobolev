@@ -22,6 +22,8 @@ Proved components include:
 * Compactness and Haar probability on U(N) and SU(N).
 * The traceless skew-Hermitian matrix Lie algebra, its trace pairing, and the
   exact `2N` matrix commutator-energy identity (not yet a Ricci or LSI theorem).
+* Actual SU exponential curves, their trace-zero determinant identity, exact
+  Hilbert–Schmidt speed, and characterization of velocities at identity.
 * The normalized interval and its L² product with SU(N).
 * The paper's phase map into U(N), with the `sqrt(3)` Lipschitz bound.
 * **The exact short-interval Haar decomposition (Lemma 16)** for every positive N,

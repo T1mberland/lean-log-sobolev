@@ -42,6 +42,28 @@ locally Lipschitz real function. No alternative energy or measure is substituted
 Independent examples check the coefficient in dimension three and the
 nonzero element `diag(i, -i)` in dimension two, including its norm squared `2`.
 
+## Curve geometry now proved
+
+`Unitary/DeterminantDerivative.lean:hasDerivAt_det_at_one` proves that the
+matrix determinant derivative at identity is the trace of the velocity.
+`Unitary/SpecialUnitaryCurves.lean:det_exp_smul_eq_one_of_trace_zero` then proves
+`det(exp(t A)) = 1` for every traceless complex matrix and real t, by the
+exponential group law and vanishing derivative.
+
+`mem_specialUnitaryLieAlgebra_iff_curve_velocity` characterizes the algebra
+exactly as derivatives at identity of curves in the actual matrix SU group.
+Its reverse construction is `specialUnitaryExpCurve`.
+`specialUnitaryExpCurve_speed` gives constant speed `‖A‖_HS`, and
+`specialUnitaryExpCurve_lipschitz` gives the corresponding global Lipschitz bound.
+`specialUnitary_curve_velocity_leftTranslate` and
+`specialUnitary_velocity_leftTranslate_norm` prove that translating arbitrary
+curve velocities to identity puts them in this algebra and preserves their norm.
+
+These statements use the unnormalized Frobenius norm throughout. They identify
+curve velocities without claiming a manifold atlas or Levi-Civita connection.
+Independent examples test arbitrary algebra elements and the determinant-one
+exponential of the non-skew trace-zero matrix `diag(1, -1)`.
+
 ## What these identities do not prove
 
 The complex matrix units Eij are **not** a real orthonormal basis of su(N).
@@ -58,8 +80,8 @@ needed for its abstract LSI implication and cannot supply this missing proof.
 
 ## Remaining route to the theorem
 
-1. Identify the traceless skew-Hermitian algebra with the tangent space of the
-   actual matrix SU group, and construct the Hilbert–Schmidt bi-invariant
+1. Upgrade the proved curve-velocity characterization to a manifold tangent
+   identification for the actual matrix SU group, and construct the Hilbert–Schmidt bi-invariant
    Riemannian metric. Relate the matrix-unit identity to the real orthonormal
    tangent contraction and prove the Ricci bound with normalization `N/2`.
 2. Prove an applicable curvature-to-LSI criterion. A diffusion route needs a
@@ -81,10 +103,11 @@ or constant-arithmetic problem.
 
 ## Verification
 
-Proof commit: `0f05569`. `lake build` and the independent `Examples.lean`
-compilation pass. The recursive `Audit.lean` check passes for all 194 project
+Proof commits: `0f05569` (algebra) and `339112a` (curves). `lake build` and the independent `Examples.lean`
+compilation pass. The recursive `Audit.lean` check passes for all 222 project
 declarations, accepting only `propext`, `Classical.choice`, and `Quot.sound`.
-It prints the fully elaborated commutator-energy theorem, exposes the
-Frobenius instances, and inspects the Lie-algebra and trace-pairing definitions.
+It prints the fully elaborated commutator-energy, curve-velocity, and
+exponential-speed theorems, exposes the Frobenius instances, and inspects the
+Lie-algebra, trace-pairing, and exponential-curve definitions.
 The full output is in [axiom-audit.txt](axiom-audit.txt). These checks certify
-the algebraic results above, not an SU(N) LSI theorem.
+the algebraic and curve results above, not an SU(N) LSI theorem.
