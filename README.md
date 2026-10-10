@@ -38,7 +38,8 @@ Proved components include:
   `D_A D_B − D_B D_A = D_[A,B]` for every smooth SU test.
 * The exact `N/2` lower bound on second-derivative energy, and a constructed
   sum-of-squares operator whose carré du champ is proved to be first-derivative
-  energy. The Γ₂ identity and LSI are still open.
+  energy. Generator commutation, the Γ₂ identity, and `Γ₂ ≥ (N/2) Γ` are
+  now proved for all smooth real SU tests. The entropy inequality remains open.
 * The normalized interval and its L² product with SU(N).
 * The paper's phase map into U(N), with the `sqrt(3)` Lipschitz bound.
 * **The exact short-interval Haar decomposition (Lemma 16)** for every positive N,

@@ -8,8 +8,9 @@ for N=1. No interval or SU(N) LSI has been assumed as an axiom or installed in a
 typeclass. The development proves the metric/measure foundations, the exact Haar
 decomposition in Lemma 16, and the transport and regularity results below.
 
-The principal unfinished step is analytic/geometric: obtaining SU(N)'s LSI
-from a proved curvature or Γ₂ calculation and a proved diffusion criterion. The
+The principal unfinished step is analytic: obtaining SU(N)'s LSI from the now
+proved Γ₂ estimate through a constructed Haar-invariant diffusion and a proved
+entropy argument. The
 interval/circle LSI and the appropriate tensorization argument are also
 substantial analytic obligations. The exact short-interval Haar decomposition is now proved, including N=1.
 The remaining analytic/geometric obligations are mathematical missing proofs,
@@ -59,6 +60,10 @@ All names below are in namespace `LogSobolev`.
 | `LogSobolev/Geometry/SecondOrderArray.lean` | `sum_sq_sub_transpose_le` | Antisymmetrization has squared norm at most four on a finite real array. |
 | `LogSobolev/Unitary/SpecialUnitarySecondOrder.lean` | `specialUnitary_dual_commutator_energy`, `specialUnitary_second_derivative_energy_lower_bound` | Exact dual Killing contraction `2N`; for every smooth real SU test and real HS orthonormal basis, second-derivative energy is at least `N/2` times first-derivative energy. No Γ₂ identity is assumed. |
 | `LogSobolev/Unitary/SpecialUnitaryGenerator.lean` | `specialUnitaryLaplacian`, `specialUnitaryLaplacian_contMDiff`, `specialUnitaryGamma_eq`, `specialUnitaryGamma_nonneg` | Actual sum of squares preserves smoothness. Its generator-defined carré du champ equals the sum of products of first derivatives. No semigroup or invariant-measure identity yet. |
+| `LogSobolev/Geometry/CasimirCommutation.lean` | `sum_squares_commute_of_skew_coefficients` | A finite sum of squares commutes with any element whose commutator acts by skew coefficients. Pure algebra, applied below to actual operators. |
+| `LogSobolev/Unitary/SpecialUnitaryOperatorAlgebra.lean` | `specialUnitaryDerivEnd`, `specialUnitaryDerivRepresentation`, `specialUnitaryDerivEnd_commutator` | Actual invariant derivatives as linear endomorphisms of genuine smooth functions, with proved linearity and commutator relation. |
+| `LogSobolev/Unitary/SpecialUnitaryGeneratorCommutation.lean` | `specialUnitaryCasimir_commute`, `specialUnitaryLaplacian_deriv` | The constructed generator commutes with every invariant derivative for a real HS orthonormal basis; no diffusion or curvature hypothesis. |
+| `LogSobolev/Unitary/SpecialUnitaryGammaTwo.lean` | `specialUnitaryGammaTwo_eq`, `specialUnitaryGammaTwo_lower_bound` | Γ₂ is defined by `(LΓ−2Γ(f,Lf))/2`; its equality with second-derivative energy and the exact lower bound `Γ₂ ≥ (N/2)Γ` are proved for every smooth real test. This is not LSI or entropy decay. |
 | `LogSobolev/Unitary/PhaseMap.lean` | `phaseMul_dist_le`, `phaseMap_lipschitz` | The full-line phase map has Lipschitz constant `sqrt(3)` for every positive N; no probability argument is needed. |
 | `LogSobolev/Measure/Interval.lean` | `intervalUniform_univ`, `map_intervalUniform` | Normalized Lebesgue measure on the Euclidean subtype `[0,L]` for `L>0`. |
 | `LogSobolev/Unitary/ProductDomain.lean` | `phaseDomainMeasure_probability`, `intervalPhaseMap_lipschitz` | The exact interval × SU domain and probability measure, and the restricted map's Lipschitz bound. |
@@ -167,15 +172,14 @@ The [SU-specific proof boundary](SU_LSI.md) describes the algebraic
 normalization, smooth Lie group, and tangent-inclusion proofs. The geometric
 Lie-bracket identification, Riemannian metric, and curvature computation remain
 to be established.
-The actual invariant differential operators, their commutators, the generator
-product identity, and the `N/2` second-derivative estimate are now proved. The
-remaining sum-of-squares Γ₂ argument needs commutation of the generator with
-invariant derivatives and the Γ₂ identity. This is a possible shorter alternative
-to the geometric Ricci calculation, as detailed in the SU report. Neither route
-to LSI is yet complete. The SU step still needs a concrete diffusion or Riemannian development: the
-Hilbert–Schmidt bi-invariant geometry, Ricci normalization, entropy dissipation,
-curvature-to-Fisher-information decay, equilibrium convergence, and any smooth
-approximation needed to obtain locally Lipschitz functions. The abstract
+The sum-of-squares Γ₂ argument is now closed: the generator commutes with
+invariant derivatives, its actual iterated carré du champ equals the
+second-derivative sum, and `Γ₂ ≥ (N/2)Γ` is proved for every smooth real test.
+This avoids needing a geometric Ricci theorem for the current operator route.
+The SU step still needs Haar integration by parts, a constructed diffusion,
+entropy dissipation, the Fisher-information estimate, and equilibrium convergence
+with proved ergodicity. Energy identification and approximation are required to
+obtain locally Lipschitz functions. The abstract
 `markov-semigroups` class does not eliminate these obligations. Its assumed
 entropy decay must not be passed off as a proved curvature criterion.
 
@@ -188,16 +192,16 @@ the compact regularity side conditions. A verified Herbst argument is a later ta
 Verification performed on 2026-10-10 with Lean 4.28.0 and the pinned Mathlib
 commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
 
-* `lake build`: passed for the complete library (2935 dependency/build jobs,
+* `lake build`: passed for the complete library (2939 dependency/build jobs,
   primarily cached Mathlib artifacts).
 * `lake env lean LogSobolev/Examples.lean`: passed; the examples compile as an
   independent client importing the public root module.
 * `lake env lean LogSobolev/Audit.lean`: passed. The automated traversal checked
-  **439 declarations** in the `LogSobolev` namespace, including definitions,
+  **465 declarations** in the `LogSobolev` namespace, including definitions,
   instances, and generated auxiliaries. Every transitive axiom was one of
   `propext`, `Classical.choice`, or `Quot.sound`. No `sorryAx` or custom axiom
   was present in those dependency closures.
-* The audit also executes 92 `#print axioms` commands, prints the core
+* The audit also executes 99 `#print axioms` commands, prints the core
   definitions, and prints fully elaborated types for the trace normalization,
   phase-map Lipschitz theorem, U(N) regularity theorem, exact Haar identity,
   conditional final LSI transfer, product entropy chain rule, and SU algebra
@@ -206,12 +210,14 @@ commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
   coordinates, smoothness of the ambient inverse, the actual smooth atlas, the ambient smooth-map criterion, Lie group instance,
   inclusion derivative with exact coordinate-norm preservation, local smooth
   extension, the actual differential-operator commutator, the `N/2` second-order
-  bound, and the generator-defined carré du champ identity. The elaborated
+  bound, the generator-defined carré du champ identity, generator commutation,
+  and the exact Γ₂ bound. The elaborated
   metric instances are explicitly Frobenius and `WithLp 2`.
 * The recursive audit now shares Lean's core collector visited set across all
-  project roots. An independent-root baseline run and the shared-traversal run
-  both passed for 439 declarations and produced byte-for-byte identical complete
-  output, including all 92 explicit axiom prints. The shared run took 1m47s.
+  project roots. At milestone `6cb53ac`, an independent-root baseline run and
+  the shared-traversal run both passed for 439 declarations and produced
+  byte-for-byte identical complete output, including all 92 explicit axiom
+  prints at that milestone. That shared run took 1m47s.
 * Source scan found no proof omissions or custom axiom declarations;
   `git diff --check` passed.
 
@@ -293,6 +299,14 @@ Completed milestones:
   concrete energy, and both versions of the 439-declaration audit pass.
   The shared audit traversal has identical output to the independent-root
   baseline. Generator commutation, the Γ₂ identity, and LSI remain open.
+
+* `eb986ff`: actual invariant operators on the smooth function space, a reusable
+  finite Casimir calculation, proved generator commutation, and the exact
+  generator-defined Γ₂ identity and bound `Γ₂ ≥ (N/2)Γ`. Build (2939 jobs),
+  independent SU(3) normalization and iterated-generator examples, and the
+  465-declaration recursive axiom audit pass. Haar integration by parts,
+  diffusion construction, entropy dissipation/convergence, and locally Lipschitz
+  LSI remain open; the Γ₂ differential estimate itself is now proved.
 
 The report and README are committed separately after these verified proof
 milestones; use `git log --oneline` to see the documentation commit as well.
