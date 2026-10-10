@@ -527,7 +527,7 @@ example : ConnectedSpace (Matrix.specialUnitaryGroup (Fin 1) ℂ) := inferInstan
 example : ConnectedSpace (Matrix.specialUnitaryGroup (Fin 3) ℂ) := inferInstance
 
 -- A concrete nonconstant positive quadratic has strictly positive Haar energy.
-example :
+private theorem quadraticSU2_energy_pos :
     let b := stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 2))
     0 < ∫ U, specialUnitaryGamma b quadraticSU2.val quadraticSU2.val U
       ∂specialUnitaryHaar (Fin 2) := by
@@ -596,4 +596,29 @@ example (N d : ℕ) (hN : 0 < N) (f : specialUnitaryPolynomialSpace (n := Fin N)
     entropy (specialUnitaryHaar (Fin N)) (fun U => f.val U ^ 2) ≤
       (4 / (N : ℝ)) * (∫ U, specialUnitaryGamma b f.val f.val U ∂specialUnitaryHaar (Fin N)) := by
   simpa using specialUnitaryPolynomial_entropy_sq_le
+    (stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin N))) d (by simpa using hN) f
+
+
+-- The actual local metric slope, with a finite right-hand side, on a nonconstant SU(2) test.
+example : slopeEnergy (specialUnitaryHaar (Fin 2)) quadraticSU2.val ≠ ⊤ :=
+  specialUnitaryPolynomial_slopeEnergy_ne_top 2 quadraticSU2
+
+example : 0 < slopeEnergy (specialUnitaryHaar (Fin 2)) quadraticSU2.val := by
+  have he := ENNReal.ofReal_pos.mpr quadraticSU2_energy_pos
+  exact he.trans_le (specialUnitary_integral_gamma_le_slopeEnergy
+    (stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 2))) quadraticSU2.val.contMDiff)
+
+-- This test vanishes at the identity; the metric LSI has no positivity hypothesis.
+example : entropy (specialUnitaryHaar (Fin 2)) (fun U => centeredQuadraticSU2.val U ^ 2) ≤
+    2 * (∫ U, (localSlope centeredQuadraticSU2.val U).toReal ^ 2 ∂specialUnitaryHaar (Fin 2)) := by
+  have h := specialUnitaryPolynomial_entropy_sq_le_slope
+    (stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 2))) 2 (by decide) centeredQuadraticSU2
+  norm_num at h
+  exact h
+
+-- Exact constant 2/N in the paper's extended local-slope formulation for every positive N.
+example (N d : ℕ) (hN : 0 < N) (f : specialUnitaryPolynomialSpace (n := Fin N) d) :
+    ENNReal.ofReal (entropy (specialUnitaryHaar (Fin N)) (fun U => f.val U ^ 2)) ≤
+      2 * ((2 / (N : NNReal) : NNReal) : ENNReal) * slopeEnergy (specialUnitaryHaar (Fin N)) f.val := by
+  simpa using specialUnitaryPolynomial_metric_entropy_sq_le
     (stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin N))) d (by simpa using hN) f

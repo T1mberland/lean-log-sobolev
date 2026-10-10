@@ -369,3 +369,24 @@ set_option pp.all true in
 #check @LogSobolev.specialUnitaryPolynomial_entropy_le_fisher
 set_option pp.all true in
 #check @LogSobolev.specialUnitaryPolynomial_entropy_sq_le
+
+
+#print axioms LogSobolev.localSlope_eq_of_hasDerivAt
+#print axioms LogSobolev.specialUnitary_isometry_mul_left
+#print axioms LogSobolev.specialUnitaryDeriv_le_localSlope
+#print axioms LogSobolev.specialUnitaryGradient_norm_sq
+#print axioms LogSobolev.specialUnitaryDeriv_gradient
+#print axioms LogSobolev.specialUnitaryGamma_le_localSlope_sq
+#print axioms LogSobolev.specialUnitaryPolynomial_exists_contDiff_extension
+#print axioms LogSobolev.specialUnitaryPolynomial_locallyLipschitz
+#print axioms LogSobolev.specialUnitary_integral_gamma_le_slopeEnergy
+#print axioms LogSobolev.specialUnitaryPolynomial_metric_entropy_sq_le
+#print axioms LogSobolev.specialUnitaryPolynomial_slopeEnergy_ne_top
+#print axioms LogSobolev.specialUnitaryPolynomial_entropy_sq_le_slope
+#print LogSobolev.specialUnitaryGradient
+set_option pp.all true in
+#check @LogSobolev.specialUnitaryGamma_le_localSlope_sq
+set_option pp.all true in
+#check @LogSobolev.specialUnitaryPolynomial_metric_entropy_sq_le
+set_option pp.all true in
+#check @LogSobolev.specialUnitaryPolynomial_entropy_sq_le_slope

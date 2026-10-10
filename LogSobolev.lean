@@ -79,3 +79,7 @@ import LogSobolev.Unitary.SpecialUnitaryPolynomialEnergyDecay
 import LogSobolev.Unitary.SpecialUnitaryPolynomialEquilibrium
 import LogSobolev.Unitary.SpecialUnitarySquareEnergy
 import LogSobolev.Unitary.SpecialUnitaryPolynomialLSI
+import LogSobolev.Geometry.LocalSlopeDerivative
+import LogSobolev.Unitary.SpecialUnitarySlope
+import LogSobolev.Unitary.SpecialUnitaryPolynomialExtension
+import LogSobolev.Unitary.SpecialUnitaryPolynomialMetricLSI
