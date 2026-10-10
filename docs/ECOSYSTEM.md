@@ -164,3 +164,16 @@ entropy limit. `IntervalMetricLSI.lean` proves the full locally Lipschitz
 normalized-interval LSI with constant `L²/8`. `DimensionOneLSI.lean` combines it
 with the previously verified Haar decomposition to prove U(1) constant `6`.
 No external dependency or assumed analytic criterion was added.
+
+
+## Simultaneous phase differentiation
+
+`Mathlib/Analysis/Calculus/Rademacher.lean` in the pinned version proves
+`LipschitzWith.ae_differentiableAt` for finite-dimensional real normed spaces
+under additive Haar measure. The new `SpecialUnitaryPolynomialFamily.lean`
+applies it to a curve from the real line into the actual finite-degree SU
+polynomial space with its induced uniform norm. A proved positive-kernel
+contraction supplies the Lipschitz hypothesis. This avoids any assumption
+about Rademacher under manifold charts or about exceptional sets uniform in
+an arbitrary family of scalar functions. The joint evaluation derivative is
+proved separately by expansion in `Module.finBasis`.

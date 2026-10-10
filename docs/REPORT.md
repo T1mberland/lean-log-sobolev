@@ -307,15 +307,21 @@ interval and metric tensorization statements above also remain unproved.
 
 The interval extension is complete. The remaining bottleneck is analytic:
 combining the phase derivative and SU gradient with the correct quadratic
-energy. A candidate route uses SU polynomial convolution of a locally
-Lipschitz U(N) observable. At each phase, this lies in the existing finite-degree
-SU polynomial space. Proving that this polynomial-valued phase curve is
-Lipschitz would let Mathlib's finite-dimensional Rademacher theorem provide a
-single phase derivative almost everywhere. Central/traceless orthogonality and
-the existing averaged-derivative slope estimate could then control the total
-energy by the original U(N) slope energy. Passing through the SU kernel limit
-would give coefficient `π²/N ≤ 12/N`. These joint differentiation and energy
-estimates are proposed proof obligations, not established theorems.
+energy. SU polynomial convolution now gives a Lipschitz curve in the existing
+finite-degree polynomial space (`unitary_exists_phase_polynomial`). Mathlib's
+finite-dimensional Rademacher theorem supplies a simultaneous phase derivative
+almost everywhere; a locally Lipschitz input suffices. The joint derivative
+formula `specialUnitaryPolynomial_hasDerivAt_phase_flow` is proved by finite
+basis expansion, and `specialUnitary_phase_velocity_norm_sq` proves the exact
+central/traceless orthogonality identity.
+
+Still needed: prove the combined phase/exponential curve's Lipschitz constant
+from its velocity norm; apply the averaged-derivative local-slope bound with
+the SU gradient and phase speed equal to half the phase derivative; integrate
+this quadratic estimate through the verified Haar decomposition; and pass to
+the SU convolution limit in entropy. The proposed resulting coefficient is
+`π²/N ≤ 12/N`. The combined energy estimate and final limit theorem remain
+unproved; these new differentiation lemmas do not assert an LSI on U(N).
 
 The [completed SU proof](SU_LSI.md) supplies the `2/N` factor unconditionally,
 including locally Lipschitz tests. Its route uses actual sum-of-squares Γ₂ and
@@ -642,3 +648,37 @@ and their dependency closures; all 13 selected axiom prints use only `propext`,
 entropy, slope, measure, and LSI definitions are recorded in
 `interval-metric-axiom-audit.txt`. The source omission scan and `git diff --check`
 passed. No sharp interval LSI or U(N) result for N ≥ 2 is asserted by this commit.
+
+
+## Phase polynomial and joint derivative infrastructure
+
+* `LogSobolev/Unitary/PhaseSlices.lean`: `phaseMul_sqrt_lipschitz` proves the
+  phase speed bound `sqrt(2)`; `phaseMul_isometry` proves fixed-phase isometry;
+  `unitaryPhaseSlice_lipschitz` proves the uniform-norm bound for the SU slices.
+* `LogSobolev/Unitary/SpecialUnitaryPolynomialFamily.lean`:
+  `specialUnitaryPolynomial_averaging_dist_le` proves contraction by a
+  nonnegative polynomial kernel of mass one. This yields Lipschitz polynomial
+  families and their finite-dimensional almost-everywhere differentiability.
+* `LogSobolev/Unitary/UnitaryPhasePolynomial.lean`:
+  `unitary_exists_phase_polynomial_of_locallyLipschitz` applies the actual
+  normalized SU power kernel to arbitrary locally Lipschitz U(N) observables.
+  No joint differentiability assumption is made about the original observable.
+* `LogSobolev/Unitary/SpecialUnitaryPolynomialJointDerivative.lean`:
+  `specialUnitaryPolynomial_hasDerivAt_phase_flow` gives the joint derivative
+  `c p′(V) + D_A(p(t))(V)` along `(t+cs,V exp(sA))`. Its derivative hypothesis
+  concerns the polynomial-valued curve and is supplied almost everywhere by
+  the preceding construction.
+* `LogSobolev/Unitary/CentralOrthogonality.lean`:
+  `frobenius_norm_sq_add_scalar` proves the general traceless/scalar identity;
+  `specialUnitary_phase_velocity_norm_sq` gives exactly `‖A‖² + 2c²` at the
+  phase normalization used in the paper. There is no dimension-normalized norm.
+
+
+Commit `357ce62` contains the phase-polynomial infrastructure above. Full
+`lake build` passed (3186 jobs), and `ExamplesPhasePolynomial.lean` compiled
+independently. `AuditPhasePolynomial.lean` recursively checked all 971 project
+namespace declarations and their transitive dependencies; its 12 selected
+axiom prints use only `propext`, `Classical.choice`, and `Quot.sound`.
+Full elaborated statements are saved in `phase-polynomial-axiom-audit.txt`.
+The source omission scan and `git diff --check` pass. These are proved analytic
+and algebraic components; the U(N) LSI for N ≥ 2 remains open.

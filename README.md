@@ -16,6 +16,10 @@ Proved components include:
   This constant is not sharp.
 * U(1) LSI with constant `π²/2`, hence the requested constant `6`, for every
   locally Lipschitz real observable under actual Haar and the HS metric.
+* SU polynomial regularization of locally Lipschitz U(N) observables gives a
+  polynomial-valued phase curve differentiable almost everywhere. Its joint
+  derivative along SU exponential curves and the exact central/traceless
+  quadratic norm identity are proved; the final energy assembly remains open.
 * Entropy continuity under uniform convergence on compact finite-measure spaces,
   including squared observables with zeros and varying polynomial degree.
 * Explicit polynomial probability kernels on SU concentrate at identity and
