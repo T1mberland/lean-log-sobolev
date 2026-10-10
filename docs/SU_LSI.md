@@ -632,11 +632,27 @@ energy-controlled approximation covering the whole locally Lipschitz class.
 Uniform polynomial density alone does not suffice: the approximants' energies
 must also be controlled by the original function's local-slope energy.
 
-A polynomial smoothing/convolution route is a candidate: construct polynomial
-approximate-identity kernels on SU, prove convergence of their averages and entropy,
-and prove the averaged slope/energy bound using Haar invariance and the HS-isometric
-group translations. These approximation and energy-control results are not yet
-formalized. A sufficient precise approximation statement, for a locally Lipschitz
+The polynomial convolution construction is now proved in
+`Unitary/SpecialUnitaryPolynomialConvolution.lean`: for any continuous `f` and
+polynomial kernel `k` of degree at most `d`, there is an actual polynomial `p`
+of degree at most `d` with
+
+`p(U) = ∫ f(V) k(U⁻¹ V) dHaar(V) = ∫ f(U V) k(V) dHaar(V)`.
+
+The proof uses degree preservation under real linear matrix pullbacks
+(`SpecialUnitaryPolynomialPullback.lean`), integration in the closed
+finite-dimensional polynomial subspace, and proved Haar invariance.
+Normalized kernels preserve the Haar mean; nonnegative normalized kernels
+preserve pointwise upper bounds. No convergence or energy estimate is assumed
+in these results.
+
+`Measure/EntropyContinuity.lean` proves entropy and squared entropy continuous
+in the uniform norm on continuous real functions on any compact space with a
+finite measure. It includes zeros and sequences of varying polynomial degree.
+
+It remains to construct polynomial approximate-identity kernels on SU, prove
+uniform convergence of their averages, and prove the averaged energy bound
+using Haar invariance and the HS-isometric group translations. A sufficient precise approximation statement, for a locally Lipschitz
 `f : SU(N) → ℝ`, `hf : LocallyLipschitz f`, and HS orthonormal basis `b`, is:
 
 ```lean
@@ -651,11 +667,26 @@ formalized. A sufficient precise approximation statement, for a locally Lipschit
     slopeEnergy (specialUnitaryHaar (Fin N)) f
 ```
 
-Together with a verified entropy limit under uniform convergence, this would
-extend the existing polynomial energy inequality directly. It does not require
-controlling the approximants' full local-slope energy. Neither this approximation
-statement nor that general entropy-limit theorem has yet been proved. The full
-`MetricLSI` target at the top of this report remains unproved.
+Together with the now-proved entropy limit under uniform convergence, this
+would extend the existing polynomial energy inequality directly. It does not
+require controlling the approximants' full local-slope energy. The approximation
+statement and full `MetricLSI` target at the top of this report remain unproved.
+The bottleneck is analytic: kernel concentration and the derivative/local-slope
+bound for averaging a nonsmooth function, rather than polynomial closure or
+entropy continuity.
+
+A concrete next construction (not yet formalized) is
+`q(U) = (N + Re Tr U)/(2N) = 1 - ‖U-I‖²_HS/(4N)` for `N > 0`, and
+`k_j = q^j / ∫ q^j`. One must prove `0 ≤ q ≤ 1`, its unique maximum at identity,
+positive normalization, and concentration of the normalized powers. Compactness
+then yields uniform convergence of the averages of every continuous function.
+For energy control, use difference quotients along the verified exponential
+curves and Mathlib's `MeasureTheory.limsup_lintegral_le` (reverse Fatou), with
+finite domination from compact local Lipschitz regularity. The intended estimate
+is `|D_A p(U)| ≤ ‖A‖ ∫ k(V) localSlope(f)(UV) dHaar(V)`. Choosing the proved
+polynomial gradient direction, applying Jensen to the square, and integrating
+using Haar invariance would give the required energy bound. This is a proposed
+proof route, not an imported assertion or a proved theorem in the library.
 
 Consistency across finite-degree heat constructions and extension of heat to
 arbitrary smooth functions remain unproved, but are not needed if the polynomial
@@ -727,9 +758,10 @@ generator kernel), and `35e2978` (polynomial heat equilibrium, zero limiting
 entropy, positive-density entropy bound, and the squared-polynomial LSI with
 coefficient `4/N`), and `1e2e435` (pointwise local-slope comparison, polynomial
 ambient extension and local Lipschitz regularity, and finite-energy polynomial
-metric LSI).
+metric LSI), and `e41ed2b` (uniform entropy continuity, degree-preserving
+pullbacks, polynomial convolution, and normalized averaging identities).
 `lake build` and the independent `Examples.lean`
-compilation pass. The recursive `Audit.lean` check passes for all 723 project
+compilation pass. The recursive `Audit.lean` check passes for all 736 project
 declarations, accepting only `propext`, `Classical.choice`, and `Quot.sound`.
 It prints the fully elaborated commutator-energy, curve-velocity, and
 exponential-speed, conjugation-derivative, and Killing-contraction, exact-coefficient, and real-orthonormal-energy theorems, exposes the Frobenius instances, and inspects the

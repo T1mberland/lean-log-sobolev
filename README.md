@@ -9,6 +9,10 @@ It uses Mathlib's actual matrix unitary and special unitary groups and the
 
 Proved components include:
 
+* Entropy continuity under uniform convergence on compact finite-measure spaces,
+  including squared observables with zeros and varying polynomial degree.
+* Polynomial convolution on SU preserves degree; normalized averaging preserves
+  Haar mass and nonnegative normalized kernels preserve upper bounds.
 * Entropy transport, the product entropy chain rule with proved marginal
   log-integrability, and an explicit-energy LSI transport/scaling API.
 * The upper local metric slope: agreement with the punctured limsup,

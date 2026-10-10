@@ -16,6 +16,12 @@ to the full locally Lipschitz class by an energy-controlled approximation.
 The comparison with the actual local Hilbert–Schmidt slope and the polynomial
 metric LSI, including finite slope energy, are now proved. The interval/circle LSI and the appropriate tensorization argument are also
 substantial analytic obligations. The exact short-interval Haar decomposition is now proved, including N=1.
+Entropy continuity under uniform convergence, degree preservation under translations
+and inversion, and polynomial convolution of arbitrary continuous observables are
+also proved. Normalized convolution preserves Haar mass; nonnegative normalized
+kernels preserve upper bounds. What remains on the SU approximation route is
+kernel concentration and control of the averaged differential energy by the
+original function's local-slope energy.
 The remaining analytic/geometric obligations are mathematical missing proofs,
 not merely unresolved Lean syntax or typeclass errors.
 
@@ -110,6 +116,25 @@ All names below are in namespace `LogSobolev`.
 | `LogSobolev/Unitary/PhaseHaar.lean` | `integral_map_intervalPhaseMap`, `map_intervalPhaseMap` | **Unconditional Lemma 16:** the exact normalized interval × SU measure maps to normalized U Haar, for every positive N including N=1. |
 | `LogSobolev/Unitary/LSITransfer.lean` | `unitary_metricLSI_of_phaseDomain` | **Conditional:** explicitly assumes source MetricLSI(2/N), then proves target MetricLSI(6/N) using the verified Haar identity and Lipschitz bound. No source LSI is proved. |
 | `LogSobolev/Unitary/Observables.lean` | `entryReal_lipschitz`, `entryReal_not_ae_constant`, `unitary_regular` | A meaningful nonconstant test in each positive dimension, and all integrability requirements for every locally Lipschitz U(N) observable. |
+
+The latest approximation infrastructure is unconditional:
+
+* `Measure/EntropyContinuity.lean`: `continuous_entropy_continuousMap`,
+  `continuous_entropy_sq_continuousMap`, and
+  `tendsto_entropy_sq_of_tendsto_continuousMap` prove entropy convergence for
+  uniform limits on compact finite-measure spaces, including zeros.
+* `Unitary/SpecialUnitaryPolynomialPullback.lean`:
+  `specialUnitaryPolynomial_exists_linear_pullback` proves degree preservation
+  for ambient real linear maps preserving SU. Its translation and inversion
+  specializations give the polynomial kernel identity needed for convolution.
+* `Unitary/SpecialUnitaryPolynomialConvolution.lean`:
+  `specialUnitaryPolynomial_exists_convolution` and
+  `specialUnitaryPolynomial_exists_averaging` construct an actual degree-`d`
+  polynomial from any continuous observable and degree-`d` kernel.
+  `specialUnitary_averaging_integral` proves preservation of Haar mean for
+  normalized kernels, and `specialUnitary_averaging_le` proves preservation of
+  upper bounds for nonnegative normalized kernels. These theorems do not claim
+  that such kernels form an approximate identity or control differential energy.
 
 ## Convention and semantic checks
 
@@ -244,16 +269,16 @@ the compact regularity side conditions. A verified Herbst argument is a later ta
 Verification performed on 2026-10-10 with Lean 4.28.0 and the pinned Mathlib
 commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
 
-* `lake build`: passed for the complete library (3104 dependency/build jobs,
+* `lake build`: passed for the complete library (3107 dependency/build jobs,
   primarily cached Mathlib artifacts).
 * `lake env lean LogSobolev/Examples.lean`: passed; the examples compile as an
   independent client importing the public root module.
 * `lake env lean LogSobolev/Audit.lean`: passed. The automated traversal checked
-  **723 declarations** in the `LogSobolev` namespace, including definitions,
+  **736 declarations** in the `LogSobolev` namespace, including definitions,
   instances, and generated auxiliaries. Every transitive axiom was one of
   `propext`, `Classical.choice`, or `Quot.sound`. No `sorryAx` or custom axiom
   was present in those dependency closures.
-* The audit also executes 195 `#print axioms` commands, prints the core
+* The audit also executes 208 `#print axioms` commands, prints the core
   definitions, and prints fully elaborated types for the trace normalization,
   phase-map Lipschitz theorem, U(N) regularity theorem, exact Haar identity,
   conditional final LSI transfer, product entropy chain rule, and SU algebra
@@ -461,6 +486,17 @@ Completed milestones:
   standard foundational axioms. The remaining full-SU obligation is verified
   energy-controlled approximation and entropy convergence for arbitrary locally
   Lipschitz functions; no full `MetricLSI` instance is asserted.
+
+* `e41ed2b`: uniform-norm continuity of entropy and squared entropy on compact
+  finite-measure spaces; degree preservation of actual SU polynomials under
+  ambient real linear pullback, translations, and inversion; polynomial
+  convolution of arbitrary continuous observables, with the averaging formula
+  proved by Haar invariance; preservation of Haar mean and upper bounds by
+  normalized averaging. Full build (3107 jobs), independent varying-degree
+  entropy-limit and continuous-observable convolution examples, and the complete
+  recursive audit pass. All 736 project declarations and 208 explicit axiom
+  checks use only standard foundational axioms. Kernel concentration and the
+  averaged energy bound remain unproved; full SU(N) `MetricLSI` is not asserted.
 
 The report and README are committed separately after these verified proof
 milestones; use `git log --oneline` to see the documentation commit as well.
