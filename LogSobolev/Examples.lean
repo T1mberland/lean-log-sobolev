@@ -666,3 +666,53 @@ example : ∃ p : ∀ j, specialUnitaryPolynomialSpace (n := Fin 2) j,
   obtain ⟨p, _, hu, he⟩ := specialUnitaryPolynomial_exists_uniform_entropy_approximation
     (n := Fin 2) (by decide) ⟨fun U => dist U 1, continuous_id.dist continuous_const⟩
   exact ⟨p, hu, he⟩
+
+-- Full SU(N) metric LSI: no polynomial, smoothness, heat, or energy hypothesis.
+example (N : ℕ) (hN : 0 < N) :
+    MetricLSI (specialUnitaryHaar (Fin N)) (2 / (N : NNReal)) := by
+  simpa using specialUnitary_metricLSI (n := Fin N) (by simpa using hN)
+
+-- The positive-dimension theorem includes SU(1).
+example : MetricLSI (specialUnitaryHaar (Fin 1)) 2 := by
+  simpa using specialUnitary_metricLSI (n := Fin 1) (by decide)
+
+-- Every locally Lipschitz function has the exact real coefficient 4/N.
+example (N : ℕ) (hN : 0 < N) (f : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ)
+    (hf : LocallyLipschitz f) :
+    entropy (specialUnitaryHaar (Fin N)) (fun U => f U ^ 2) ≤
+      (4 / (N : ℝ)) * ∫ U, (localSlope f U).toReal ^ 2 ∂specialUnitaryHaar (Fin N) := by
+  simpa using specialUnitary_entropy_sq_le_of_locallyLipschitz (by simpa using hN) hf
+
+-- An admissible distance function with a zero at identity, without assuming smoothness.
+example : entropy (specialUnitaryHaar (Fin 2)) (fun U => dist U 1 ^ 2) ≤
+    2 * ∫ U, (localSlope (fun V : Matrix.specialUnitaryGroup (Fin 2) ℂ => dist V 1) U).toReal ^ 2
+      ∂specialUnitaryHaar (Fin 2) := by
+  have h := specialUnitary_entropy_sq_le_of_locallyLipschitz (n := Fin 2) (by decide)
+    (LipschitzWith.dist_left (1 : Matrix.specialUnitaryGroup (Fin 2) ℂ)).locallyLipschitz
+  norm_num at h
+  exact h
+
+-- All integrability requirements and finite energy for that nonsmooth admissible test.
+example :
+    Integrable (fun U : Matrix.specialUnitaryGroup (Fin 2) ℂ => dist U 1 ^ 2) (specialUnitaryHaar (Fin 2)) ∧
+    Integrable (fun U : Matrix.specialUnitaryGroup (Fin 2) ℂ => dist U 1 ^ 2 * Real.log (dist U 1 ^ 2))
+      (specialUnitaryHaar (Fin 2)) ∧
+    slopeEnergy (specialUnitaryHaar (Fin 2)) (fun U => dist U 1) ≠ ⊤ := by
+  have hf := (LipschitzWith.dist_left (1 : Matrix.specialUnitaryGroup (Fin 2) ℂ)).locallyLipschitz
+  refine ⟨integrable_sq_of_locallyLipschitz hf, integrable_sq_log_of_locallyLipschitz hf, ?_⟩
+  rw [slopeEnergy_eq_ofReal_integral hf]
+  exact ENNReal.ofReal_ne_top
+
+private def negIdentitySU2 : Matrix.specialUnitaryGroup (Fin 2) ℂ :=
+  ⟨-1, by
+    constructor
+    · constructor <;> simp
+    · change Matrix.det (-(1 : Matrix (Fin 2) (Fin 2) ℂ)) = 1
+      simp [Matrix.det_neg]⟩
+
+-- The distance observable is nonconstant on the actual group.
+example : dist negIdentitySU2 1 ≠ dist (1 : Matrix.specialUnitaryGroup (Fin 2) ℂ) 1 := by
+  rw [dist_self, ne_eq, dist_eq_zero]
+  intro h
+  have he := congrArg (fun U : Matrix.specialUnitaryGroup (Fin 2) ℂ => U.val 0 0) h
+  norm_num [negIdentitySU2] at he

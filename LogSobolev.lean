@@ -91,3 +91,6 @@ import LogSobolev.Measure.PowerKernelApproximation
 import LogSobolev.Unitary.SpecialUnitaryPeak
 import LogSobolev.Unitary.SpecialUnitaryPowerKernel
 import LogSobolev.Unitary.SpecialUnitaryPolynomialApproximation
+import LogSobolev.Geometry.LocalSlopeAverage
+import LogSobolev.Unitary.SpecialUnitaryConvolutionEnergy
+import LogSobolev.Unitary.SpecialUnitaryLSI

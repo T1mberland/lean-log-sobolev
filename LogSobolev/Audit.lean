@@ -437,3 +437,22 @@ set_option pp.all true in
 #print LogSobolev.specialUnitaryPowerKernel
 set_option pp.all true in
 #check @LogSobolev.specialUnitaryPolynomial_exists_uniform_entropy_approximation
+#print axioms LogSobolev.limsup_ofReal_norm_slope_le
+#print axioms LogSobolev.limsup_ofReal_slope_sq_le
+#print axioms LogSobolev.ofReal_deriv_integral_sq_le_lintegral_localSlope_sq
+#print axioms LogSobolev.specialUnitary_isometry_mul_right
+#print axioms LogSobolev.specialUnitary_convolution_deriv_sq_le
+#print axioms LogSobolev.specialUnitary_convolution_gamma_le
+#print axioms LogSobolev.specialUnitary_convolution_energy_le_slopeEnergy
+#print axioms LogSobolev.specialUnitary_entropy_sq_le_of_locallyLipschitz
+#print axioms LogSobolev.specialUnitary_metricLSI
+set_option pp.all true in
+#check @LogSobolev.specialUnitary_convolution_energy_le_slopeEnergy
+set_option pp.all true in
+#check @LogSobolev.specialUnitary_entropy_sq_le_of_locallyLipschitz
+set_option pp.all true in
+#check @LogSobolev.specialUnitary_metricLSI
+#print LogSobolev.MetricLSI
+#print LogSobolev.localSlope
+#print LogSobolev.slopeEnergy
+#print LogSobolev.specialUnitaryHaar
