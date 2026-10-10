@@ -31,3 +31,6 @@ import LogSobolev.Unitary.SpecialUnitaryKillingConstant
 import LogSobolev.Unitary.MatrixExpDeterminant
 import LogSobolev.Unitary.MatrixLocalExponential
 import LogSobolev.Unitary.SpecialUnitaryLocalCoordinates
+import LogSobolev.Unitary.SpecialUnitaryAnalyticNeighborhood
+import LogSobolev.Unitary.SpecialUnitaryChart
+import LogSobolev.Unitary.SpecialUnitaryManifold

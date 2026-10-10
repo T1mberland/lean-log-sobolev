@@ -141,3 +141,16 @@ set_option pp.all true in
 #check LogSobolev.exists_specialUnitary_exp_homeomorph
 set_option pp.all true in
 #check LogSobolev.matrixLog_contDiffAt_one
+
+#print axioms LogSobolev.exists_specialUnitary_analytic_exp
+#print axioms LogSobolev.specialUnitaryExpChart
+#print axioms LogSobolev.specialUnitaryChartedSpace
+#print axioms LogSobolev.specialUnitaryAlgebraProjection_val
+#print axioms LogSobolev.specialUnitary_chart_transition_contDiffOn
+#print axioms LogSobolev.specialUnitaryIsManifold
+#print LogSobolev.specialUnitaryExpChart
+#print LogSobolev.specialUnitaryChartedSpace
+set_option pp.all true in
+#check LogSobolev.specialUnitaryIsManifold
+set_option pp.all true in
+#check LogSobolev.specialUnitary_chart_transition_contDiffOn

@@ -178,3 +178,18 @@ example : ∃ t : Set (Matrix.specialUnitaryGroup (Fin 2) ℂ),
 
 example : ContDiffAt ℝ ∞ (matrixExpLocalHomeomorph (n := Fin 3)).symm 1 :=
   matrixLog_contDiffAt_one ∞
+
+open scoped Manifold
+
+-- The atlas is installed on the original matrix group, with the actual su model.
+example : IsManifold 𝓘(ℝ, specialUnitaryLieAlgebra (n := Fin 2)) ∞
+    (Matrix.specialUnitaryGroup (Fin 2) ℂ) := inferInstance
+
+example (U : Matrix.specialUnitaryGroup (Fin 3) ℂ) :
+    U ∈ (chartAt (specialUnitaryLieAlgebra (n := Fin 3)) U).source :=
+  ChartedSpace.mem_chart_source U
+
+example (U V : Matrix.specialUnitaryGroup (Fin 3) ℂ) :
+    ContDiffOn ℝ ∞ ((specialUnitaryChartAt U).symm.trans (specialUnitaryChartAt V))
+      ((specialUnitaryChartAt U).symm.trans (specialUnitaryChartAt V)).source :=
+  specialUnitary_chart_transition_contDiffOn U V
