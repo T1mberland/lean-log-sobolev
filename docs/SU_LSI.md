@@ -372,8 +372,40 @@ proves `specialUnitary_weighted_gammaTwo_log_lower_bound`:
 `(N/2) ∫ Γ(f,f)/f ≤ ∫ f Γ₂(log f)`.
 
 This supplies the curvature part of the Fisher-information argument. The
-identity differentiating Fisher information along a heat trajectory, its
-exponential decay, heat existence, and equilibrium convergence remain open.
+spatial dissipation identity and a conditional time-derivative theorem are now
+proved below. Heat existence, its required regularity, exponential decay and
+equilibrium convergence remain open.
+
+## Fisher dissipation now proved under explicit regularity
+
+`Unitary/SpecialUnitaryFisherIdentity.lean` proves the mixed logarithmic chain
+rule and the weighted Haar identity, then
+`specialUnitary_fisher_variation_identity`:
+
+`∫ [2 Γ(f,Lf)/f − Γ(f,f) Lf/f²] = −2 ∫ f Γ₂(log f)`.
+
+This spatial identity is unconditional for a smooth nowhere-zero test and any
+finite family of directions. It uses the actual constructed operators and
+normalized Haar measure. For positive tests and an HS orthonormal basis,
+`specialUnitary_fisher_variation_le` bounds this expression by `−N ∫ Γ(f,f)/f`.
+
+`Unitary/SpecialUnitaryFisherDifferentiation.lean` proves
+`specialUnitary_hasDerivAt_fisher` by differentiating the integral. Its explicit
+hypotheses are joint continuity of `F`, `Q`, `D_i F`, and `D_i Q`; spatial
+smoothness; nonvanishing of `F`; and local identities `∂ₜF = Q` and
+`∂ₜ(D_i F) = D_i Q`. It does not assume the desired Fisher derivative.
+With the additional heat-direction equality `Q_t = L F_t`,
+`specialUnitary_hasDerivAt_fisher_of_heat` proves
+
+`I′(t) = −2 ∫ F_t Γ₂(log F_t)`, where `I(t) = ∫ Γ(F_t,F_t)/F_t`.
+
+For positive families, `specialUnitary_fisher_deriv_le` proves `I′(t) ≤ −N I(t)`.
+These are **conditional theorems about supplied regular families**. A heat
+family satisfying their hypotheses has not been constructed; the mixed
+derivative identity has not yet been deduced from a joint smoothness theorem.
+An independent exponential-rescaling example discharges every differentiation
+hypothesis for a time-dependent family, without asserting it solves the heat
+equation.
 
 ## Remaining route to the theorem
 
@@ -383,20 +415,15 @@ for this operator and prove the entropy argument, with invariant measure equal
 to the already-defined normalized Haar probability. Haar integration by parts
 is now proved, as is the entropy-dissipation formula for a supplied positive
 regular family in the heat direction. Required steps include semigroup
-existence and regularity, the Fisher-information derivative and decay using
-the proved weighted Γ₂ estimate, and convergence
+existence with the explicit mixed-derivative regularity required above,
+integration of the proved Fisher differential inequality, and convergence
 to constants. Connectedness/ergodicity needed for this convergence must be proved;
 it is not supplied by an abstract class or inferred from Γ₂ alone.
 
-The next unproved differential identity, for a positive regular heat family
-`f_t` with `∂ₜ f_t = L f_t`, is
-
-`I′(t) = −2 ∫ f_t Γ₂(log f_t)`, where `I(t) = ∫ Γ(f_t,f_t)/f_t`.
-
-The proved weighted estimate would then yield `I′(t) ≤ −N I(t)`. Integrating
-entropy dissipation still requires existence of this family and its convergence
-to equilibrium. Neither the identity nor those analytic existence/convergence
-statements is currently a proved library declaration.
+For an actual heat family, the next analytic step is to integrate the proved
+`I′ ≤ −N I` inequality to obtain exponential Fisher decay. Combining this with
+entropy dissipation requires convergence to equilibrium and vanishing limiting
+entropy. Those facts remain to be proved, not postulated as semigroup data.
 
 A precise **unproved smooth intermediate goal**, for `N ≥ 2`, a real orthonormal
 basis `b` of su(N), and `f` smooth on SU(N), is
@@ -453,9 +480,11 @@ generator-defined carré du champ), and `eb986ff` (actual operator Casimir
 commutation and the exact generator-defined Γ₂ identity and bound), and
 `3c059da` (actual Haar integration by parts and integrated Γ₂ coercivity), and
 `0c520e8` (scalar/logarithmic diffusion calculus, compact entropy
-differentiation, conditional entropy dissipation, and weighted logarithmic Γ₂).
+differentiation, conditional entropy dissipation, and weighted logarithmic Γ₂),
+and `d6c3cc6` (spatial Fisher identity and conditional time-dependent Fisher
+dissipation with explicit mixed-derivative hypotheses).
 `lake build` and the independent `Examples.lean`
-compilation pass. The recursive `Audit.lean` check passes for all 507 project
+compilation pass. The recursive `Audit.lean` check passes for all 523 project
 declarations, accepting only `propext`, `Classical.choice`, and `Quot.sound`.
 It prints the fully elaborated commutator-energy, curve-velocity, and
 exponential-speed, conjugation-derivative, and Killing-contraction, exact-coefficient, and real-orthonormal-energy theorems, exposes the Frobenius instances, and inspects the
@@ -463,5 +492,6 @@ Lie-algebra, trace-pairing, exponential-curve, and inner-product definitions.
 The full output is in [axiom-audit.txt](axiom-audit.txt). These checks certify
 the algebraic, curve, local-coordinate, smooth Lie-group, tangent-derivative,
 smooth differential-operator, second-order energy, generator, Γ₂, and Haar
-integration, logarithmic chain-rule, and entropy-differentiation results
+integration, logarithmic chain-rule, entropy-differentiation, and spatial and
+conditional time-dependent Fisher results
 above, not an SU(N) LSI theorem.

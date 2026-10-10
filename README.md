@@ -48,6 +48,10 @@ Proved components include:
   dissipation is proved **for a supplied positive family satisfying the heat
   equation at the specified time**; existence of a heat flow remains open.
   The weighted logarithmic Γ₂ curvature bound is also proved.
+* The spatial Fisher dissipation identity and its exact `−N` bound. For
+  supplied time-dependent families with explicit joint-continuity and mixed
+  time/spatial derivative hypotheses, Fisher dissipation and `I′ ≤ −N I` are
+  proved. These hypotheses are not yet established for a constructed heat flow.
 * The normalized interval and its L² product with SU(N).
 * The paper's phase map into U(N), with the `sqrt(3)` Lipschitz bound.
 * **The exact short-interval Haar decomposition (Lemma 16)** for every positive N,

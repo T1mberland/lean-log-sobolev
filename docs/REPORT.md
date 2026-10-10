@@ -71,6 +71,8 @@ All names below are in namespace `LogSobolev`.
 | `LogSobolev/Measure/EntropyDifferentiation.lean` | `hasDerivAt_entropy_of_compact`, `hasDerivAt_entropy_of_compact_of_integral_eq_zero` | Entropy derivative of a positive family, including the changing-mass correction and its zero-mass-derivative specialization. |
 | `LogSobolev/Unitary/SpecialUnitaryChainRules.lean` | `specialUnitaryLaplacian_comp`, `specialUnitaryLaplacian_log`, `specialUnitaryGamma_log`, `specialUnitary_integral_log_mul_laplacian` | Actual diffusion chain rule, logarithmic generator/energy formulas, and logarithmic Haar integration by parts. |
 | `LogSobolev/Unitary/SpecialUnitaryEntropyDissipation.lean` | `specialUnitary_hasDerivAt_entropy`, `specialUnitary_entropy_deriv_nonpos`, `specialUnitary_weighted_gammaTwo_log_lower_bound` | Entropy dissipation for an explicitly supplied positive differentiable family in the actual heat direction; weighted logarithmic Γ₂ estimate. No heat existence or Fisher time-decay theorem is asserted. |
+| `LogSobolev/Unitary/SpecialUnitaryFisherIdentity.lean` | `specialUnitary_fisher_variation_identity`, `specialUnitary_fisher_variation_le` | Spatial Fisher variation equals `−2 ∫ f Γ₂(log f)` and is at most `−N I(f)` for positive smooth tests and an HS orthonormal basis. No time family is needed. |
+| `LogSobolev/Unitary/SpecialUnitaryFisherDifferentiation.lean` | `specialUnitary_hasDerivAt_fisher`, `specialUnitary_hasDerivAt_fisher_of_heat`, `specialUnitary_fisher_deriv_le` | Conditional Fisher derivative and dissipation for supplied families with explicit joint-continuity and mixed-derivative hypotheses. Proves `I′ ≤ −N I` in the heat direction; no heat construction or exponential decay is claimed. |
 | `LogSobolev/Unitary/PhaseMap.lean` | `phaseMul_dist_le`, `phaseMap_lipschitz` | The full-line phase map has Lipschitz constant `sqrt(3)` for every positive N; no probability argument is needed. |
 | `LogSobolev/Measure/Interval.lean` | `intervalUniform_univ`, `map_intervalUniform` | Normalized Lebesgue measure on the Euclidean subtype `[0,L]` for `L>0`. |
 | `LogSobolev/Unitary/ProductDomain.lean` | `phaseDomainMeasure_probability`, `intervalPhaseMap_lipschitz` | The exact interval × SU domain and probability measure, and the restricted map's Lipschitz bound. |
@@ -186,7 +188,8 @@ This avoids needing a geometric Ricci theorem for the current operator route.
 Haar integration by parts and the integrated Γ₂ identity are now proved.
 The entropy-dissipation formula for a supplied positive differentiable family
 in the heat direction is also proved. The SU step still needs a constructed
-diffusion, the Fisher-information time derivative and decay, and equilibrium convergence
+diffusion with the explicit mixed-derivative regularity, integration of the
+proved conditional Fisher differential inequality, and equilibrium convergence
 with proved ergodicity. Energy identification and approximation are required to
 obtain locally Lipschitz functions. The abstract
 `markov-semigroups` class does not eliminate these obligations. Its assumed
@@ -201,16 +204,16 @@ the compact regularity side conditions. A verified Herbst argument is a later ta
 Verification performed on 2026-10-10 with Lean 4.28.0 and the pinned Mathlib
 commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
 
-* `lake build`: passed for the complete library (2947 dependency/build jobs,
+* `lake build`: passed for the complete library (2949 dependency/build jobs,
   primarily cached Mathlib artifacts).
 * `lake env lean LogSobolev/Examples.lean`: passed; the examples compile as an
   independent client importing the public root module.
 * `lake env lean LogSobolev/Audit.lean`: passed. The automated traversal checked
-  **507 declarations** in the `LogSobolev` namespace, including definitions,
+  **523 declarations** in the `LogSobolev` namespace, including definitions,
   instances, and generated auxiliaries. Every transitive axiom was one of
   `propext`, `Classical.choice`, or `Quot.sound`. No `sorryAx` or custom axiom
   was present in those dependency closures.
-* The audit also executes 121 `#print axioms` commands, prints the core
+* The audit also executes 130 `#print axioms` commands, prints the core
   definitions, and prints fully elaborated types for the trace normalization,
   phase-map Lipschitz theorem, U(N) regularity theorem, exact Haar identity,
   conditional final LSI transfer, product entropy chain rule, and SU algebra
@@ -222,7 +225,9 @@ commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
   bound, the generator-defined carré du champ identity, generator commutation,
   the exact Γ₂ bound, Haar integration by parts, and the integrated Γ₂
   estimate, scalar diffusion chain rule, entropy differentiation with changing
-  mass, conditional entropy dissipation, and weighted logarithmic Γ₂. The elaborated
+  mass, conditional entropy dissipation, weighted logarithmic Γ₂, the spatial
+  Fisher identity, and the conditional Fisher differential inequality with all
+  mixed-derivative hypotheses exposed. The elaborated
   metric instances are explicitly Frobenius and `WithLp 2`.
 * The recursive audit now shares Lean's core collector visited set across all
   project roots. At milestone `6cb53ac`, an independent-root baseline run and
@@ -339,6 +344,17 @@ Completed milestones:
   All 121 explicit axiom checks use only standard foundational axioms. Heat
   construction, Fisher time derivative/decay, equilibrium convergence, and the
   locally Lipschitz LSI remain open.
+
+* `d6c3cc6`: mixed logarithmic carré du champ, weighted Γ₂ integration by
+  parts, and the unconditional spatial Fisher-variation identity and `−N`
+  bound. Differentiation under the integral yields Fisher dissipation and
+  `I′ ≤ −N I` for supplied families with explicit time/spatial regularity.
+  Full build (2949 jobs), independent SU(3) normalization and time-dependent
+  exponential-rescaling examples, and the 523-declaration recursive audit
+  pass; 130 explicit axiom checks use only the standard foundational axioms.
+  The mixed derivative hypotheses still need to be established for a
+  constructed heat family. Heat existence, integrated decay, convergence,
+  energy identification, and the locally Lipschitz LSI remain open.
 
 The report and README are committed separately after these verified proof
 milestones; use `git log --oneline` to see the documentation commit as well.
