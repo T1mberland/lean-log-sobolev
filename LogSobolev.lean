@@ -22,3 +22,6 @@ import LogSobolev.Unitary.SpecialUnitaryCasimir
 import LogSobolev.Unitary.DeterminantDerivative
 import LogSobolev.Unitary.UnitaryCurves
 import LogSobolev.Unitary.SpecialUnitaryCurves
+import LogSobolev.Unitary.SpecialUnitaryInner
+import LogSobolev.Unitary.SpecialUnitaryAdjoint
+import LogSobolev.Unitary.SpecialUnitaryKilling

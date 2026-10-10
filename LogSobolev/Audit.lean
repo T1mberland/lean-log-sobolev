@@ -102,3 +102,17 @@ set_option pp.all true in
 #check LogSobolev.mem_specialUnitaryLieAlgebra_iff_curve_velocity
 set_option pp.all true in
 #check LogSobolev.specialUnitaryExpCurve_speed
+
+#print axioms LogSobolev.specialUnitaryAlgebraInnerProductSpace
+#print axioms LogSobolev.specialUnitary_ad_skew
+#print axioms LogSobolev.specialUnitaryAdjointIsometry
+#print axioms LogSobolev.specialUnitaryAdjoint_lie
+#print axioms LogSobolev.specialUnitaryAdjoint_exp_derivative
+#print axioms LogSobolev.specialUnitary_killing_self
+#print axioms LogSobolev.specialUnitary_commutator_energy_basis_independent
+#print axioms LogSobolev.specialUnitary_killing_self_nonpos
+#print LogSobolev.specialUnitaryAlgebraInnerProductSpace
+set_option pp.all true in
+#check LogSobolev.specialUnitary_killing_self
+set_option pp.all true in
+#check LogSobolev.specialUnitaryAdjoint_exp_derivative

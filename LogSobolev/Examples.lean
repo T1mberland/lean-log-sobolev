@@ -119,3 +119,18 @@ example (t : ℝ) :
 example (A : specialUnitaryLieAlgebra (n := Fin 2)) :
     LipschitzWith ‖A.val‖₊ (specialUnitaryExpCurve A) :=
   specialUnitaryExpCurve_lipschitz A
+
+-- Real orthonormal contractions use the exact unnormalized HS metric.
+example (A : specialUnitaryLieAlgebra (n := Fin 3)) :
+    inner ℝ A A = ‖A.val‖ ^ 2 := by
+  rw [specialUnitaryAlgebra_inner, specialUnitary_negTracePair_self]
+
+example (U : Matrix.unitaryGroup (Fin 3) ℂ)
+    (A B : specialUnitaryLieAlgebra (n := Fin 3)) :
+    dist (specialUnitaryAdjointIsometry U A) (specialUnitaryAdjointIsometry U B) =
+      dist A B := (specialUnitaryAdjointIsometry U).dist_map A B
+
+example (A : specialUnitaryLieAlgebra (n := Fin 2)) :
+    killingForm ℝ (specialUnitaryLieAlgebra (n := Fin 2)) A A =
+      -(∑ i, ‖⁅A, stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 2)) i⁆‖ ^ 2) :=
+  specialUnitary_killing_self _ A
