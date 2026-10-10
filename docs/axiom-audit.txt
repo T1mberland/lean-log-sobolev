@@ -1,5 +1,9 @@
-Recursive axiom audit passed for 163 LogSobolev declarations.
+Recursive axiom audit passed for 167 LogSobolev declarations.
 'LogSobolev.entropy_nonneg' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.integrable_marginal_mul_log' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.integrable_slice_entropy' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.entropy_prod_chain' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LogSobolev.entropy_marginal_le' depends on axioms: [propext, Classical.choice, Quot.sound]
 'LogSobolev.entropy_map' depends on axioms: [propext, Classical.choice, Quot.sound]
 'LogSobolev.HasEnergyLSI.map' depends on axioms: [propext, Classical.choice, Quot.sound]
 'LogSobolev.localSlope_eq_limsup_nhdsNE' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -1059,3 +1063,61 @@ LogSobolev.unitary_metricLSI_of_phaseDomain (N : Nat)
             (@NonAssocSemiring.toAddCommMonoidWithOne.{0} NNReal
               (@Semiring.toNonAssocSemiring.{0} NNReal instSemiringNNReal))))
         N))
+LogSobolev.entropy_prod_chain.{u_1, u_2} {X : Type u_1} {Y : Type u_2} [MeasurableSpace.{u_1} X]
+  [MeasurableSpace.{u_2} Y] {μ : @MeasureTheory.Measure.{u_1} X inst✝} {ν : @MeasureTheory.Measure.{u_2} Y inst✝¹}
+  [@MeasureTheory.IsProbabilityMeasure.{u_1} X inst✝ μ] [@MeasureTheory.IsProbabilityMeasure.{u_2} Y inst✝¹ ν]
+  {g : Prod.{u_1, u_2} X Y → Real}
+  (hg :
+    @Filter.EventuallyLE.{max u_1 u_2, 0} (Prod.{u_1, u_2} X Y) Real Real.instLE
+      (@MeasureTheory.ae.{max u_1 u_2, max u_1 u_2} (Prod.{u_1, u_2} X Y)
+        (@MeasureTheory.Measure.{max u_2 u_1} (Prod.{u_1, u_2} X Y)
+          (@Prod.instMeasurableSpace.{u_1, u_2} X Y inst✝ inst✝¹))
+        (@MeasureTheory.Measure.instFunLike.{max u_1 u_2} (Prod.{u_1, u_2} X Y)
+          (@Prod.instMeasurableSpace.{u_1, u_2} X Y inst✝ inst✝¹))
+        (@MeasureTheory.Measure.instOuterMeasureClass.{max u_1 u_2} (Prod.{u_1, u_2} X Y)
+          (@Prod.instMeasurableSpace.{u_1, u_2} X Y inst✝ inst✝¹))
+        (@MeasureTheory.Measure.prod.{u_1, u_2} X Y inst✝ inst✝¹ μ ν))
+      (@OfNat.ofNat.{max u_1 u_2} (Prod.{u_1, u_2} X Y → Real) (nat_lit 0)
+        (@Zero.toOfNat0.{max u_1 u_2} (Prod.{u_1, u_2} X Y → Real)
+          (@Pi.instZero.{max u_1 u_2, 0} (Prod.{u_1, u_2} X Y) (fun (a : Prod.{u_1, u_2} X Y) => Real)
+            fun (i : Prod.{u_1, u_2} X Y) => Real.instZero)))
+      g)
+  (hi :
+    @MeasureTheory.Integrable.{0, max u_1 u_2} Real
+      (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+      (@SeminormedAddGroup.toContinuousENorm.{0} Real
+        (@SeminormedAddCommGroup.toSeminormedAddGroup.{0} Real
+          (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real
+            (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real
+              (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real
+                (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing))))))
+      (Prod.{u_1, u_2} X Y) (@Prod.instMeasurableSpace.{u_1, u_2} X Y inst✝ inst✝¹) g
+      (@MeasureTheory.Measure.prod.{u_1, u_2} X Y inst✝ inst✝¹ μ ν))
+  (hl :
+    @MeasureTheory.Integrable.{0, max u_1 u_2} Real
+      (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+      (@SeminormedAddGroup.toContinuousENorm.{0} Real
+        (@SeminormedAddCommGroup.toSeminormedAddGroup.{0} Real
+          (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real
+            (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real
+              (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real
+                (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing))))))
+      (Prod.{u_1, u_2} X Y) (@Prod.instMeasurableSpace.{u_1, u_2} X Y inst✝ inst✝¹)
+      (fun (p : Prod.{u_1, u_2} X Y) =>
+        @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (g p) (Real.log (g p)))
+      (@MeasureTheory.Measure.prod.{u_1, u_2} X Y inst✝ inst✝¹ μ ν)) :
+  @Eq.{1} Real
+    (@LogSobolev.entropy.{max u_1 u_2} (Prod.{u_1, u_2} X Y) (@Prod.instMeasurableSpace.{u_1, u_2} X Y inst✝ inst✝¹)
+      (@MeasureTheory.Measure.prod.{u_1, u_2} X Y inst✝ inst✝¹ μ ν) g)
+    (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+      (@MeasureTheory.integral.{u_1, 0} X Real Real.normedAddCommGroup
+        (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike
+          (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)
+          (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))
+        inst✝ μ fun (x : X) => @LogSobolev.entropy.{u_2} Y inst✝¹ ν fun (y : Y) => g (@Prod.mk.{u_1, u_2} X Y x y))
+      (@LogSobolev.entropy.{u_1} X inst✝ μ fun (x : X) =>
+        @MeasureTheory.integral.{u_2, 0} Y Real Real.normedAddCommGroup
+          (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike
+            (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)
+            (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))
+          inst✝¹ ν fun (y : Y) => g (@Prod.mk.{u_1, u_2} X Y x y)))

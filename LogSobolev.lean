@@ -1,4 +1,5 @@
 import LogSobolev.Measure.Entropy
+import LogSobolev.Measure.ProductEntropy
 import LogSobolev.Measure.LSI
 import LogSobolev.Measure.Interval
 import LogSobolev.Geometry.LocalSlope

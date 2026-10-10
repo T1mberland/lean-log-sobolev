@@ -65,3 +65,15 @@ example (h : MetricLSI (phaseDomainMeasure 2) 1) :
     MetricLSI (unitaryHaar (Fin 2)) 3 := by
   convert unitary_metricLSI_of_phaseDomain 2 (by decide) (by simpa using h) using 1
   norm_num
+
+-- The entropy chain rule applies to locally Lipschitz squares on compact products.
+example {X Y : Type*} [MetricSpace X] [MetricSpace Y]
+    [MeasurableSpace X] [MeasurableSpace Y] [BorelSpace X] [BorelSpace Y]
+    [CompactSpace X] [CompactSpace Y]
+    (μ : Measure X) (ν : Measure Y) [IsProbabilityMeasure μ] [IsProbabilityMeasure ν]
+    (f : X × Y → ℝ) (hf : LocallyLipschitz f) :
+    entropy (μ.prod ν) (fun p => f p ^ 2) =
+      (∫ x, entropy ν (fun y => f (x, y) ^ 2) ∂μ) +
+        entropy μ (fun x => ∫ y, f (x, y) ^ 2 ∂ν) :=
+  entropy_prod_chain (Filter.Eventually.of_forall fun p => sq_nonneg (f p))
+    (integrable_sq_of_locallyLipschitz hf) (integrable_sq_log_of_locallyLipschitz hf)

@@ -22,6 +22,10 @@ run_cmd do
   logInfo m!"Recursive axiom audit passed for {count} LogSobolev declarations."
 
 #print axioms LogSobolev.entropy_nonneg
+#print axioms LogSobolev.integrable_marginal_mul_log
+#print axioms LogSobolev.integrable_slice_entropy
+#print axioms LogSobolev.entropy_prod_chain
+#print axioms LogSobolev.entropy_marginal_le
 #print axioms LogSobolev.entropy_map
 #print axioms LogSobolev.HasEnergyLSI.map
 #print axioms LogSobolev.localSlope_eq_limsup_nhdsNE
@@ -74,3 +78,5 @@ set_option pp.all true in
 #check LogSobolev.map_intervalPhaseMap
 set_option pp.all true in
 #check LogSobolev.unitary_metricLSI_of_phaseDomain
+set_option pp.all true in
+#check LogSobolev.entropy_prod_chain

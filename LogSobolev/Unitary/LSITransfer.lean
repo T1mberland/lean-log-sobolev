@@ -3,7 +3,8 @@ import LogSobolev.Geometry.CompactRegularity
 
 /-! # Conditional final transfer to U(N)
 
-The geometric and measure-theoretic parts of the reference proof are complete.
+The metric and measure-theoretic transfer steps are complete; the SU curvature
+and analytic arguments remain open.
 The source LSI below is an explicit, still-unproved analytic hypothesis. This
 module does not establish LSI on the interval, SU, their product, or U.
 -/
