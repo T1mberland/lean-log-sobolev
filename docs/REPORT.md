@@ -3,8 +3,8 @@
 ## Result and limits
 
 This is a **partial formalization**, not a proof of Meckes–Meckes Theorem 15.
-There is no theorem claiming the `6/N` LSI on U(N), even for smooth functions or
-for N=1. No interval or SU(N) LSI has been assumed as an axiom or installed in a
+The `6/N` LSI on U(N) remains open for N ≥ 2. The N=1 case is now proved
+for all locally Lipschitz real functions. No interval or SU(N) LSI has been assumed as an axiom or installed in a
 typeclass. The development proves the metric/measure foundations, the exact Haar
 decomposition in Lemma 16, and the transport and regularity results below.
 
@@ -23,10 +23,19 @@ entropy. Reverse Fatou and Jensen control the approximants' differential energy
 by the original locally Lipschitz function's local-slope energy. Passing to the
 limit proves the full metric result without an assumed Bakry–Émery criterion.
 
-A C¹ interval inequality is also proved: normalized uniform measure on `[0,L]`
-satisfies `Ent(f²) ≤ (L²/4) ∫ f′²` for restrictions of real continuously
-differentiable functions. Its LSI constant is `L²/8`, not the sharp `L²/π²`.
-Signs and zeros are allowed.
+The interval LSI is now proved for all locally Lipschitz real functions:
+`intervalUniform_metricLSI` gives constant `L²/8` under actual normalized
+Lebesgue measure on the Euclidean subtype `[0,L]`. Its real theorem
+`intervalUniform_entropy_sq_le_of_locallyLipschitz` has coefficient `L²/4`.
+The sharp interval constant `L²/π²` remains unproved. Absolute continuity and
+integrable derivatives extend the dyadic-grid proof beyond C¹ functions.
+
+`unitary_fin_one_metricLSI` in `Unitary/DimensionOneLSI.lean` proves constant
+`6` for actual U(1) Haar and unnormalized HS metric. Its real theorem
+`unitary_fin_one_entropy_sq_le` gives coefficient `12`, assuming only local
+Lipschitz regularity. The proof identifies SU(1) with the singleton identity,
+uses the verified Haar phase decomposition and its sharper `sqrt(2)` Lipschitz
+constant, obtains `π²/2`, and weakens this to `6`.
 
 For the larger U(N) objective, the remaining obligations are a sufficient
 locally Lipschitz extension, the product/tangent energy argument, and the U(1) case. The short-interval
@@ -210,10 +219,19 @@ The completed extension is proved in:
   A future constant `6/N` therefore has coefficient `12/N`.
 * `phaseMap_apply` gives the actual exponential matrix formula. The interval
   length is `π * sqrt(2/N)`. Its positivity and probability normalization need
-  `N>0`. The metric proof works for N=1 too, but is **not** a proof of its LSI.
+  `N>0`. The metric proof works for N=1 too; its LSI is proved separately in `DimensionOneLSI.lean`.
 * The real diagonal coordinate separates `I` from `-I`, is 1-Lipschitz, and is
   not a.e. constant under Haar. This checks that the admissible class contains
   nonconstant functions. It does not by itself prove their entropy inequality.
+
+## Locally Lipschitz interval and U(1) modules
+
+| Source | Main declarations | Scope |
+|---|---|---|
+| `LogSobolev/Analysis/LipschitzIntervalEnergy.lean` | `lipschitz_intervalIntegrable_deriv_sq`, `sum_sq_uniform_increments_le_of_lipschitz` | Actual integrable derivative energy controls grid increments without a C¹ hypothesis. |
+| `LogSobolev/Analysis/LipschitzUnitIntervalLSI.lean` | `unitInterval_entropy_sq_le_of_lipschitzWith` | Unit interval entropy coefficient `1/4`, for globally Lipschitz real functions. |
+| `LogSobolev/Geometry/IntervalMetricLSI.lean` | `intervalUniform_entropy_sq_le_of_locallyLipschitz`, `intervalUniform_metricLSI` | All locally Lipschitz functions on `[0,L]`, `L>0`, actual normalized measure, local slope, constant `L²/8`. |
+| `LogSobolev/Unitary/DimensionOneLSI.lean` | `map_unitaryOnePhaseMap`, `unitary_fin_one_metricLSI_pi`, `unitary_fin_one_metricLSI`, `unitary_fin_one_entropy_sq_le` | Actual U(1), actual Haar, HS metric, constants `π²/2` and `6`, real coefficient `12`. |
 
 ## Exact remaining statements
 
@@ -251,9 +269,6 @@ route to U(N) still needs these statements:
   MetricLSI (intervalUniform (phaseIntervalLength N)) (2 / (N : ℝ≥0)) →
   MetricLSI (specialUnitaryHaar (Fin N)) (2 / (N : ℝ≥0)) →
   MetricLSI (phaseDomainMeasure N) (2 / (N : ℝ≥0))
-
--- The remaining separate N=1 analytic case:
-MetricLSI (unitaryHaar (Fin 1)) 6
 ```
 
 None of these is a hypothesis hidden in the proved geometric or regularity
@@ -281,7 +296,7 @@ differentiating a marginal square root. The remaining tensorization obligation
 is to compare the sum of the coordinate energies with the full L²-product
 energy. This is not an automatic pointwise inequality for arbitrary nonsmooth
 functions; a smooth approximation or almost-everywhere argument is still needed.
-The new C¹ interval bound supplies one possible alternative to the sharp
+The full locally Lipschitz interval bound supplies one possible alternative to the sharp
 interval route. At the paper's length its constant is `π²/(4N)`, so merely
 combining it with the existing global `sqrt(3)` Lipschitz transfer is insufficient.
 A proposed continuation is to use orthogonality of the central phase direction
@@ -290,12 +305,17 @@ coefficient at most `π²/N < 12/N`. This comparison and the extension to arbitr
 locally Lipschitz U(N) observables are **not yet formalized**. The original sharp
 interval and metric tensorization statements above also remain unproved.
 
-For the interval extension, pinned Mathlib provides
-`LipschitzOnWith.absolutelyContinuousOnInterval` and
-`AbsolutelyContinuousOnInterval.integral_deriv_eq_sub`. These offer a direct
-route from the grid argument to nonsmooth Lipschitz functions, after upgrading
-the squared-integral estimate to integrable derivatives and comparing derivatives
-to the local slope. These are next proof obligations, not imported LSI assertions.
+The interval extension is complete. The remaining bottleneck is analytic:
+combining the phase derivative and SU gradient with the correct quadratic
+energy. A candidate route uses SU polynomial convolution of a locally
+Lipschitz U(N) observable. At each phase, this lies in the existing finite-degree
+SU polynomial space. Proving that this polynomial-valued phase curve is
+Lipschitz would let Mathlib's finite-dimensional Rademacher theorem provide a
+single phase derivative almost everywhere. Central/traceless orthogonality and
+the existing averaged-derivative slope estimate could then control the total
+energy by the original U(N) slope energy. Passing through the SU kernel limit
+would give coefficient `π²/N ≤ 12/N`. These joint differentiation and energy
+estimates are proposed proof obligations, not established theorems.
 
 The [completed SU proof](SU_LSI.md) supplies the `2/N` factor unconditionally,
 including locally Lipschitz tests. Its route uses actual sum-of-squares Γ₂ and
@@ -607,3 +627,18 @@ Completed milestones:
 
 The report and README are committed separately after these verified proof
 milestones; use `git log --oneline` to see the documentation commit as well.
+
+
+## Latest verified milestone
+
+Commit `0f8e487` proves the full locally Lipschitz interval LSI and U(1) case
+listed above. `lake build` passed (3154 jobs). Independent clients
+`ExamplesIntervalMetric.lean` and `ExamplesInterval.lean` compiled successfully,
+including distance observables, actual U(1) matrix coordinates, integrability,
+and a proof that the coordinate is not Haar-almost-everywhere constant.
+`AuditIntervalMetric.lean` recursively audited all 949 namespace declarations
+and their dependency closures; all 13 selected axiom prints use only `propext`,
+`Classical.choice`, and `Quot.sound`. Full elaborated statements and the actual
+entropy, slope, measure, and LSI definitions are recorded in
+`interval-metric-axiom-audit.txt`. The source omission scan and `git diff --check`
+passed. No sharp interval LSI or U(N) result for N ≥ 2 is asserted by this commit.

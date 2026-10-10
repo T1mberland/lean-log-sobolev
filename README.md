@@ -1,6 +1,6 @@
 # Logarithmic Sobolev infrastructure for U(N)
 
-**Status: SU(N) LSI is proved for all locally Lipschitz functions.
+**Status: SU(N) and U(1) LSI are proved for all locally Lipschitz functions.
 The full U(N) Theorem 15 remains open.**
 
 This Lean 4.28.0 / Mathlib project develops components for the logarithmic
@@ -10,10 +10,12 @@ It uses Mathlib's actual matrix unitary and special unitary groups and the
 
 Proved components include:
 
-* A proved C¹ interval inequality under actual normalized uniform measure:
-  `Ent(f²) ≤ (L²/4) ∫ f′²`, obtained from two-point entropy, dyadic weighted
-  path energies, and a verified continuum limit. This gives constant `L²/8`;
-  it is not the sharp interval constant or a locally Lipschitz interval result.
+* A locally Lipschitz interval LSI under actual normalized uniform measure,
+  with constant `L²/8` and the local metric slope. The proof extends the dyadic
+  entropy argument using absolute continuity and integrable derivatives.
+  This constant is not sharp.
+* U(1) LSI with constant `π²/2`, hence the requested constant `6`, for every
+  locally Lipschitz real observable under actual Haar and the HS metric.
 * Entropy continuity under uniform convergence on compact finite-measure spaces,
   including squared observables with zeros and varying polynomial degree.
 * Explicit polynomial probability kernels on SU concentrate at identity and
@@ -108,7 +110,7 @@ Proved components include:
 full SU(N) result for all positive dimensions. The real theorem has coefficient
 `4/N` and requires only local Lipschitz regularity.
 
-The U(N) and circle inequalities, the full locally Lipschitz interval inequality,
+The U(N) inequality for N ≥ 2, the sharp interval constant,
 and L²-product metric tensorization remain open. The U(N) transfer still takes an explicit product `MetricLSI` assumption.
 
 ## Build and audit

@@ -151,3 +151,16 @@ Lipschitz constant `sqrt(3)`, giving `C = 6/N` in the `2C` convention. N=1 uses
 the circle inequality. The SU step cites a curvature criterion and the interval
 step cites the sharp circle inequality: these citations are not Lean proofs.
 The metric estimate is a useful independently provable milestone.
+
+
+## Locally Lipschitz interval extension
+
+The pinned Mathlib declarations `LipschitzOnWith.absolutelyContinuousOnInterval`,
+`AbsolutelyContinuousOnInterval.intervalIntegrable_deriv`, and
+`AbsolutelyContinuousOnInterval.integral_deriv_eq_sub` now supply the actual
+FTC step in `LipschitzIntervalEnergy.lean`. The proof establishes squared
+integrability using the Lipschitz derivative bound, then reuses the dyadic
+entropy limit. `IntervalMetricLSI.lean` proves the full locally Lipschitz
+normalized-interval LSI with constant `L²/8`. `DimensionOneLSI.lean` combines it
+with the previously verified Haar decomposition to prove U(1) constant `6`.
+No external dependency or assumed analytic criterion was added.
