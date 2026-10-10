@@ -1,7 +1,11 @@
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
-import Mathlib.MeasureTheory.Integral.Bochner.Set
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.Topology.Order.Compact
+module
+
+public import Mathlib.MeasureTheory.Function.LocallyIntegrable
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Topology.Order.Compact
+
+@[expose] public section
 
 /-! # Normalized powers as concentrating kernels
 

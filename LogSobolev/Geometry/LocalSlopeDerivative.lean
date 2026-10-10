@@ -1,6 +1,10 @@
-import LogSobolev.Geometry.LocalSlope
-import Mathlib.Analysis.Calculus.Deriv.Slope
-import Mathlib.Topology.Order.LiminfLimsup
+module
+
+public import LogSobolev.Geometry.LocalSlope
+public import Mathlib.Analysis.Calculus.Deriv.Slope
+public import Mathlib.Topology.Order.LiminfLimsup
+
+@[expose] public section
 
 /-! # Local metric slope and ordinary derivatives
 

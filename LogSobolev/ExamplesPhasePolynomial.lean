@@ -1,4 +1,10 @@
-import LogSobolev
+module
+
+public import LogSobolev
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! Independent clients for the phase/SU regularization and joint derivative. -/
 open Matrix MeasureTheory LogSobolev

@@ -1,6 +1,10 @@
-import LogSobolev.Measure.PowerKernel
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-import Mathlib.Topology.ContinuousMap.Compact
+module
+
+public import LogSobolev.Measure.PowerKernel
+public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+public import Mathlib.Topology.ContinuousMap.Compact
+
+@[expose] public section
 
 /-! # Approximation by normalized powers
 
@@ -34,7 +38,8 @@ theorem tendsto_integral_powerKernel_smul {q : X → ℝ} (hq : Continuous q)
   have he (j : ℕ) : (∫ x, powerKernel μ q j x • F x ∂μ) - F x₀ =
       ∫ x, powerKernel μ q j x • G x ∂μ := by
     simp_rw [hG, smul_sub]
-    rw [integral_sub
+    rw [integral_sub (f := fun x => powerKernel μ q j x • F x)
+      (g := fun x => powerKernel μ q j x • F x₀)
       (((continuous_powerKernel μ hq j).smul F.continuous).integrable_of_hasCompactSupport
         (HasCompactSupport.of_compactSpace _))
       ((continuous_powerKernel μ hq j).smul continuous_const |>.integrable_of_hasCompactSupport

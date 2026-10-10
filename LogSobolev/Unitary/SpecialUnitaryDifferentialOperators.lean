@@ -1,6 +1,14 @@
-import LogSobolev.Geometry.AlgebraVectorFields
-import LogSobolev.Unitary.SpecialUnitaryInvariantFields
-import LogSobolev.Unitary.SpecialUnitarySmoothExtension
+module
+
+public import LogSobolev.Geometry.AlgebraVectorFields
+public import LogSobolev.Unitary.SpecialUnitaryInvariantFields
+public import LogSobolev.Unitary.SpecialUnitarySmoothExtension
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-! # Actual directional derivatives on SU
 

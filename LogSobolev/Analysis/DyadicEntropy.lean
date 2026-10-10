@@ -1,7 +1,11 @@
-import LogSobolev.Analysis.TwoPointEntropy
-import LogSobolev.Measure.FiniteUniform
-import LogSobolev.Measure.ProductEntropySubadditivity
-import Mathlib.Algebra.BigOperators.Fin
+module
+
+public import LogSobolev.Analysis.TwoPointEntropy
+public import LogSobolev.Measure.FiniteUniform
+public import LogSobolev.Measure.ProductEntropySubadditivity
+public import Mathlib.Algebra.BigOperators.Fin
+
+@[expose] public section
 
 /-! # Dyadic entropy decomposition
 

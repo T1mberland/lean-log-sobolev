@@ -1,6 +1,12 @@
-import LogSobolev.Unitary.SpecialUnitaryPolynomialHeatRegularity
-import LogSobolev.Unitary.SpecialUnitaryFisherDifferentiation
-import LogSobolev.Analysis.ExponentialDecay
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialHeatRegularity
+public import LogSobolev.Unitary.SpecialUnitaryFisherDifferentiation
+public import LogSobolev.Analysis.ExponentialDecay
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Entropy and Fisher dissipation for constructed SU polynomial heat
 

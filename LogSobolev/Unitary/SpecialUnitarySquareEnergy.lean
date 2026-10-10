@@ -1,4 +1,10 @@
-import LogSobolev.Unitary.SpecialUnitaryChainRules
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryChainRules
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Energy of a regularized square on SU
 
@@ -24,7 +30,7 @@ theorem specialUnitaryDeriv_sq_add_const
     specialUnitaryDeriv A (fun V => f V ^ 2 + ε) U = 2 * f U * specialUnitaryDeriv A f U := by
   have h := specialUnitaryDeriv_comp A U (hf.mdifferentiableAt (by decide))
     (((hasDerivAt_id (f U)).pow 2).add_const ε)
-  simpa using h
+  simpa [Function.comp_def] using h
 
 /-- Carré du champ of a regularized square, with the exact factor four. -/
 theorem specialUnitaryGamma_sq_add_const

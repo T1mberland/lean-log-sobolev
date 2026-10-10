@@ -1,4 +1,12 @@
-import LogSobolev
+module
+
+public import LogSobolev
+
+@[expose] public section
+
+attribute [local instance 100] LieRing.ofAssociativeRing
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Independent usage examples
 
@@ -345,7 +353,7 @@ example :
   have hf : ContMDiff 𝓘(ℝ, specialUnitaryLieAlgebra (n := Fin 2)) 𝓘(ℝ) ∞
       (fun U : Matrix.specialUnitaryGroup (Fin 2) ℂ => Real.exp (l U.val)) :=
     Real.contDiff_exp.comp_contMDiff (l.contMDiff.comp specialUnitary_val_contMDiff)
-  simpa using specialUnitary_weighted_gammaTwo_log_lower_bound
+  simpa [l] using specialUnitary_weighted_gammaTwo_log_lower_bound
     (stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 2))) hf
     (fun U : Matrix.specialUnitaryGroup (Fin 2) ℂ => Real.exp_pos (l U.val))
 
@@ -364,7 +372,7 @@ example {h : Matrix.specialUnitaryGroup (Fin 2) ℂ → ℝ} (hc : Continuous h)
       (hc.comp continuous_snd)
   · exact fun r U => Real.exp_pos _
   · intro r _ U
-    simpa only [one_mul] using ((hasDerivAt_id r).mul_const (h U)).exp
+    simpa only [one_mul, id_eq] using ((hasDerivAt_id r).mul_const (h U)).exp
   · simp
 
 -- The spatial Fisher variation has the exact coefficient -3 on SU(3).
@@ -435,7 +443,7 @@ example (T : ℝ) (hT : 0 ≤ T) :
   intro U
   change 0 < 2 + (U.val 0 0).im
   have hn : ‖U.val‖ = Real.sqrt 2 := by
-    simpa using unitary_norm (specialUnitaryInclusion U)
+    simpa [specialUnitaryInclusion] using unitary_norm (specialUnitaryInclusion U)
   have hb := (Complex.abs_im_le_norm (U.val 0 0)).trans (norm_entry_le_frobenius U.val 0 0)
   rw [hn] at hb
   have hs := Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)
@@ -470,7 +478,7 @@ private theorem quadraticSU2_pos (U : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
     0 < quadraticSU2.val U := by
   rw [quadraticSU2_apply]
   have hn : ‖U.val‖ = Real.sqrt 2 := by
-    simpa using unitary_norm (specialUnitaryInclusion U)
+    simpa [specialUnitaryInclusion] using unitary_norm (specialUnitaryInclusion U)
   have hb := (Complex.abs_im_le_norm (U.val 0 0)).trans (norm_entry_le_frobenius U.val 0 0)
   rw [hn] at hb
   have hs := Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)
@@ -703,7 +711,7 @@ example :
   rw [slopeEnergy_eq_ofReal_integral hf]
   exact ENNReal.ofReal_ne_top
 
-private def negIdentitySU2 : Matrix.specialUnitaryGroup (Fin 2) ℂ :=
+def negIdentitySU2 : Matrix.specialUnitaryGroup (Fin 2) ℂ :=
   ⟨-1, by
     constructor
     · constructor <;> simp

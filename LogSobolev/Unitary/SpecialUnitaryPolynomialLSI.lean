@@ -1,6 +1,12 @@
-import LogSobolev.Unitary.SpecialUnitaryPolynomialEquilibrium
-import LogSobolev.Analysis.DissipationBound
-import LogSobolev.Unitary.SpecialUnitarySquareEnergy
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialEquilibrium
+public import LogSobolev.Analysis.DissipationBound
+public import LogSobolev.Unitary.SpecialUnitarySquareEnergy
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Logarithmic Sobolev inequality for polynomial SU observables
 

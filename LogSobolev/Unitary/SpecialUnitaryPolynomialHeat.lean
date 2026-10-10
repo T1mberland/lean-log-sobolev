@@ -1,7 +1,13 @@
-import LogSobolev.Unitary.SpecialUnitaryPolynomialNorm
-import Mathlib.Analysis.SpecialFunctions.Exponential
-import LogSobolev.Measure.CompactDifferentiation
-import LogSobolev.Unitary.SpecialUnitaryHaarCalculus
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialNorm
+public import Mathlib.Analysis.SpecialFunctions.Exponential
+public import LogSobolev.Measure.CompactDifferentiation
+public import LogSobolev.Unitary.SpecialUnitaryHaarCalculus
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Constructed heat evolution on every finite-degree SU polynomial space
 
@@ -30,7 +36,9 @@ noncomputable def specialUnitaryPolynomialHeat
     (b : ι → specialUnitaryLieAlgebra (n := n)) (d : ℕ)
     (f : specialUnitaryPolynomialSpace (n := n) d) :
     specialUnitaryPolynomialHeat b d f 0 = f := by
-  simp [specialUnitaryPolynomialHeat]
+  unfold specialUnitaryPolynomialHeat
+  rw [zero_smul ℝ (specialUnitaryPolynomialLaplacianCLM b d), NormedSpace.exp_zero]
+  rfl
 
 /-- The constructed polynomial heat evolution has the semigroup law. -/
 theorem specialUnitaryPolynomialHeat_add
@@ -38,9 +46,13 @@ theorem specialUnitaryPolynomialHeat_add
     (f : specialUnitaryPolynomialSpace (n := n) d) (s t : ℝ) :
     specialUnitaryPolynomialHeat b d f (s + t) =
       specialUnitaryPolynomialHeat b d (specialUnitaryPolynomialHeat b d f t) s := by
+  have hc : Commute (s • specialUnitaryPolynomialLaplacianCLM b d)
+      (t • specialUnitaryPolynomialLaplacianCLM b d) := by
+    ext v
+    simp [ContinuousLinearMap.mul_apply, smul_smul, mul_comm]
   unfold specialUnitaryPolynomialHeat
-  rw [add_smul, NormedSpace.exp_add_of_commute_of_mem_ball (𝕂 := ℝ)
-    (((Commute.refl (specialUnitaryPolynomialLaplacianCLM b d)).smul_left s).smul_right t)
+  rw [add_smul s t (specialUnitaryPolynomialLaplacianCLM b d),
+    NormedSpace.exp_add_of_commute_of_mem_ball (𝕂 := ℝ) hc
     (by simp [NormedSpace.expSeries_radius_eq_top])
     (by simp [NormedSpace.expSeries_radius_eq_top])]
   rfl

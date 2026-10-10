@@ -1,6 +1,10 @@
-import LogSobolev.Unitary.HilbertSchmidt
-import Mathlib.MeasureTheory.Measure.Haar.Unique
-import Mathlib.MeasureTheory.Group.Integral
+module
+
+public import LogSobolev.Unitary.HilbertSchmidt
+public import Mathlib.MeasureTheory.Measure.Haar.Unique
+public import Mathlib.MeasureTheory.Group.Integral
+
+@[expose] public section
 
 /-! # Haar probability on the actual unitary group
 
@@ -36,8 +40,23 @@ instance unitaryCompactSpace : CompactSpace (Matrix.unitaryGroup n ℂ) := by
   simpa only [Metric.mem_closedBall, dist_zero_right] using
     unitary_entry_norm_le_one ⟨U, hU⟩ i j
 
-instance unitaryMeasurableSpace : MeasurableSpace (Matrix.unitaryGroup n ℂ) := borel _
+noncomputable instance unitaryMeasurableSpace : MeasurableSpace (Matrix.unitaryGroup n ℂ) := borel _
 instance unitaryBorelSpace : BorelSpace (Matrix.unitaryGroup n ℂ) := ⟨rfl⟩
+
+/-- Compatibility with the topology inferred through the Frobenius metric.
+The structures are definitionally equal; spelling out the metric projection
+also makes the instance available at instance-synthesis transparency. -/
+instance unitaryMetricBorelSpace :
+    @BorelSpace (Matrix.unitaryGroup n ℂ)
+      (inferInstance : MetricSpace (Matrix.unitaryGroup n ℂ)).toPseudoMetricSpace.toUniformSpace.toTopologicalSpace
+      inferInstance := unitaryBorelSpace
+
+/-- Compactness for the same Frobenius metric topology. -/
+instance unitaryMetricCompactSpace :
+    @CompactSpace (Matrix.unitaryGroup n ℂ)
+      (inferInstance : MetricSpace (Matrix.unitaryGroup n ℂ)).toPseudoMetricSpace.toUniformSpace.toTopologicalSpace :=
+  unitaryCompactSpace
+
 
 /-- Normalized Haar measure, with the topology underlying the Frobenius metric. -/
 noncomputable def unitaryHaar (n : Type*) [Fintype n] [DecidableEq n] :
@@ -53,13 +72,12 @@ theorem eq_unitaryHaar (μ : Measure (Matrix.unitaryGroup n ℂ)) [IsProbability
   have h := Measure.isMulInvariant_eq_smul_of_compactSpace μ (unitaryHaar n)
   have hc := congrArg (fun ν : Measure (Matrix.unitaryGroup n ℂ) => ν Set.univ) h
   have hc' : Measure.haarScalarFactor μ (unitaryHaar n) = 1 := by
-    simpa [ENNReal.smul_def, smul_eq_mul] using hc.symm
+    simpa only [Measure.smul_apply, measure_univ, ENNReal.smul_def, smul_eq_mul, mul_one,
+      ENNReal.coe_eq_one] using hc.symm
   simpa [hc'] using h
 
 instance : (unitaryHaar n).IsMulRightInvariant where
   map_mul_right_eq_self g := by
-    letI := Measure.isProbabilityMeasure_map (μ := unitaryHaar n)
-      (measurable_mul_const g).aemeasurable
     exact eq_unitaryHaar _
 
 /-- Continuous observables on the compact group are Haar integrable. -/

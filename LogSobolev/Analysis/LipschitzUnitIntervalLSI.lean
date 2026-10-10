@@ -1,5 +1,9 @@
-import LogSobolev.Analysis.UnitIntervalLSI
-import LogSobolev.Analysis.LipschitzIntervalEnergy
+module
+
+public import LogSobolev.Analysis.UnitIntervalLSI
+public import LogSobolev.Analysis.LipschitzIntervalEnergy
+
+@[expose] public section
 
 /-! # Unit-interval entropy bound for Lipschitz observables
 

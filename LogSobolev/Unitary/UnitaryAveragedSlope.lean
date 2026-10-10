@@ -1,6 +1,12 @@
-import LogSobolev.Unitary.UnitaryConvolutionDerivative
-import LogSobolev.Unitary.PhaseHaar
-import Mathlib.MeasureTheory.Integral.Prod
+module
+
+public import LogSobolev.Unitary.UnitaryConvolutionDerivative
+public import LogSobolev.Unitary.PhaseHaar
+public import Mathlib.MeasureTheory.Integral.Prod
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Haar integration of averaged local slopes
 

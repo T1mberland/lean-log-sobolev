@@ -1,6 +1,12 @@
-import LogSobolev.Unitary.PhaseMap
-import LogSobolev.Unitary.SpecialUnitary
-import Mathlib.Topology.ContinuousMap.Compact
+module
+
+public import LogSobolev.Unitary.PhaseMap
+public import LogSobolev.Unitary.SpecialUnitary
+public import Mathlib.Topology.ContinuousMap.Compact
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Phase slices with their exact metric constants
 
@@ -26,6 +32,8 @@ theorem phaseMul_sqrt_lipschitz (N : ℕ) (hN : 0 < N)
       ← Real.sqrt_mul (div_nonneg (by norm_num) hNr.le), div_mul_cancel₀ _ hNr.ne']
   apply LipschitzWith.of_dist_le_mul
   intro s t
+  change dist (phaseMul (Real.sqrt (2 / (N : ℝ))) s U)
+    (phaseMul (Real.sqrt (2 / (N : ℝ))) t U) ≤ Real.sqrt 2 * dist s t
   simpa only [dist_self, zero_add, hs, Real.dist_eq] using
     phaseMul_dist_le (Real.sqrt (2 / (N : ℝ))) s t U U
 
@@ -34,6 +42,7 @@ theorem phaseMul_isometry {n : Type*} [Fintype n] [DecidableEq n] (a t : ℝ) :
     Isometry (phaseMul (n := n) a t) := by
   apply Isometry.of_dist_eq
   intro U V
+  simp only [Subtype.dist_eq, dist_eq_norm]
   change ‖(phase (a * t) : ℂ) • (U : Matrix n n ℂ) -
     (phase (a * t) : ℂ) • (V : Matrix n n ℂ)‖ = ‖(U : Matrix n n ℂ) - V‖
   rw [← smul_sub, norm_smul, norm_phase, one_mul]

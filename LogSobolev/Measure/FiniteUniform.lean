@@ -1,6 +1,10 @@
-import LogSobolev.Measure.Entropy
-import Mathlib.Probability.UniformOn
-import Mathlib.MeasureTheory.Integral.Prod
+module
+
+public import LogSobolev.Measure.Entropy
+public import Mathlib.Probability.UniformOn
+public import Mathlib.MeasureTheory.Integral.Prod
+
+@[expose] public section
 
 /-! # Entropy under finite uniform measures
 

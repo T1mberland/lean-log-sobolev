@@ -1,6 +1,12 @@
-import LogSobolev.Unitary.SpecialUnitaryConvolutionEnergy
-import LogSobolev.Unitary.SpecialUnitaryPolynomialApproximation
-import LogSobolev.Unitary.SpecialUnitaryPolynomialLSI
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryConvolutionEnergy
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialApproximation
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialLSI
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Logarithmic Sobolev inequality on SU(N)
 

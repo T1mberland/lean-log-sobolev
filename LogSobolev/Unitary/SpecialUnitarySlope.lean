@@ -1,6 +1,12 @@
-import LogSobolev.Geometry.LocalSlopeDerivative
-import LogSobolev.Unitary.SpecialUnitaryFlow
-import LogSobolev.Unitary.SpecialUnitaryGenerator
+module
+
+public import LogSobolev.Geometry.LocalSlopeDerivative
+public import LogSobolev.Unitary.SpecialUnitaryFlow
+public import LogSobolev.Unitary.SpecialUnitaryGenerator
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Actual SU derivatives and the Hilbert–Schmidt local slope
 
@@ -21,6 +27,7 @@ theorem specialUnitary_isometry_mul_left (U : Matrix.specialUnitaryGroup n ℂ) 
     Isometry (fun V : Matrix.specialUnitaryGroup n ℂ => U * V) := by
   apply isometry_iff_dist_eq.mpr
   intro V W
+  simp only [Subtype.dist_eq, dist_eq_norm, Submonoid.coe_mul]
   change ‖U.val * V.val - U.val * W.val‖ = ‖V.val - W.val‖
   rw [← mul_sub]
   exact norm_unitary_mul (specialUnitaryInclusion U) _
@@ -29,7 +36,7 @@ theorem specialUnitary_isometry_mul_left (U : Matrix.specialUnitaryGroup n ℂ) 
 theorem specialUnitary_mul_exp_lipschitz
     (U : Matrix.specialUnitaryGroup n ℂ) (A : specialUnitaryLieAlgebra (n := n)) :
     LipschitzWith ‖A.val‖₊ (fun t => U * specialUnitaryExpCurve A t) := by
-  simpa only [one_mul] using
+  simpa only [one_mul, Function.comp_def] using
     (specialUnitary_isometry_mul_left U).lipschitz.comp (specialUnitaryExpCurve_lipschitz A)
 
 /-- Actual invariant derivatives are bounded by the upper local Hilbert–Schmidt slope.

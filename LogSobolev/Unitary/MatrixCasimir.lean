@@ -1,7 +1,13 @@
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.LinearAlgebra.Matrix.Trace
-import Mathlib.Data.Matrix.Basis
-import Mathlib.Tactic.Abel
+module
+
+public import Mathlib.Algebra.Lie.OfAssociative
+public import Mathlib.LinearAlgebra.Matrix.Trace
+public import Mathlib.Data.Matrix.Basis
+public import Mathlib.Tactic.Abel
+
+@[expose] public section
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-! # Double commutators with matrix units
 

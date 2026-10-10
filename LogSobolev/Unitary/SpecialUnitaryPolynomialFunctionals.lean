@@ -1,4 +1,10 @@
-import LogSobolev.Unitary.SpecialUnitaryPolynomialDissipation
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialDissipation
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Continuous integral functionals on SU polynomial spaces
 

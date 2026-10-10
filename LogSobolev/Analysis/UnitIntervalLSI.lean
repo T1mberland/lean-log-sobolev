@@ -1,6 +1,10 @@
-import LogSobolev.Analysis.DyadicLSI
-import LogSobolev.Analysis.UniformGridLimit
-import LogSobolev.Analysis.IntervalSquareIncrement
+module
+
+public import LogSobolev.Analysis.DyadicLSI
+public import LogSobolev.Analysis.UniformGridLimit
+public import LogSobolev.Analysis.IntervalSquareIncrement
+
+@[expose] public section
 
 /-! # A one-dimensional logarithmic Sobolev bound
 
@@ -40,8 +44,8 @@ theorem tendsto_uniformGridEntropy_samples {f : ℝ → ℝ} (hf : Continuous f)
   have h := h2.sub (Real.continuous_mul_log.continuousAt.tendsto.comp h1)
   simp only [Function.comp_def] at h
   simp only [uniformGridEntropy_samples_eq]
-  convert h using 1
-  simp only [entropy, integral_Icc_eq_integral_Ioc,
+  convert h using 1 <;>
+    simp only [Pi.pow_apply, entropy, integral_Icc_eq_integral_Ioc,
     intervalIntegral.integral_of_le (by norm_num : (0 : ℝ) ≤ 1)]
 
 /-- Unit-interval LSI for continuously differentiable real functions, coefficient `1/4`.

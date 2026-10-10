@@ -1,8 +1,14 @@
-import LogSobolev.Unitary.UnitaryCurves
-import LogSobolev.Unitary.DeterminantDerivative
-import Mathlib.Analysis.Calculus.Deriv.Shift
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+module
+
+public import LogSobolev.Unitary.UnitaryCurves
+public import LogSobolev.Unitary.DeterminantDerivative
+public import Mathlib.Analysis.Calculus.Deriv.Shift
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Determinant of the matrix exponential
 
@@ -49,8 +55,10 @@ theorem det_exp_smul (A : Matrix n n ℂ) (t : ℝ) :
     have he := ((hasDerivAt_id r).smul_const (-Matrix.trace A)).cexp
     have hd := (hasDerivAt_det_exp_smul A r).mul he
     convert hd using 1
-    dsimp [f]
-    ring
+    · funext s
+      rfl
+    · simp only [id_eq, one_smul]
+      ring
   have he := is_const_of_deriv_eq_zero (fun r => (hg r).differentiableAt)
     (fun r => (hg r).deriv) t 0
   have hprod : f t * Complex.exp (-(t • Matrix.trace A)) = 1 := by

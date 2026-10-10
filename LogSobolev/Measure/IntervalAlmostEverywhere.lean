@@ -1,4 +1,8 @@
-import LogSobolev.Measure.Interval
+module
+
+public import LogSobolev.Measure.Interval
+
+@[expose] public section
 
 /-! # Transferring almost-everywhere assertions to normalized intervals -/
 

@@ -1,7 +1,13 @@
-import LogSobolev.Unitary.SpecialUnitaryCasimir
-import Mathlib.LinearAlgebra.Matrix.StdBasis
-import Mathlib.LinearAlgebra.Complex.Module
-import Mathlib.LinearAlgebra.Trace
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryCasimir
+public import Mathlib.LinearAlgebra.Matrix.StdBasis
+public import Mathlib.LinearAlgebra.Complex.Module
+public import Mathlib.LinearAlgebra.Trace
+
+@[expose] public section
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-! # Traces of matrix adjoint operators
 

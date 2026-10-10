@@ -1,5 +1,9 @@
-import Mathlib.Analysis.Calculus.VectorField
-import Mathlib.Analysis.Calculus.FDeriv.Mul
+module
+
+public import Mathlib.Analysis.Calculus.VectorField
+public import Mathlib.Analysis.Calculus.FDeriv.Mul
+
+@[expose] public section
 
 /-! # Invariant vector fields in an ambient real normed algebra
 

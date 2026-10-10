@@ -1,5 +1,11 @@
-import LogSobolev.Unitary.SpecialUnitaryPowerKernel
-import LogSobolev.Measure.PowerKernelApproximation
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryPowerKernel
+public import LogSobolev.Measure.PowerKernelApproximation
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Uniform polynomial approximation by positive convolution on SU
 
@@ -41,7 +47,8 @@ theorem specialUnitaryPolynomial_exists_uniform_approximation
       (∫ V, powerKernel (specialUnitaryHaar n) specialUnitaryPeak.val j V • H V
         ∂specialUnitaryHaar n) = specialUnitaryPolynomialToContinuous j (p j) := by
     ext U
-    rw [ContinuousMap.integral_apply
+    rw [ContinuousMap.integral_apply (f := fun V =>
+      powerKernel (specialUnitaryHaar n) specialUnitaryPeak.val j V • H V)
       (((continuous_powerKernel (specialUnitaryHaar n) specialUnitaryPeak.val.contMDiff.continuous j).smul hH).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _))]
     change (∫ V, powerKernel (specialUnitaryHaar n) specialUnitaryPeak.val j V * f (U * V)
       ∂specialUnitaryHaar n) = (p j).val U

@@ -1,5 +1,11 @@
-import LogSobolev.Unitary.MatrixLocalExponential
-import Mathlib.Analysis.Analytic.ChangeOrigin
+module
+
+public import LogSobolev.Unitary.MatrixLocalExponential
+public import Mathlib.Analysis.Analytic.ChangeOrigin
+
+@[expose] public section
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-! # Analytic exponential neighborhoods for SU
 

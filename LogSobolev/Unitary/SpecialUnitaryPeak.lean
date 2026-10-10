@@ -1,5 +1,11 @@
-import LogSobolev.Unitary.SpecialUnitaryPolynomialNorm
-import LogSobolev.Unitary.SpecialUnitaryPolynomialFunctionals
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialNorm
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialFunctionals
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # A polynomial peaked at the identity of SU
 

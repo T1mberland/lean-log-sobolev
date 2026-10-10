@@ -1,6 +1,12 @@
-import LogSobolev.Geometry.DerivationSubmodulePowers
-import LogSobolev.Unitary.SpecialUnitaryLinearHeat
-import LogSobolev.Unitary.SpecialUnitaryOperatorAlgebra
+module
+
+public import LogSobolev.Geometry.DerivationSubmodulePowers
+public import LogSobolev.Unitary.SpecialUnitaryLinearHeat
+public import LogSobolev.Unitary.SpecialUnitaryOperatorAlgebra
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Finite-dimensional polynomial spaces on the actual SU group
 
@@ -118,7 +124,7 @@ theorem specialUnitaryPolynomialSpace_mono : Monotone (specialUnitaryPolynomialS
   intro d f hf
   change f ∈ specialUnitaryAffineSpace ^ (d + 1)
   rw [pow_succ (specialUnitaryAffineSpace (n := n)) d]
-  simpa only [mul_one] using Submodule.mul_mem_mul hf one_mem_specialUnitaryAffineSpace
+  simpa only [mul_one, specialUnitaryPolynomialSpace] using Submodule.mul_mem_mul hf one_mem_specialUnitaryAffineSpace
 
 /-- Products add degree bounds, using Mathlib's actual submodule multiplication. -/
 theorem specialUnitaryPolynomialSpace_mul_mem {d e : ℕ}

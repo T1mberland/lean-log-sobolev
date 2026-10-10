@@ -3,12 +3,18 @@ Copyright (c) 2026 Yuanhe Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 Ported from AI4SLT d0f506f0a695018265dccb33bcb05e2f5ca1c876.
-Modified for Lean 4.28.0 and the shared LogSobolev entropy/two-point API.
+Initially adapted for Lean 4.28.0. Updated from StatsMLlib
+75611ba335ee4ff2fb8b09938f6319d2cbf3d804 for Lean 4.34.1; local imports
+and module visibility adapted. Original Apache-2.0 attribution retained.
 -/
-import LogSobolev.Gaussian.Port.GaussianSobolevDense.Defs
-import LogSobolev.Gaussian.Port.GaussianSobolevDense.Cutoff
-import Mathlib.Analysis.Convolution
-import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+module
+
+public import LogSobolev.Gaussian.Port.GaussianSobolevDense.Defs
+public import LogSobolev.Gaussian.Port.GaussianSobolevDense.Cutoff
+public import Mathlib.Analysis.Convolution
+public import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+
+@[expose] public section
 
 /-!
 # Mollification Lemmas for Gaussian Sobolev Density
@@ -186,9 +192,9 @@ lemma mollify_tendsto_pointwise {n : ℕ} {g : E n → ℝ} (hg_cont : Continuou
         ext i; exact Fin.elim0 i
       rw [h_const, integral_const, smul_eq_mul]
       have h_vol_one : (volume : Measure (E 0)).real Set.univ = 1 := by
-        haveI : Subsingleton (E 0) := by
-          haveI : IsEmpty (Fin 0) := Fin.isEmpty
-          haveI : Unique (Fin 0 → ℝ) := Pi.uniqueOfIsEmpty _
+        have : Subsingleton (E 0) := by
+          have : IsEmpty (Fin 0) := Fin.isEmpty
+          have : Unique (Fin 0 → ℝ) := Pi.uniqueOfIsEmpty _
           exact (Equiv.subsingleton_congr (EuclideanSpace.equiv (Fin 0) ℝ).toEquiv).mpr
             Unique.instSubsingleton
         have h_univ_eq : (Set.univ : Set (E 0)) = {0} := Set.eq_singleton_iff_unique_mem.mpr
@@ -277,7 +283,6 @@ lemma mollify_tendsto_pointwise {n : ℕ} {g : E n → ℝ} (hg_cont : Continuou
 
 /-! #### Uniform Convergence on Compact Sets -/
 
-set_option maxHeartbeats 400000 in
 /-- For uniformly continuous functions on a compact set, mollification converges uniformly. -/
 lemma mollify_tendsto_uniformly_on_compact {n : ℕ} {g : E n → ℝ} {K : Set (E n)}
     (hK : IsCompact K) (hg_cont : Continuous g) :
@@ -401,13 +406,14 @@ lemma mollify_tendsto_uniformly_on_compact {n : ℕ} {g : E n → ℝ} {K : Set 
     finite-measure set. Bounds the L² norm by sup-norm times measure^(1/2). -/
 lemma eLpNorm_tendsto_zero_of_tendstoUniformly_restrict {n : ℕ} {f : ℕ → E n → ℝ} {g : E n → ℝ}
     {s : Set (E n)} (hμ : volume s < ⊤)
+    (hfg_meas : ∀ i, AEStronglyMeasurable (f i - g) volume)
     (hf_zero : ∀ i x, x ∉ s → f i x = 0) (hg_zero : ∀ x, x ∉ s → g x = 0)
     (h_unif : TendstoUniformly f g Filter.atTop) :
     Filter.Tendsto (fun i => eLpNorm (f i - g) 2 volume) Filter.atTop (nhds 0) := by
   have h_restrict : ∀ i, eLpNorm (f i - g) 2 volume = eLpNorm (f i - g) 2 (volume.restrict s) := by
     intro i
     symm
-    apply eLpNorm_restrict_eq_of_support_subset
+    apply eLpNorm_restrict_eq_of_support_subset (hfg_meas i)
     intro x hx
     rw [Function.mem_support, Pi.sub_apply, sub_ne_zero] at hx
     by_contra hxs
@@ -420,7 +426,7 @@ lemma eLpNorm_tendsto_zero_of_tendstoUniformly_restrict {n : ℕ} {f : ℕ → E
   · use 0
     intro i _
     rw [Measure.restrict_zero_set hμ_zero, eLpNorm_measure_zero]
-    exact zero_le ε
+    exact zero_le
   · by_cases hε_top : ε = ⊤
     · use 0; intro i _; rw [hε_top]; exact le_top
     have h_sqrt_pos : 0 < (volume s).toReal.sqrt :=
@@ -438,7 +444,7 @@ lemma eLpNorm_tendsto_zero_of_tendstoUniformly_restrict {n : ℕ} {f : ℕ → E
     have h_bound : eLpNorm (f i - g) 2 (volume.restrict s) ≤ ENNReal.ofReal δ * (volume s) ^ (1/2 : ℝ) := by
       calc eLpNorm (f i - g) 2 (volume.restrict s)
           ≤ eLpNorm (fun _ => δ) 2 (volume.restrict s) := by
-            apply eLpNorm_mono_ae
+            apply eLpNorm_mono_ae (hfg_meas i).restrict
             rw [Filter.eventually_iff_exists_mem]
             use Set.univ
             constructor
@@ -487,13 +493,14 @@ lemma eLpNorm_tendsto_zero_of_tendstoUniformly_restrict {n : ℕ} {f : ℕ → E
 lemma eLpNorm_tendsto_zero_of_tendstoUniformly_general {n : ℕ} {μ : Measure (E n)}
     {f : ℕ → E n → ℝ} {g : E n → ℝ}
     {s : Set (E n)} (hμ : μ s < ⊤)
+    (hfg_meas : ∀ i, AEStronglyMeasurable (f i - g) μ)
     (hf_zero : ∀ i x, x ∉ s → f i x = 0) (hg_zero : ∀ x, x ∉ s → g x = 0)
     (h_unif : TendstoUniformly f g Filter.atTop) :
     Filter.Tendsto (fun i => eLpNorm (f i - g) 2 μ) Filter.atTop (nhds 0) := by
   have h_restrict : ∀ i, eLpNorm (f i - g) 2 μ = eLpNorm (f i - g) 2 (μ.restrict s) := by
     intro i
     symm
-    apply eLpNorm_restrict_eq_of_support_subset
+    apply eLpNorm_restrict_eq_of_support_subset (hfg_meas i)
     intro x hx
     rw [Function.mem_support, Pi.sub_apply, sub_ne_zero] at hx
     by_contra hxs
@@ -506,7 +513,7 @@ lemma eLpNorm_tendsto_zero_of_tendstoUniformly_general {n : ℕ} {μ : Measure (
   · use 0
     intro i _
     rw [Measure.restrict_eq_zero.mpr hμ_zero, eLpNorm_measure_zero]
-    exact zero_le ε
+    exact zero_le
   · by_cases hε_top : ε = ⊤
     · use 0; intro i _; rw [hε_top]; exact le_top
     have h_sqrt_pos : 0 < (μ s).toReal.sqrt :=
@@ -524,7 +531,7 @@ lemma eLpNorm_tendsto_zero_of_tendstoUniformly_general {n : ℕ} {μ : Measure (
     have h_bound : eLpNorm (f i - g) 2 (μ.restrict s) ≤ ENNReal.ofReal δ * (μ s) ^ (1/2 : ℝ) := by
       calc eLpNorm (f i - g) 2 (μ.restrict s)
           ≤ eLpNorm (fun _ => δ) 2 (μ.restrict s) := by
-            apply eLpNorm_mono_ae
+            apply eLpNorm_mono_ae (hfg_meas i).restrict
             rw [Filter.eventually_iff_exists_mem]
             use Set.univ
             constructor
@@ -570,7 +577,6 @@ lemma eLpNorm_tendsto_zero_of_tendstoUniformly_general {n : ℕ} {μ : Measure (
 
 /-! ### L² Convergence for Continuous Compactly Supported Functions -/
 
-set_option maxHeartbeats 400000 in
 /-- Mollification of continuous compactly supported functions converges in L².
     This uses uniform convergence on compact sets + finite measure on the support. -/
 lemma mollify_L2_convergence_continuous {n : ℕ} {g : E n → ℝ} {R : ℝ} (hR : 0 < R)
@@ -643,10 +649,16 @@ lemma mollify_L2_convergence_continuous {n : ℕ} {g : E n → ℝ} {R : ℝ} (h
       simp only [hg_xy, zero_mul, Pi.zero_apply]
   have h_pointwise_bound : ∀ x ∈ Metric.closedBall (0 : E n) (2 * R + 1),
       dist (mollify ε g x) (g x) < η := fun x hx => by rw [dist_comm]; exact hε_unif x hx
+  have hg_compact : HasCompactSupport g :=
+    HasCompactSupport.of_support_subset_isCompact (isCompact_closedBall 0 (2 * R))
+      (fun x hx => hg_supp (subset_closure hx))
+  have hdiff_meas : AEStronglyMeasurable (mollify ε g - g) volume :=
+    (((mollify_smooth hg_compact hg_cont.locallyIntegrable hε_pos).continuous.sub
+      hg_cont)).aestronglyMeasurable
   have h_restrict : eLpNorm (mollify ε g - g) 2 volume =
       eLpNorm (mollify ε g - g) 2 (volume.restrict (Metric.closedBall 0 (2 * R + 1))) := by
     symm
-    apply eLpNorm_restrict_eq_of_support_subset
+    apply eLpNorm_restrict_eq_of_support_subset hdiff_meas
     intro x hx
     rw [Function.mem_support] at hx
     by_contra hx_not_in
@@ -654,7 +666,7 @@ lemma mollify_L2_convergence_continuous {n : ℕ} {g : E n → ℝ} {R : ℝ} (h
   rw [h_restrict]
   calc eLpNorm (mollify ε g - g) 2 (volume.restrict (Metric.closedBall 0 (2 * R + 1)))
       ≤ eLpNorm (fun (_ : E n) => η) 2 (volume.restrict (Metric.closedBall 0 (2 * R + 1))) := by
-        apply eLpNorm_mono_ae
+        apply eLpNorm_mono_ae hdiff_meas.restrict
         rw [Filter.eventually_iff_exists_mem]
         use Set.univ
         constructor
@@ -681,14 +693,14 @@ lemma mollify_L2_convergence_continuous {n : ℕ} {g : E n → ℝ} {R : ℝ} (h
           have h_rad_pos : (0 : ℝ) < 2 * R + 1 := by linarith
           by_cases hn : n = 0
           · subst hn
-            haveI : IsEmpty (Fin 0) := inferInstance
-            haveI : Subsingleton (E 0) := inferInstance
+            have : IsEmpty (Fin 0) := inferInstance
+            have : Subsingleton (E 0) := inferInstance
             have h_univ : Metric.closedBall (0 : E 0) (2 * R + 1) = Set.univ := by
               ext x; simp [Metric.mem_closedBall, Subsingleton.elim x 0, dist_self, h_rad_pos.le]
             rw [h_univ] at hvol
             have h_ne : (volume : Measure (E 0)) ≠ 0 := NeZero.ne volume
             exact (MeasureTheory.Measure.measure_univ_ne_zero.mpr h_ne) hvol
-          · haveI : Nonempty (Fin n) := ⟨⟨0, Nat.pos_of_ne_zero hn⟩⟩
+          · have : Nonempty (Fin n) := ⟨⟨0, Nat.pos_of_ne_zero hn⟩⟩
             rw [EuclideanSpace.volume_closedBall] at hvol
             simp only [mul_eq_zero] at hvol
             rcases hvol with h_pow | h_const
@@ -741,7 +753,6 @@ lemma mollify_L2_convergence_continuous {n : ℕ} {g : E n → ℝ} {R : ℝ} (h
 
 /-! ### Gaussian L² Convergence for Continuous Functions -/
 
-set_option maxHeartbeats 4000000 in
 /-- For any probability measure μ, mollification of continuous compactly supported
     functions converges in L²(μ). Since stdGaussianE is a probability measure,
     μ s ≤ 1 < ⊤ for any set s, so we can use uniform convergence. -/
@@ -780,7 +791,7 @@ lemma mollify_L2_convergence_gaussian_continuous {n : ℕ} {g : E n → ℝ} {R 
     have h_int_nonempty : (interior K).Nonempty := ⟨0, h_0_in_K⟩
     have h_int_open : IsOpen (interior K) := isOpen_interior
     -- Gaussian measure has full support, so positive on non-empty open sets
-    haveI : (stdGaussianE n).IsOpenPosMeasure := GaussianSobolev.stdGaussianE_isOpenPosMeasure
+    have : (stdGaussianE n).IsOpenPosMeasure := GaussianSobolev.stdGaussianE_isOpenPosMeasure
     calc 0 < stdGaussianE n (interior K) := h_int_open.measure_pos _ h_int_nonempty
       _ ≤ stdGaussianE n K := measure_mono interior_subset
   -- Now we can proceed with the positive measure case
@@ -844,7 +855,7 @@ lemma mollify_L2_convergence_gaussian_continuous {n : ℕ} {g : E n → ℝ} {R 
               have hxy_ball : x - y ∈ Metric.closedBall 0 (2 * R) := hg_supp hxy_in
               rw [Metric.mem_closedBall, dist_zero_right] at hxy_ball
               have hx_norm : ‖x‖ > 2 * R + 1 := by
-                rw [hK_def, Metric.closedBall, Set.mem_setOf] at hx
+                rw [hK_def, Metric.closedBall, Set.mem_ofPred] at hx
                 push Not at hx
                 rw [dist_zero_right] at hx
                 exact hx
@@ -879,10 +890,16 @@ lemma mollify_L2_convergence_gaussian_continuous {n : ℕ} {g : E n → ℝ} {R 
             simp [h_mol_zero]
         rw [h_integrand_zero, integral_zero]
       linarith
+    have hg_compact : HasCompactSupport g :=
+      HasCompactSupport.of_support_subset_isCompact (isCompact_closedBall 0 (2 * R))
+        (fun x hx => hg_supp (subset_closure hx))
+    have hdiff_meas : AEStronglyMeasurable (mollify ε g - g) (stdGaussianE n) :=
+      (((mollify_smooth hg_compact hg_cont.locallyIntegrable hε_pos).continuous.sub
+        hg_cont)).aestronglyMeasurable
     have h_norm_eq_restrict : eLpNorm (mollify ε g - g) 2 (stdGaussianE n) =
         eLpNorm (mollify ε g - g) 2 ((stdGaussianE n).restrict K) := by
       symm
-      apply eLpNorm_restrict_eq_of_support_subset
+      apply eLpNorm_restrict_eq_of_support_subset hdiff_meas
       intro x hx
       rw [Function.mem_support] at hx
       by_contra hx_not_in
@@ -894,7 +911,7 @@ lemma mollify_L2_convergence_gaussian_continuous {n : ℕ} {g : E n → ℝ} {R 
       exact this
     calc eLpNorm (mollify ε g - g) 2 ((stdGaussianE n).restrict K)
         ≤ eLpNorm (fun _ => η) 2 ((stdGaussianE n).restrict K) := by
-          apply eLpNorm_mono_ae
+          apply eLpNorm_mono_ae hdiff_meas.restrict
           filter_upwards with x
           rw [Real.norm_eq_abs, Real.norm_eq_abs, abs_of_pos hη_pos]
           simp only [Pi.sub_apply]
@@ -1000,9 +1017,9 @@ lemma cutoff_product_fderiv_continuous {f : E n → ℝ} {R : ℝ} (hR : 0 < R)
       (smoothCutoffR R x) • (fderiv ℝ f x) + (f x) • (fderiv ℝ (smoothCutoffR R) x) := by
     intro x
     ext v
-    simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply]
+    simp only [add_apply, smul_apply]
     rw [fderiv_mul (hf_diff x) (hχ_diff x)]
-    simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+    simp only [add_apply, smul_apply, smul_eq_mul]
     ring
   simp_rw [h_eq]
   apply Continuous.add
@@ -1203,7 +1220,7 @@ lemma gradient_L2_convergence_gaussian {g : E n → ℝ} {R : ℝ} (hR : 0 < R)
           have h_basis_diff : ∀ i, (fderiv ℝ (mollify ε g) x - fderiv ℝ g x) (b i) =
               mollify ε (fun y => fderiv ℝ g y (b i)) x - fderiv ℝ g x (b i) := by
             intro i
-            simp only [ContinuousLinearMap.sub_apply, h_commute i]
+            simp only [sub_apply, h_commute i]
           simp_rw [h_basis_diff]
           have h1 : |∑ i : Fin n, b.repr v i *
                   (mollify ε (fun y => fderiv ℝ g y (b i)) x - fderiv ℝ g x (b i))|
@@ -1288,6 +1305,8 @@ lemma gradient_L2_convergence_gaussian {g : E n → ℝ} {R : ℝ} (hR : 0 < R)
     calc eLpNorm (fun x => ‖fderiv ℝ (mollify ε g) x - fderiv ℝ g x‖) 2 (stdGaussianE n)
         ≤ eLpNorm (fun _ => δr) 2 (stdGaussianE n) := by
           apply eLpNorm_mono_ae
+            (((measurable_fderiv ℝ (mollify ε g)).sub
+              (measurable_fderiv ℝ g)).norm).aestronglyMeasurable
           filter_upwards with x
           rw [Real.norm_eq_abs, abs_of_nonneg (norm_nonneg _)]
           rw [Real.norm_eq_abs, abs_of_pos hδr_pos]

@@ -1,5 +1,11 @@
-import LogSobolev.Unitary.SpecialUnitaryLieGroup
-import LogSobolev.Unitary.SpecialUnitaryTangent
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryLieGroup
+public import LogSobolev.Unitary.SpecialUnitaryTangent
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Local ambient extensions of smooth SU functions
 
@@ -44,7 +50,7 @@ theorem specialUnitaryLocalRetraction_contMDiffAt (U : Matrix.specialUnitaryGrou
       (specialUnitaryLocalRetraction U) U.val := by
   have ht : (U⁻¹).val * U.val ∈ specialUnitaryAmbientChart.target := by
     change (U⁻¹ * U).val ∈ specialUnitaryAmbientChart.target
-    simpa only [inv_mul_cancel] using (specialUnitaryAmbientChart_spec (n := n)).2.2.1
+    simpa only [inv_mul_cancel, Submonoid.coe_one] using (specialUnitaryAmbientChart_spec (n := n)).2.2.1
   have hl := (specialUnitary_projected_log_contDiffAt (U⁻¹).val U.val ht).contMDiffAt
   exact contMDiffAt_const.mul (specialUnitary_exp_contMDiff.contMDiffAt.comp U.val hl)
 

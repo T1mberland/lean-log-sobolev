@@ -1,4 +1,8 @@
-import LogSobolev.Unitary.MatrixAdjointTrace
+module
+
+public import LogSobolev.Unitary.MatrixAdjointTrace
+
+@[expose] public section
 
 /-! # The skew-adjoint real form of complex matrices
 

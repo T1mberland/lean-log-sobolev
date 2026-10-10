@@ -1,5 +1,11 @@
-import LogSobolev.Unitary.SpecialUnitaryPolynomialSpace
-import Mathlib.Analysis.Calculus.ContDiff.RCLike
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialSpace
+public import Mathlib.Analysis.Calculus.ContDiff.RCLike
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Global smooth ambient extensions of SU polynomial observables
 

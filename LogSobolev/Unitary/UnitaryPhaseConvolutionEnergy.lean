@@ -1,7 +1,13 @@
-import LogSobolev.Unitary.UnitaryPhaseFlow
-import LogSobolev.Unitary.UnitaryConvolutionDerivative
-import LogSobolev.Unitary.SpecialUnitaryPolynomialJointDerivative
-import LogSobolev.Unitary.SpecialUnitarySlope
+module
+
+public import LogSobolev.Unitary.UnitaryPhaseFlow
+public import LogSobolev.Unitary.UnitaryConvolutionDerivative
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialJointDerivative
+public import LogSobolev.Unitary.SpecialUnitarySlope
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Combined phase and SU energy of positive convolution
 
@@ -89,7 +95,7 @@ theorem unitary_phase_convolution_energy_le (N : ℕ) (hN : 0 < N) (d : ℕ)
   by_cases hz : ENNReal.ofReal Q = 0
   · change ENNReal.ofReal Q ≤ _
     rw [hz]
-    exact zero_le _
+    exact zero_le
   · exact (ENNReal.mul_le_mul_iff_right hz ENNReal.ofReal_ne_top).mp h
 
 end LogSobolev

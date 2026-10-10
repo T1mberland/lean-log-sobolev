@@ -1,4 +1,8 @@
-import LogSobolev.Unitary.Haar
+module
+
+public import LogSobolev.Unitary.Haar
+
+@[expose] public section
 
 /-! # Special unitary Haar probability and its inclusion into U(N)
 
@@ -39,8 +43,23 @@ instance specialUnitaryContinuousInv : ContinuousInv (Matrix.specialUnitaryGroup
 
 instance specialUnitaryTopologicalGroup : IsTopologicalGroup (Matrix.specialUnitaryGroup n ℂ) where
 
-instance specialUnitaryMeasurableSpace : MeasurableSpace (Matrix.specialUnitaryGroup n ℂ) := borel _
+noncomputable instance specialUnitaryMeasurableSpace : MeasurableSpace (Matrix.specialUnitaryGroup n ℂ) := borel _
 instance specialUnitaryBorelSpace : BorelSpace (Matrix.specialUnitaryGroup n ℂ) := ⟨rfl⟩
+
+/-- Compatibility with the topology inferred through the Frobenius metric.
+The structures are definitionally equal; spelling out the metric projection
+also makes the instance available at instance-synthesis transparency. -/
+instance specialUnitaryMetricBorelSpace :
+    @BorelSpace (Matrix.specialUnitaryGroup n ℂ)
+      (inferInstance : MetricSpace (Matrix.specialUnitaryGroup n ℂ)).toPseudoMetricSpace.toUniformSpace.toTopologicalSpace
+      inferInstance := specialUnitaryBorelSpace
+
+/-- Compactness for the same Frobenius metric topology. -/
+instance specialUnitaryMetricCompactSpace :
+    @CompactSpace (Matrix.specialUnitaryGroup n ℂ)
+      (inferInstance : MetricSpace (Matrix.specialUnitaryGroup n ℂ)).toPseudoMetricSpace.toUniformSpace.toTopologicalSpace :=
+  specialUnitaryCompactSpace
+
 
 /-- Haar probability on SU, normalized on the entire compact group. -/
 noncomputable def specialUnitaryHaar (n : Type*) [Fintype n] [DecidableEq n] :

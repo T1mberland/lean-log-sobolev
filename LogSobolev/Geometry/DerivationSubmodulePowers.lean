@@ -1,5 +1,9 @@
-import Mathlib.RingTheory.Derivation.Basic
-import Mathlib.RingTheory.Finiteness.Subalgebra
+module
+
+public import Mathlib.RingTheory.Derivation.Basic
+public import Mathlib.RingTheory.Finiteness.Subalgebra
+
+@[expose] public section
 
 /-! # Derivations preserving polynomial submodule filtrations
 

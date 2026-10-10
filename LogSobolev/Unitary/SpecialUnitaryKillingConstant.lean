@@ -1,6 +1,12 @@
-import LogSobolev.Unitary.MatrixRealForm
-import LogSobolev.Unitary.SpecialUnitaryKilling
-import Mathlib.LinearAlgebra.PID
+module
+
+public import LogSobolev.Unitary.MatrixRealForm
+public import LogSobolev.Unitary.SpecialUnitaryKilling
+public import Mathlib.LinearAlgebra.PID
+
+@[expose] public section
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-! # Exact Killing coefficient of the real matrix special unitary algebra
 

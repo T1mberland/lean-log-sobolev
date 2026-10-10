@@ -1,6 +1,12 @@
-import LogSobolev.Gaussian.Port.GaussianLSI.TensorizedGLSI
-import LogSobolev.Gaussian.EuclideanEnergy
-import LogSobolev.Geometry.LocalSlopeFDeriv
+module
+
+public import LogSobolev.Gaussian.Port.GaussianLSI.TensorizedGLSI
+public import LogSobolev.Gaussian.EuclideanEnergy
+public import LogSobolev.Geometry.LocalSlopeFDeriv
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Gaussian logarithmic Sobolev inequality
 
@@ -54,7 +60,7 @@ theorem gaussian_entropy_sq_le_of_contDiff {n : ℕ}
       (hcont i).aestronglyMeasurable
     exact Filter.Eventually.of_forall fun x => by
       simp only [Function.comp_apply, hcoord]
-      simpa using (fderiv ℝ f (e.symm x)).le_opNorm (EuclideanSpace.single i 1)
+      simpa [e, EuclideanSpace.equiv] using (fderiv ℝ f (e.symm x)).le_opNorm (EuclideanSpace.single i 1)
   have hlog : Integrable (fun x => (g x)^2 * Real.log ((g x)^2))
       (GaussianMeasure.stdGaussianPi n) :=
     (integrable_map_measure hl.aestronglyMeasurable
@@ -82,8 +88,11 @@ theorem gaussian_entropy_sq_le_of_contDiff_of_hasCompactSupport {n : ℕ}
   · exact (hc.continuous_fderiv one_ne_zero).norm.memLp_of_hasCompactSupport
       ((hs.fderiv (𝕜 := ℝ)).comp_left
         (g := fun L : EuclideanSpace ℝ (Fin n) →L[ℝ] ℝ => ‖L‖) (by simp))
-  · exact (Real.continuous_mul_log.comp (hc.continuous.pow 2)).integrable_of_hasCompactSupport
-      (hs.comp_left (g := fun y : ℝ => y^2 * Real.log (y^2)) (by simp))
+  · have hcont : Continuous (fun x => f x ^ 2 * Real.log (f x ^ 2)) := by
+      fun_prop
+    have hsupp : HasCompactSupport (fun x => f x ^ 2 * Real.log (f x ^ 2)) :=
+      hs.comp_left (g := fun y : ℝ => y ^ 2 * Real.log (y ^ 2)) (by simp)
+    exact hcont.integrable_of_hasCompactSupport hsupp
 
 /-- The same `C¹` Gaussian bound in the slope-energy convention of `MetricLSI`.
 This is a theorem for the stated test class, not yet the all-locally-Lipschitz

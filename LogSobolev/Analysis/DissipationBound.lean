@@ -1,4 +1,8 @@
-import LogSobolev.Analysis.ExponentialDecay
+module
+
+public import LogSobolev.Analysis.ExponentialDecay
+
+@[expose] public section
 
 /-! # An initial bound from dissipation, decay, and a zero limit
 
@@ -22,7 +26,7 @@ theorem initial_le_div_of_dissipation_decay {E I : ℝ → ℝ} {a K : ℝ}
   let g : ℝ → ℝ := fun t => E t - Real.exp (-a * t) * (K / a)
   have hg (t : ℝ) (ht : 0 < t) :
       HasDerivAt g (-I t + Real.exp (-a * t) * K) t := by
-    convert (hd t ht).sub ((((hasDerivAt_id t).const_mul (-a)).exp).mul_const (K / a)) using 1
+    convert (hd t ht).sub ((((hasDerivAt_id t).const_mul (-a)).exp).mul_const (K / a)) using 1 <;> try rfl
     dsimp
     field_simp [ne_of_gt ha]
     ring
@@ -39,7 +43,7 @@ theorem initial_le_div_of_dissipation_decay {E I : ℝ → ℝ} {a K : ℝ}
       rw [(hg t ht').deriv]
       linarith [hI t ht']
   have he : Tendsto (fun t : ℝ => Real.exp (-a * t)) atTop (𝓝 0) := by
-    simpa only [neg_mul] using Real.tendsto_exp_neg_atTop_nhds_zero.comp
+    simpa only [neg_mul, Function.comp_def, id_eq] using Real.tendsto_exp_neg_atTop_nhds_zero.comp
       (tendsto_id.const_mul_atTop ha)
   have hglim : Tendsto g atTop (𝓝 0) := by
     simpa only [zero_mul, sub_zero] using hlim.sub (he.mul_const (K / a))

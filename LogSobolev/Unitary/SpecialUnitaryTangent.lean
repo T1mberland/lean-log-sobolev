@@ -1,6 +1,12 @@
-import LogSobolev.Unitary.SpecialUnitarySmoothMaps
-import LogSobolev.Unitary.SpecialUnitary
-import Mathlib.Geometry.Manifold.MFDeriv.Basic
+module
+
+public import LogSobolev.Unitary.SpecialUnitarySmoothMaps
+public import LogSobolev.Unitary.SpecialUnitary
+public import Mathlib.Geometry.Manifold.MFDeriv.Basic
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Tangent vectors of the matrix special unitary group
 
@@ -46,9 +52,11 @@ theorem specialUnitary_parametrization_hasFDerivAt (U : Matrix.specialUnitaryGro
       (specialUnitaryTangentInclusion U) 0 := by
   have he : HasFDerivAt (fun A : specialUnitaryLieAlgebra (n := n) => NormedSpace.exp A.val)
       specialUnitaryAlgebraInclusion 0 := by
-    simpa using (hasFDerivAt_exp_zero (𝕂 := ℝ) (𝔸 := Matrix n n ℂ)).comp
+    have hd := (hasFDerivAt_exp_zero (𝕂 := ℝ) (𝔸 := Matrix n n ℂ)).comp
       (0 : specialUnitaryLieAlgebra (n := n))
       (specialUnitaryAlgebraInclusion (n := n)).hasFDerivAt
+    simp only [ContinuousLinearMap.one_def, ContinuousLinearMap.id_comp] at hd
+    convert hd using 1 <;> rfl
   exact he.const_mul U.val
 
 /-- Matrix inclusion has the expected derivative on the actual manifold tangent space. -/

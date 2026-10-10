@@ -1,7 +1,13 @@
-import LogSobolev.Unitary.PhaseSlices
-import LogSobolev.Geometry.CompactRegularity
-import LogSobolev.Unitary.SpecialUnitaryPolynomialFamily
-import LogSobolev.Unitary.SpecialUnitaryPowerKernel
+module
+
+public import LogSobolev.Unitary.PhaseSlices
+public import LogSobolev.Geometry.CompactRegularity
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialFamily
+public import LogSobolev.Unitary.SpecialUnitaryPowerKernel
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Polynomial regularization along the SU slices of U(N)
 

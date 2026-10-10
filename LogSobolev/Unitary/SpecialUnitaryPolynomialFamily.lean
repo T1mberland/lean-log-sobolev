@@ -1,5 +1,11 @@
-import LogSobolev.Unitary.SpecialUnitaryPolynomialConvolution
-import Mathlib.Analysis.Calculus.Rademacher
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialConvolution
+public import Mathlib.Analysis.Calculus.Rademacher
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Lipschitz families of polynomial averages
 

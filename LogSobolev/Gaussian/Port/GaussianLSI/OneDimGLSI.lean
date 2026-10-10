@@ -3,16 +3,22 @@ Copyright (c) 2026 Yuanhe Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 Ported from AI4SLT d0f506f0a695018265dccb33bcb05e2f5ca1c876.
-Modified for Lean 4.28.0 and the shared LogSobolev entropy/two-point API.
+Initially adapted for Lean 4.28.0. Updated from StatsMLlib
+75611ba335ee4ff2fb8b09938f6319d2cbf3d804 for Lean 4.34.1; local imports,
+module visibility, and the subsequence helper call adapted.
 -/
-import LogSobolev.Gaussian.Port.GaussianSobolevDense.Density
-import LogSobolev.Measure.Entropy
-import LogSobolev.Gaussian.Port.GaussianLSI.OneDimGLSICompSmo
-import LogSobolev.Gaussian.Port.GaussianPoincare.TaylorBound
-import LogSobolev.Gaussian.Port.ConvergenceL1Subseq
-import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
-import Mathlib.Order.Filter.AtTopBot.Basic
-import Mathlib.Topology.Algebra.Order.LiminfLimsup
+module
+
+public import LogSobolev.Gaussian.Port.GaussianSobolevDense.Density
+public import LogSobolev.Measure.Entropy
+public import LogSobolev.Gaussian.Port.GaussianLSI.OneDimGLSICompSmo
+public import LogSobolev.Gaussian.Port.GaussianPoincare.TaylorBound
+public import LogSobolev.Gaussian.Port.ConvergenceL1Subseq
+public import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
+public import Mathlib.Order.Filter.AtTopBot.Basic
+public import Mathlib.Topology.Algebra.Order.LiminfLimsup
+
+@[expose] public section
 
 /-!
 # One-Dimensional Gaussian Log-Sobolev Inequality
@@ -54,7 +60,7 @@ variable {μ : Measure ℝ}
 
 /-! ## Entropy density function -/
 
-private def phi (t : ℝ) : ℝ := t * Real.log t
+def phi (t : ℝ) : ℝ := t * Real.log t
 
 /-- The entropy density φ(t) = t log t is continuous. -/
 lemma phi_continuous : Continuous phi := by
@@ -152,8 +158,8 @@ lemma tendsto_eLpNorm_sq_sub_of_tendsto_L2
       refine Eventually.of_forall ?_
       intro x
       simp [norm_mul]
-    have h_holder' := (eLpNorm_le_eLpNorm_mul_eLpNorm_of_nnnorm (p := 2) (q := 2) (r := 1)
-        h_meas1 h_meas2 (fun a b => a * b) 1 h_bound)
+    have h_holder' := (eLpNorm_le_eLpNorm_mul_eLpNorm_of_norm (p := 2) (q := 2) (r := 1)
+        (fun a b => a * b) 1 continuous_mul h_meas1 h_meas2 h_bound)
     have h_eq : (fun x => (g k x)^2 - (f x)^2) =
         fun x => (g k x - f x) * (g k x + f x) := by
       ext x
@@ -179,11 +185,9 @@ lemma tendsto_eLpNorm_sq_sub_of_tendsto_L2
       eLpNorm (fun x => g k x + f x) 2 μ ≤
         1 + 2 * eLpNorm f 2 μ := by
     filter_upwards [h_eventually_small] with k hk
-    have h_meas1 : AEStronglyMeasurable (fun x => g k x - f x) μ :=
-      (hg_cont k).aestronglyMeasurable.sub hf_cont.aestronglyMeasurable
-    have h_meas2 : AEStronglyMeasurable (fun x => (2 : ℝ) * f x) μ :=
-      hf_cont.aestronglyMeasurable.const_mul (2 : ℝ)
-    have h_tri := eLpNorm_add_le h_meas1 h_meas2 (by norm_num : (1 : ℝ≥0∞) ≤ 2)
+    have h_tri := eLpNorm_add_le (μ := μ) (p := 2)
+      (f := fun x => g k x - f x) (g := fun x => (2 : ℝ) * f x)
+      (by norm_num : (1 : ℝ≥0∞) ≤ 2)
     have h_eq : (fun x => g k x + f x) = fun x => (g k x - f x) + (2 : ℝ) * f x := by
       funext x
       ring
@@ -311,7 +315,9 @@ lemma tendsto_integral_norm_fderiv_sq_of_sobolev (f : ℝ → ℝ) (g : ℕ → 
         eLpNorm (fun x => ‖fderiv ℝ f x‖ - ‖fderiv ℝ (g k) x‖) 2 μ ≤
           eLpNorm (fun x => ‖fderiv ℝ f x - fderiv ℝ (g k) x‖) 2 μ := by
       intro k
-      refine eLpNorm_mono_ae ?_
+      refine eLpNorm_mono_ae
+        (((measurable_fderiv ℝ f).norm.sub (measurable_fderiv ℝ (g k)).norm)
+          ).aestronglyMeasurable ?_
       refine Eventually.of_forall ?_
       intro x
       simpa [Real.norm_eq_abs] using
@@ -339,8 +345,7 @@ lemma tendsto_integral_norm_fderiv_sq_of_sobolev (f : ℝ → ℝ) (g : ℕ → 
   have h_int_g : ∀ᶠ k in atTop, Integrable (fun x => ‖fderiv ℝ (g k) x‖^2) μ :=
     Eventually.of_forall (fun k => (hg_mem k).integrable_sq)
   have h_int_tend :=
-    tendsto_integral_of_L1' (f := fun x => ‖fderiv ℝ f x‖^2)
-      h_int_f h_int_g h_sq_tend
+    tendsto_integral_of_L1' (f := fun x => ‖fderiv ℝ f x‖^2) h_int_g h_sq_tend
   simpa using h_int_tend
 
 /-- Shifted entropy density φ(t) + 1/e ≥ 0 for t ≥ 0. -/
@@ -448,8 +453,7 @@ theorem gaussian_logSobolev_W12_real {f : ℝ → ℝ}
     Eventually.of_forall h_int_qk
   have h_m_tend :
       Tendsto (fun k => ∫ x, qk k x ∂μ) atTop (nhds (∫ x, q x ∂μ)) := by
-    have h_int_tend := tendsto_integral_of_L1' (f := q)
-      h_int_q h_int_qk_event h_L1
+    have h_int_tend := tendsto_integral_of_L1' (f := q) h_int_qk_event h_L1
     simpa [q, qk] using h_int_tend
   have h_mlog_tend :
       Tendsto (fun k =>
@@ -540,7 +544,9 @@ theorem gaussian_logSobolev_W12_real {f : ℝ → ℝ}
             eLpNorm (fun x => ‖fderiv ℝ f x‖ - ‖fderiv ℝ (g k) x‖) 2 μ ≤
               eLpNorm (fun x => ‖fderiv ℝ f x - fderiv ℝ (g k) x‖) 2 μ := by
           intro k
-          refine eLpNorm_mono_ae ?_
+          refine eLpNorm_mono_ae
+            (((measurable_fderiv ℝ f).norm.sub (measurable_fderiv ℝ (g k)).norm)
+              ).aestronglyMeasurable ?_
           refine Eventually.of_forall ?_
           intro x
           simpa [Real.norm_eq_abs] using
@@ -559,8 +565,7 @@ theorem gaussian_logSobolev_W12_real {f : ℝ → ℝ}
     have h_int_g : ∀ᶠ k in atTop, Integrable (fun x => ‖fderiv ℝ (g k) x‖^2) μ :=
       Eventually.of_forall (fun k => (hg_mem k).integrable_sq)
     have h_int_tend :=
-      tendsto_integral_of_L1' (f := fun x => ‖fderiv ℝ f x‖^2)
-        h_int_f h_int_g h_norm_tend
+      tendsto_integral_of_L1' (f := fun x => ‖fderiv ℝ f x‖^2) h_int_g h_norm_tend
     simpa using h_int_tend
   have h_grad_bound : ∀ᶠ k in atTop,
       ∫ x, ‖fderiv ℝ (g k) x‖^2 ∂μ ≤ ∫ x, ‖fderiv ℝ f x‖^2 ∂μ + 1 := by

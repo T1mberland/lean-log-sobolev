@@ -1,8 +1,16 @@
-import LogSobolev.Unitary.UnitaryCurves
-import LogSobolev.Unitary.MatrixExpDeterminant
-import LogSobolev.Unitary.SpecialUnitary
-import Mathlib.Analysis.Calculus.Deriv.Shift
-import Mathlib.Analysis.Calculus.MeanValue
+module
+
+public import LogSobolev.Unitary.UnitaryCurves
+public import LogSobolev.Unitary.MatrixExpDeterminant
+public import LogSobolev.Unitary.SpecialUnitary
+public import Mathlib.Analysis.Calculus.Deriv.Shift
+public import Mathlib.Analysis.Calculus.MeanValue
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-! # Curve velocities and exponentials in SU
 

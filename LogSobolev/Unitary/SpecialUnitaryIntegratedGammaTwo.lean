@@ -1,5 +1,11 @@
-import LogSobolev.Unitary.SpecialUnitaryHaarCalculus
-import LogSobolev.Unitary.SpecialUnitaryGammaTwo
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryHaarCalculus
+public import LogSobolev.Unitary.SpecialUnitaryGammaTwo
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Integrated Γ₂ identities for normalized SU Haar measure
 

@@ -1,6 +1,14 @@
-import LogSobolev.Unitary.MatrixExpDeterminant
-import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
-import Mathlib.Analysis.SpecialFunctions.Complex.Log
+module
+
+public import LogSobolev.Unitary.MatrixExpDeterminant
+public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
+public import Mathlib.Analysis.SpecialFunctions.Complex.Log
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-! # Local matrix exponential coordinates
 
@@ -37,7 +45,7 @@ theorem zero_mem_matrixExpLocalHomeomorph_source :
 
 theorem one_mem_matrixExpLocalHomeomorph_target :
     (1 : Matrix n n ℂ) ∈ matrixExpLocalHomeomorph.target := by
-  simpa using (matrixExp_hasStrictFDerivAt_zero (n := n)).image_mem_toOpenPartialHomeomorph_target
+  simpa [matrixExpLocalHomeomorph] using (matrixExp_hasStrictFDerivAt_zero (n := n)).image_mem_toOpenPartialHomeomorph_target
 
 @[simp] theorem matrixExpLocalHomeomorph_symm_one :
     (matrixExpLocalHomeomorph (n := n)).symm 1 = 0 := by
@@ -48,7 +56,8 @@ theorem one_mem_matrixExpLocalHomeomorph_target :
 theorem matrixLog_hasStrictFDerivAt_one :
     HasStrictFDerivAt (matrixExpLocalHomeomorph (n := n)).symm
       (ContinuousLinearEquiv.refl ℝ (Matrix n n ℂ) : Matrix n n ℂ →L[ℝ] Matrix n n ℂ) 1 := by
-  simpa only [NormedSpace.exp_zero, ContinuousLinearEquiv.refl_symm] using
+  simpa only [matrixExpLocalHomeomorph, HasStrictFDerivAt.localInverse,
+    NormedSpace.exp_zero, ContinuousLinearEquiv.refl_symm] using
     (matrixExp_hasStrictFDerivAt_zero (n := n)).to_localInverse
 
 /-- Local matrix logarithm has every order of smoothness at identity. -/

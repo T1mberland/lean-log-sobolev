@@ -1,8 +1,16 @@
-import LogSobolev.Unitary.SpecialUnitaryAnalyticNeighborhood
-import LogSobolev.Unitary.SpecialUnitaryInner
-import LogSobolev.Unitary.SpecialUnitaryCurves
-import LogSobolev.Unitary.SpecialUnitary
-import Mathlib.Geometry.Manifold.ChartedSpace
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryAnalyticNeighborhood
+public import LogSobolev.Unitary.SpecialUnitaryInner
+public import LogSobolev.Unitary.SpecialUnitaryCurves
+public import LogSobolev.Unitary.SpecialUnitary
+public import Mathlib.Geometry.Manifold.ChartedSpace
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-! # A chart at identity on the actual special unitary group
 
@@ -72,7 +80,7 @@ noncomputable def specialUnitaryExpChart :
   source := Subtype.val ⁻¹' specialUnitaryAmbientChart.source
   target := Subtype.val ⁻¹' specialUnitaryAmbientChart.target
   map_source' A hA := by
-    simpa [specialUnitaryExpCurve, unitaryExpCurve] using specialUnitaryAmbientChart.map_source hA
+    simpa [specialUnitaryExpCurve, unitaryExpCurve, Function.comp_def] using specialUnitaryAmbientChart.map_source hA
   map_target' V hV := by
     change (specialUnitaryLocalLog V).val ∈ specialUnitaryAmbientChart.source
     rw [specialUnitaryLocalLog_val V hV]
@@ -80,9 +88,9 @@ noncomputable def specialUnitaryExpChart :
   left_inv' A hA := by
     apply Subtype.ext
     have ht : (specialUnitaryExpCurve A 1).val ∈ specialUnitaryAmbientChart.target := by
-      simpa [specialUnitaryExpCurve, unitaryExpCurve] using specialUnitaryAmbientChart.map_source hA
+      simpa [specialUnitaryExpCurve, unitaryExpCurve, Function.comp_def] using specialUnitaryAmbientChart.map_source hA
     rw [specialUnitaryLocalLog_val _ ht]
-    simpa [specialUnitaryExpCurve, unitaryExpCurve] using specialUnitaryAmbientChart.left_inv hA
+    simpa [specialUnitaryExpCurve, unitaryExpCurve, Function.comp_def] using specialUnitaryAmbientChart.left_inv hA
   right_inv' V hV := by
     apply Subtype.ext
     change (specialUnitaryExpCurve (specialUnitaryLocalLog V) 1).val = V.val
@@ -95,7 +103,7 @@ noncomputable def specialUnitaryExpChart :
     have h : Continuous (fun A : specialUnitaryLieAlgebra (n := n) =>
         specialUnitaryExpCurve A 1) := by
       apply Continuous.subtype_mk
-      simpa [specialUnitaryExpCurve, unitaryExpCurve] using
+      simpa [specialUnitaryExpCurve, unitaryExpCurve, Function.comp_def] using
         NormedSpace.exp_continuous.comp (continuous_subtype_val : Continuous
           (Subtype.val : specialUnitaryLieAlgebra (n := n) → Matrix n n ℂ))
     exact h.continuousOn

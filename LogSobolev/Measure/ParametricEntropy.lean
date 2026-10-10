@@ -1,5 +1,9 @@
-import LogSobolev.Measure.Entropy
-import Mathlib.MeasureTheory.Integral.Bochner.Set
+module
+
+public import LogSobolev.Measure.Entropy
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
+
+@[expose] public section
 
 /-! # Continuous dependence of entropy on parameters
 

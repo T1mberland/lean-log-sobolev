@@ -1,4 +1,10 @@
-import LogSobolev.Unitary.SpecialUnitaryPolynomialSpace
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialSpace
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Polynomial pullbacks by ambient linear maps
 

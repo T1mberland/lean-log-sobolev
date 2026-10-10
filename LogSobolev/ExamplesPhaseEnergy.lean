@@ -1,4 +1,10 @@
-import LogSobolev
+module
+
+public import LogSobolev
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! Independent clients of the combined-energy and entropy-approximation results. -/
 open Matrix MeasureTheory LogSobolev Filter

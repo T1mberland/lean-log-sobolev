@@ -1,4 +1,10 @@
-import LogSobolev.Unitary.SpecialUnitaryDifferentialOperators
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryDifferentialOperators
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Invariant differentiation along actual exponential curves
 
@@ -34,7 +40,7 @@ theorem specialUnitary_hasDerivAt_mul_exp
   have hd : HasDerivAt (fun s => g (U * specialUnitaryExpCurve A s).val)
       (specialUnitaryDeriv A f W) t := by
     rw [hD]
-    simpa only [rightMulDeriv, ← mul_assoc] using
+    simpa only [rightMulDeriv, W, Function.comp_def, Submonoid.coe_mul, ← mul_assoc] using
       (hg.differentiableAt (by decide)).hasFDerivAt.comp_hasDerivAt t
         ((specialUnitaryExpCurve_hasDerivAt A t).const_mul U.val)
   exact hd.congr_of_eventuallyEq he

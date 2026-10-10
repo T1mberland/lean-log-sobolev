@@ -1,4 +1,10 @@
-import LogSobolev.Unitary.SpecialUnitaryAlgebra
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryAlgebra
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Central and traceless directions are Hilbert–Schmidt orthogonal
 

@@ -122,7 +122,7 @@ transport, and interval scaling remain reusable components.
 
 ## Reproducibility and ecosystem
 
-Lean is pinned to 4.28.0; Mathlib is pinned to
+At the original verification milestone, Lean was pinned to 4.28.0 and Mathlib to
 `8f9d9cff6bd728b17a24e163c9402775d9e6a365`. No external research library is a
 dependency. [ECOSYSTEM.md](ECOSYSTEM.md) records declaration-level inspection,
 versions, compatibility, and the custom-axiom findings for `markov-semigroups`.
@@ -139,7 +139,9 @@ Earlier milestone reports are preserved in
 [DEVELOPMENT_HISTORY.md](DEVELOPMENT_HISTORY.md); their open-goal statements
 are historical. The detailed SU proof remains in [SU_LSI.md](SU_LSI.md).
 
-## Final verification results
+## Original Lean 4.28 verification results
+
+See [the migration report](UPGRADE_LEAN.md) for the subsequent Lean 4.34.1 upgrade.
 
 The final proof is committed as **`8ea00af`**.
 

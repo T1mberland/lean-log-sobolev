@@ -1,10 +1,14 @@
-import LogSobolev.Geometry.LocalSlopeDerivative
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
-import Mathlib.MeasureTheory.Integral.Lebesgue.DominatedConvergence
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-import Mathlib.Analysis.Convex.Integral
-import Mathlib.Analysis.Convex.Mul
-import Mathlib.Analysis.SpecificLimits.Basic
+module
+
+public import LogSobolev.Geometry.LocalSlopeDerivative
+public import Mathlib.MeasureTheory.Function.LocallyIntegrable
+public import Mathlib.MeasureTheory.Integral.Lebesgue.DominatedConvergence
+public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+public import Mathlib.Analysis.Convex.Integral
+public import Mathlib.Analysis.Convex.Mul
+public import Mathlib.Analysis.SpecificLimits.Basic
+
+@[expose] public section
 
 /-! # Derivatives of averages controlled by local slopes
 

@@ -1,5 +1,9 @@
-import LogSobolev.Unitary.Haar
-import LogSobolev.Geometry.CompactRegularity
+module
+
+public import LogSobolev.Unitary.Haar
+public import LogSobolev.Geometry.CompactRegularity
+
+@[expose] public section
 
 /-! # Nonconstant admissible observables
 
@@ -30,6 +34,7 @@ def entryReal (i j : n) (U : Matrix.unitaryGroup n ℂ) : ℝ := (U i j).re
 theorem entryReal_lipschitz (i j : n) : LipschitzWith 1 (entryReal i j) := by
   apply LipschitzWith.of_dist_le_mul
   intro U V
+  rw [Real.dist_eq, Subtype.dist_eq, dist_eq_norm]
   change |(U i j).re - (V i j).re| ≤ 1 * ‖(U : Matrix n n ℂ) - V‖
   rw [one_mul, ← Complex.sub_re]
   exact (Complex.abs_re_le_norm _).trans (norm_entry_le_frobenius ((U : Matrix n n ℂ) - (V : Matrix n n ℂ)) i j)

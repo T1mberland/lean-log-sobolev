@@ -1,5 +1,11 @@
-import LogSobolev.Unitary.SpecialUnitaryGeneratorCommutation
-import LogSobolev.Unitary.SpecialUnitarySecondOrder
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryGeneratorCommutation
+public import LogSobolev.Unitary.SpecialUnitarySecondOrder
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # The Bakry–Émery Γ₂ estimate for the actual SU differential operator
 

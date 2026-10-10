@@ -1,6 +1,10 @@
-import LogSobolev.Unitary.SpecialUnitary
-import Mathlib.Analysis.Complex.Circle
-import Mathlib.Analysis.SpecialFunctions.Complex.Arg
+module
+
+public import LogSobolev.Unitary.SpecialUnitary
+public import Mathlib.Analysis.Complex.Circle
+public import Mathlib.Analysis.SpecialFunctions.Complex.Arg
+
+@[expose] public section
 
 /-! # Full-circle Haar decomposition of the unitary group
 
@@ -82,7 +86,7 @@ theorem circleSpecialUnitaryMap_surjective (hn : 0 < Fintype.card n) :
   change (z : ℂ) • (((z⁻¹ : Circle) : ℂ) • U.val) = U.val
   rw [smul_smul, Circle.coe_inv, mul_inv_cancel₀ (Circle.coe_ne_zero z), one_smul]
 
-instance circleMeasurableSpace : MeasurableSpace Circle := borel _
+noncomputable instance circleMeasurableSpace : MeasurableSpace Circle := borel _
 instance circleBorelSpace : BorelSpace Circle := ⟨rfl⟩
 
 /-- Normalized Haar measure on the complex unit circle. -/
@@ -101,8 +105,6 @@ theorem map_circleSpecialUnitaryMap (hn : 0 < Fintype.card n) :
     Measure.map circleSpecialUnitaryMap (circleHaar.prod (specialUnitaryHaar n)) =
       unitaryHaar n := by
   have hm := (circleSpecialUnitaryMap_continuous (n := n)).measurable
-  letI := Measure.isProbabilityMeasure_map
-    (μ := circleHaar.prod (specialUnitaryHaar n)) hm.aemeasurable
   letI := isMulLeftInvariant_map
     (μ := circleHaar.prod (specialUnitaryHaar n))
     circleSpecialUnitaryMap.toMulHom hm (circleSpecialUnitaryMap_surjective hn)

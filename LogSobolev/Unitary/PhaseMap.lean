@@ -1,6 +1,10 @@
-import LogSobolev.Unitary.HilbertSchmidt
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-import Mathlib.Analysis.Normed.Lp.ProdLp
+module
+
+public import LogSobolev.Unitary.HilbertSchmidt
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+public import Mathlib.Analysis.Normed.Lp.ProdLp
+
+@[expose] public section
 
 /-! # The metric estimate in Meckes–Meckes, Theorem 15
 
@@ -50,6 +54,7 @@ noncomputable def phaseMul (a t : ℝ) (U : Matrix.unitaryGroup n ℂ) :
 theorem phaseMul_dist_le (a s t : ℝ) (U V : Matrix.unitaryGroup n ℂ) :
     dist (phaseMul a s U) (phaseMul a t V) ≤
       dist U V + (|a| * Real.sqrt (Fintype.card n)) * |s - t| := by
+  rw [Subtype.dist_eq, dist_eq_norm]
   change ‖(phase (a * s) : ℂ) • (U : Matrix n n ℂ) -
       (phase (a * t) : ℂ) • (V : Matrix n n ℂ)‖ ≤ _
   calc
@@ -63,7 +68,7 @@ theorem phaseMul_dist_le (a s t : ℝ) (U V : Matrix.unitaryGroup n ℂ) :
     _ = dist U V + ‖(phase (a * s) : ℂ) - phase (a * t)‖ *
         Real.sqrt (Fintype.card n) := by
       simp only [norm_smul, norm_phase, one_mul, unitary_norm]
-      rfl
+      rw [Subtype.dist_eq, dist_eq_norm]
     _ ≤ dist U V + |a * s - a * t| * Real.sqrt (Fintype.card n) :=
       add_le_add_right (mul_le_mul_of_nonneg_right (phase_dist_le _ _)
         (Real.sqrt_nonneg _)) _
@@ -106,7 +111,7 @@ theorem phaseMap_lipschitz (N : ℕ) (hN : 0 < N) :
   rw [hs] at h
   calc
     dist (phaseMap N p) (phaseMap N q) ≤ dist p.snd q.snd + Real.sqrt 2 * dist p.fst q.fst := by
-      simpa only [Real.dist_eq] using h
+      simpa only [phaseMap, Subtype.dist_eq, Real.dist_eq] using h
     _ ≤ Real.sqrt 3 * Real.sqrt (dist p.snd q.snd ^ 2 + dist p.fst q.fst ^ 2) :=
       add_sqrt_two_mul_le _ _ dist_nonneg dist_nonneg
     _ = _ := by

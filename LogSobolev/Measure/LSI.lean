@@ -1,5 +1,9 @@
-import LogSobolev.Measure.Entropy
-import Mathlib.Tactic.Linarith
+module
+
+public import LogSobolev.Measure.Entropy
+public import Mathlib.Tactic.Linarith
+
+@[expose] public section
 
 /-! # Logarithmic Sobolev inequalities with specified energy
 

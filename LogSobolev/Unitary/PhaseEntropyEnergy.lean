@@ -1,5 +1,11 @@
-import LogSobolev.Unitary.PolynomialPhaseEntropy
-import Mathlib.Analysis.Real.Pi.Bounds
+module
+
+public import LogSobolev.Unitary.PolynomialPhaseEntropy
+public import Mathlib.Analysis.Real.Pi.Bounds
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Entropy controlled by the combined phase/SU energy
 

@@ -1,6 +1,10 @@
-import LogSobolev.Measure.Entropy
-import LogSobolev.Measure.CompactDifferentiation
-import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
+module
+
+public import LogSobolev.Measure.Entropy
+public import LogSobolev.Measure.CompactDifferentiation
+public import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
+
+@[expose] public section
 
 /-! # Differentiating entropy of positive families on compact probability spaces
 
@@ -34,7 +38,7 @@ theorem hasDerivAt_entropy_of_compact
     (Q := fun r x => (Real.log (F r x) + 1) * Q r x)
     (hF.mul hlog) ((hlog.add (continuous_const (y := (1 : ℝ)))).mul hQ)
     (fun r hr x => by
-      simpa only [Function.comp_apply] using
+      simpa only [Function.comp_def] using
         (Real.hasDerivAt_mul_log (x := F r x) (ne_of_gt (hpos r x))).comp r (hd r hr x)) t hs
   have hFt : Continuous (F t) := hF.comp (continuous_const.prodMk continuous_id)
   have hm : 0 < ∫ x, F t x ∂μ := by

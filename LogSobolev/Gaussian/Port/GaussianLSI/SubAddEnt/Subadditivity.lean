@@ -5,8 +5,12 @@ Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 Ported from AI4SLT d0f506f0a695018265dccb33bcb05e2f5ca1c876.
 Modified for Lean 4.28.0 and the shared LogSobolev entropy/two-point API.
 -/
-import LogSobolev.Gaussian.Port.GaussianLSI.SubAddEnt.Decomposition
-import LogSobolev.Gaussian.Port.GaussianLSI.DualEntApp
+module
+
+public import LogSobolev.Gaussian.Port.GaussianLSI.SubAddEnt.Decomposition
+public import LogSobolev.Gaussian.Port.GaussianLSI.DualEntApp
+
+@[expose] public section
 
 /-!
 # Subadditivity of Entropy
@@ -507,7 +511,7 @@ theorem condExpFirstK_tower_of_integrable_slice (k : Fin n) (f : (Fin n → Ω) 
       by_cases hj_eq : j = k
       · -- j = k: j.val = k.val < k.val + 1
         simp only [hj_eq, Nat.lt_succ_self, ↓reduceIte, Nat.lt_irrefl]
-        rw [hj_eq, Function.update_self]
+        rw [Function.update_self]
       · -- j ≠ k and j.val ≥ k.val, so j.val > k.val, so j.val ≥ k.val + 1
         have hj_gt : j.val > k.val := Nat.lt_of_le_of_ne (Nat.le_of_not_lt hj_lt) (fun h => hj_eq (Fin.ext h.symm))
         have hj_ge_succ : ¬(j.val < k.val + 1) := Nat.not_lt_of_ge hj_gt

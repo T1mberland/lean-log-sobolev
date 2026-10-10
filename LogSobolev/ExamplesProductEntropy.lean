@@ -1,4 +1,10 @@
-import LogSobolev
+module
+
+public import LogSobolev
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! Independent applications of the entropy subadditivity API. -/
 

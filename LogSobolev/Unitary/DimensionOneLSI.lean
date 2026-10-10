@@ -1,6 +1,12 @@
-import LogSobolev.Geometry.IntervalMetricLSI
-import LogSobolev.Unitary.PhaseHaar
-import Mathlib.Analysis.Real.Pi.Bounds
+module
+
+public import LogSobolev.Geometry.IntervalMetricLSI
+public import LogSobolev.Unitary.PhaseHaar
+public import Mathlib.Analysis.Real.Pi.Bounds
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Logarithmic Sobolev inequality on U(1)
 
@@ -35,9 +41,10 @@ theorem unitaryOnePhaseMap_lipschitz :
     LipschitzWith ⟨Real.sqrt 2, Real.sqrt_nonneg 2⟩ unitaryOnePhaseMap := by
   apply LipschitzWith.of_dist_le_mul
   intro s t
+  change dist (unitaryOnePhaseMap s) (unitaryOnePhaseMap t) ≤ Real.sqrt 2 * dist s t
   have h := phaseMul_dist_le (Real.sqrt 2) s.val t.val
     (1 : Matrix.unitaryGroup (Fin 1) ℂ) 1
-  simpa [unitaryOnePhaseMap, abs_of_nonneg (Real.sqrt_nonneg 2), Real.dist_eq] using h
+  simpa [unitaryOnePhaseMap, abs_of_nonneg (Real.sqrt_nonneg 2), Subtype.dist_eq, NNReal.coe_mk, Real.dist_eq] using h
 
 /-- The phase map pushes actual normalized interval measure to actual U(1) Haar. -/
 theorem map_unitaryOnePhaseMap :

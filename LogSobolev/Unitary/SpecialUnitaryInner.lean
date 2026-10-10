@@ -1,6 +1,12 @@
-import LogSobolev.Unitary.SpecialUnitaryAlgebra
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.Normed.Module.FiniteDimension
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryAlgebra
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+
+@[expose] public section
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-! # The Hilbert–Schmidt inner product on su
 

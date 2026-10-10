@@ -1,5 +1,11 @@
-import LogSobolev.Unitary.SpecialUnitaryInner
-import LogSobolev.Unitary.SpecialUnitaryCurves
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryInner
+public import LogSobolev.Unitary.SpecialUnitaryCurves
+
+@[expose] public section
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-! # Unitary conjugation on the real special unitary algebra
 
@@ -109,7 +115,7 @@ theorem specialUnitaryAdjoint_exp_derivative
       ⁅A.val, B.val⁆ 0 := by
   have h := specialUnitaryExpCurve_hasDerivAt_zero A
   have hd := (h.mul_const B.val).mul h.star
-  convert hd using 1
+  convert hd using 1 <;> try rfl
   simp only [specialUnitaryExpCurve_zero]
   symm
   change A.val * B.val * star (1 : Matrix n n ℂ) +

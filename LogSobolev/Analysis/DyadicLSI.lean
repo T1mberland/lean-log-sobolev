@@ -1,5 +1,9 @@
-import LogSobolev.Analysis.DyadicEntropy
-import LogSobolev.Analysis.DyadicEnergy
+module
+
+public import LogSobolev.Analysis.DyadicEntropy
+public import LogSobolev.Analysis.DyadicEnergy
+
+@[expose] public section
 
 /-! # Logarithmic Sobolev bounds on dyadic grids
 

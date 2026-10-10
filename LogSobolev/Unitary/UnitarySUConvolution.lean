@@ -1,6 +1,12 @@
-import LogSobolev.Unitary.SpecialUnitaryPowerKernel
-import LogSobolev.Measure.PowerKernelApproximation
-import LogSobolev.Measure.EntropyContinuity
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryPowerKernel
+public import LogSobolev.Measure.PowerKernelApproximation
+public import LogSobolev.Measure.EntropyContinuity
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Uniform approximation on U(N) by SU convolution
 
@@ -40,7 +46,8 @@ theorem unitarySUConvolution_apply (d : ℕ) (f : C(Matrix.unitaryGroup n ℂ, �
       ∫ V, f (U * specialUnitaryInclusion V) * (specialUnitaryPowerKernel d).val V
         ∂specialUnitaryHaar n := by
   unfold unitarySUConvolution
-  rw [ContinuousMap.integral_apply
+  rw [ContinuousMap.integral_apply (f := fun V =>
+    (specialUnitaryPowerKernel d).val V • unitarySUTranslate f V)
     (((specialUnitaryPowerKernel d).val.contMDiff.continuous.smul
       (continuous_unitarySUTranslate f)).integrable_of_hasCompactSupport
         (HasCompactSupport.of_compactSpace _))]

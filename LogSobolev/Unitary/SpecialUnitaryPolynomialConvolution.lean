@@ -1,8 +1,14 @@
-import LogSobolev.Unitary.SpecialUnitaryPolynomialPullback
-import LogSobolev.Unitary.SpecialUnitaryPolynomialNorm
-import LogSobolev.Unitary.SpecialUnitaryHaarCalculus
-import LogSobolev.Measure.EntropyContinuity
-import Mathlib.MeasureTheory.Integral.Prod
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialPullback
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialNorm
+public import LogSobolev.Unitary.SpecialUnitaryHaarCalculus
+public import LogSobolev.Measure.EntropyContinuity
+public import Mathlib.MeasureTheory.Integral.Prod
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Polynomial convolution on SU
 

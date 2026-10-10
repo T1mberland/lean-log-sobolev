@@ -1,4 +1,8 @@
-import Mathlib.Analysis.CStarAlgebra.Unitary.Connected
+module
+
+public import Mathlib.Analysis.CStarAlgebra.Unitary.Connected
+
+@[expose] public section
 
 /-! # Connectedness of unitaries with finite spectra
 

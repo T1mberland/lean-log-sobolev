@@ -1,6 +1,10 @@
-import LogSobolev.Analysis.IntervalSquareIncrement
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
-import Mathlib.Analysis.Calculus.Deriv.Basic
+module
+
+public import LogSobolev.Analysis.IntervalSquareIncrement
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+
+@[expose] public section
 
 /-! # Derivative energy for Lipschitz real functions
 
@@ -28,7 +32,7 @@ theorem lipschitz_intervalIntegrable_deriv_sq {f : ℝ → ℝ} {K : ℝ≥0}
     rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _)]
     have h := norm_deriv_le_of_lipschitz (x₀ := x) hf
     have hs := pow_le_pow_left₀ (norm_nonneg (deriv f x)) h 2
-    simpa only [Real.norm_eq_abs, sq_abs] using hs
+    simpa only [Real.norm_eq_abs, sq_abs, Pi.pow_apply] using hs
 
 /-- Lipschitz increments satisfy the same integral energy estimate as C¹ increments. -/
 theorem sq_sub_le_interval_integral_deriv_sq_of_lipschitz {f : ℝ → ℝ} {K : ℝ≥0}

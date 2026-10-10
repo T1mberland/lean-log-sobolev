@@ -1,4 +1,10 @@
-import LogSobolev.Unitary.SpecialUnitaryDifferentialOperators
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryDifferentialOperators
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # The sum-of-squares differential operator and carré du champ on SU
 

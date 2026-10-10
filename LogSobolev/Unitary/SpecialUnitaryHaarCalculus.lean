@@ -1,8 +1,14 @@
-import LogSobolev.Unitary.SpecialUnitaryFlow
-import LogSobolev.Unitary.SpecialUnitaryGenerator
-import Mathlib.Analysis.Calculus.ParametricIntegral
-import Mathlib.MeasureTheory.Group.Integral
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryFlow
+public import LogSobolev.Unitary.SpecialUnitaryGenerator
+public import Mathlib.Analysis.Calculus.ParametricIntegral
+public import Mathlib.MeasureTheory.Group.Integral
+public import Mathlib.MeasureTheory.Function.LocallyIntegrable
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Haar integration and invariant derivatives on SU
 
@@ -25,13 +31,12 @@ theorem eq_specialUnitaryHaar (μ : Measure (Matrix.specialUnitaryGroup n ℂ))
   have h := Measure.isMulInvariant_eq_smul_of_compactSpace μ (specialUnitaryHaar n)
   have hc := congrArg (fun ν : Measure (Matrix.specialUnitaryGroup n ℂ) => ν Set.univ) h
   have hc' : Measure.haarScalarFactor μ (specialUnitaryHaar n) = 1 := by
-    simpa [ENNReal.smul_def, smul_eq_mul] using hc.symm
+    simpa only [Measure.smul_apply, measure_univ, ENNReal.smul_def, smul_eq_mul,
+      mul_one, ENNReal.coe_eq_one] using hc.symm
   simpa [hc'] using h
 
 instance : (specialUnitaryHaar n).IsMulRightInvariant where
   map_mul_right_eq_self g := by
-    letI := Measure.isProbabilityMeasure_map (μ := specialUnitaryHaar n)
-      (measurable_mul_const g).aemeasurable
     exact eq_specialUnitaryHaar _
 
 /-- Continuous real functions on SU are integrable for the actual normalized Haar measure. -/

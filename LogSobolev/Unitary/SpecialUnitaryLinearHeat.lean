@@ -1,5 +1,11 @@
-import LogSobolev.Unitary.SpecialUnitaryHeatBounds
-import Mathlib.Analysis.SpecialFunctions.Exponential
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryHeatBounds
+public import Mathlib.Analysis.SpecialFunctions.Exponential
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Constructed SU heat solutions for affine matrix observables
 

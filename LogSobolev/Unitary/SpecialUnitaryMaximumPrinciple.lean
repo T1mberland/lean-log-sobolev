@@ -1,6 +1,12 @@
-import LogSobolev.Geometry.SecondDerivativeExtrema
-import LogSobolev.Unitary.SpecialUnitaryFlow
-import LogSobolev.Unitary.SpecialUnitaryGenerator
+module
+
+public import LogSobolev.Geometry.SecondDerivativeExtrema
+public import LogSobolev.Unitary.SpecialUnitaryFlow
+public import LogSobolev.Unitary.SpecialUnitaryGenerator
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Maximum principle for the actual SU generator
 

@@ -1,6 +1,12 @@
-import LogSobolev.Unitary.SpecialUnitaryPeak
-import LogSobolev.Unitary.SpecialUnitaryPolynomialConvolution
-import LogSobolev.Measure.PowerKernel
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryPeak
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialConvolution
+public import LogSobolev.Measure.PowerKernel
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Concentrating polynomial probability densities on SU
 

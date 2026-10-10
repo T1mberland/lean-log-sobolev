@@ -1,5 +1,11 @@
-import LogSobolev.Unitary.PhaseHaar
-import LogSobolev.Measure.Entropy
+module
+
+public import LogSobolev.Unitary.PhaseHaar
+public import LogSobolev.Measure.Entropy
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Entropy transport through the actual Haar phase decomposition -/
 

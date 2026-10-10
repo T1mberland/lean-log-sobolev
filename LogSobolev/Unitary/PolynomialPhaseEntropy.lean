@@ -1,7 +1,13 @@
-import LogSobolev.Analysis.IntervalDerivativeLSI
-import LogSobolev.Unitary.SpecialUnitaryPolynomialFamilyRegularity
-import LogSobolev.Unitary.SpecialUnitaryPolynomialLSI
-import LogSobolev.Measure.ProductEntropySubadditivity
+module
+
+public import LogSobolev.Analysis.IntervalDerivativeLSI
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialFamilyRegularity
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialLSI
+public import LogSobolev.Measure.ProductEntropySubadditivity
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Entropy of a polynomial phase family
 

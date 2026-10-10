@@ -7,7 +7,7 @@ commit `d0f506f0a695018265dccb33bcb05e2f5ca1c876` (Lean 4.32.0).
 The corresponding implementation in [StatsMLlib](https://github.com/Lean-MoDS/StatsMLlib),
 commit `75611ba335ee4ff2fb8b09938f6319d2cbf3d804` (Lean 4.34.0),
 has the same authors and Bernoulli approximation strategy. Both repositories
-ship Apache-2.0 licenses. This project remains on Lean 4.28.0.
+ship Apache-2.0 licenses. The original port targeted Lean 4.28.0; the project now targets Lean 4.34.1.
 
 Actual declarations examined:
 
@@ -55,7 +55,9 @@ and records its origin in the CLT project.
 The ports reuse this repository's existing `LogSobolev.entropy` and
 `LogSobolev.TwoPoint.rothaus_lemma`, rather than introducing duplicate
 entropy definitions or two-point proofs. Further Lean 4.28 compatibility
-changes are recorded in Git.
+changes are recorded in Git. The Lean 4.34.1 migration also reuses the
+Apache-2.0 StatsMLlib Gaussian Sobolev files at the revision above; see
+[the migration report](UPGRADE_LEAN.md) for paths and API changes.
 
 ## Public theorem and mathematical scope
 
@@ -108,15 +110,19 @@ extends the real theorem by cutoff and mollification in the Gaussian L²
 function and derivative norms, and tensorizes entropy over finite products.
 No Bakry–Émery, hypercontractivity, or Gaussian LSI assumption is imported.
 
-The final Lévy convergence declarations and its uniform-tail helper, and
-the Taylor remainder compatibility proof, use the older Apache-2.0 AI4SLT
-revision `be5d5a8a1a1f46f2ec9502980ff10a39e17e3820` (Lean 4.27.0-rc1).
-Other compatibility changes restore pre-upgrade integral and linear-map APIs.
+The original Lean 4.28 port used older Lévy convergence and Taylor proofs
+from Apache-2.0 AI4SLT revision
+`be5d5a8a1a1f46f2ec9502980ff10a39e17e3820`. The Lean 4.34.1 migration
+replaces the duplicated Lévy proof with Mathlib’s
+`Mathlib.MeasureTheory.Measure.LevyConvergence` and restores the Taylor
+argument from the pinned Lean 4.32 AI4SLT source above. Integral and
+linear-map API adaptations are recorded in Git.
 The obsolete alternate entropy-notation alias is omitted.
 `GaussianMeasure.lean` retains only measure definitions, transport, and
 coordinate marginals; unused concentration/MGF infrastructure is omitted.
 
-There are no new Lake dependencies and no toolchain upgrade. All original
+There are no new research-library Lake dependencies. Lean and Mathlib
+are upgraded together to 4.34.1. All original
 ported copyright notices are retained. Neither source repository has a
 separate NOTICE file. The full Apache-2.0 license is in the repository LICENSE.
 
@@ -175,7 +181,9 @@ API additionally needs a genuine weak-derivative definition and the matching
 density theorem. The current proof does not hide either step as a hypothesis
 of an advertised all-functions LSI.
 
-## Verification
+## Original Lean 4.28 verification
+
+See [the migration report](UPGRADE_LEAN.md) for the subsequent Lean 4.34.1 upgrade.
 
 - Lean **4.28.0**, with the existing pinned Mathlib revision unchanged.
 - `lake build`: passed, **3356 jobs**.

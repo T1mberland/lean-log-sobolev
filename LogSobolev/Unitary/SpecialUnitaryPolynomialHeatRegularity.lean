@@ -1,4 +1,10 @@
-import LogSobolev.Unitary.SpecialUnitaryPolynomialHeat
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialHeat
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Regularity of the constructed polynomial heat flow
 

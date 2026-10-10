@@ -1,7 +1,13 @@
-import LogSobolev.Unitary.SpecialUnitaryPolynomialFamily
-import LogSobolev.Unitary.SpecialUnitaryPolynomialFunctionals
-import LogSobolev.Measure.IntervalAlmostEverywhere
-import Mathlib.MeasureTheory.Integral.Prod
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialFamily
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialFunctionals
+public import LogSobolev.Measure.IntervalAlmostEverywhere
+public import Mathlib.MeasureTheory.Integral.Prod
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Joint regularity of polynomial phase families
 

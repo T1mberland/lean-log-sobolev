@@ -1,5 +1,13 @@
-import LogSobolev.Unitary.SpecialUnitaryGenerator
-import Mathlib.Geometry.Manifold.Algebra.SmoothFunctions
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryGenerator
+public import Mathlib.Geometry.Manifold.Algebra.SmoothFunctions
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-! # Invariant differentiation as actual linear endomorphisms
 

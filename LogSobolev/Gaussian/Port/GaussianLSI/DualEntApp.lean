@@ -5,8 +5,12 @@ Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 Ported from AI4SLT d0f506f0a695018265dccb33bcb05e2f5ca1c876.
 Modified for Lean 4.28.0 and the shared LogSobolev entropy/two-point API.
 -/
-import LogSobolev.Gaussian.Port.GaussianLSI.DualityEntropy
-import Mathlib.Analysis.SpecialFunctions.Log.ENNRealLog
+module
+
+public import LogSobolev.Gaussian.Port.GaussianLSI.DualityEntropy
+public import Mathlib.Analysis.SpecialFunctions.Log.ENNRealLog
+
+@[expose] public section
 
 /-!
 # Entropy Duality: T-Parameterization

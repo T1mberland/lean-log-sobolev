@@ -1,4 +1,10 @@
-import LogSobolev
+module
+
+public import LogSobolev
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! Independent clients of Meckes–Meckes Theorem 15 on the actual matrix U(N). -/
 open Matrix MeasureTheory LogSobolev
@@ -58,6 +64,7 @@ example (N : ℕ) (f : Matrix.unitaryGroup (Fin N) ℂ → ℝ) (hf : LocallyLip
 example (N : ℕ) : IsProbabilityMeasure (unitaryHaar (Fin N)) := inferInstance
 example (N : ℕ) : Measure.IsHaarMeasure (unitaryHaar (Fin N)) := inferInstance
 example (N : ℕ) (U V : Matrix.unitaryGroup (Fin N) ℂ) :
-    dist U V = ‖(U : Matrix (Fin N) (Fin N) ℂ) - V‖ := rfl
+    dist U V = ‖(U : Matrix (Fin N) (Fin N) ℂ) - V‖ := by
+  simp only [Subtype.dist_eq, dist_eq_norm]
 example (N : ℕ) (A : Matrix (Fin N) (Fin N) ℂ) :
     ((‖A‖ ^ 2 : ℝ) : ℂ) = Matrix.trace (star A * A) := frobenius_norm_sq_eq_trace A

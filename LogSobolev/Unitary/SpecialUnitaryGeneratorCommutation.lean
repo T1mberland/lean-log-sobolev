@@ -1,5 +1,13 @@
-import LogSobolev.Geometry.CasimirCommutation
-import LogSobolev.Unitary.SpecialUnitaryOperatorAlgebra
+module
+
+public import LogSobolev.Geometry.CasimirCommutation
+public import LogSobolev.Unitary.SpecialUnitaryOperatorAlgebra
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-! # Commutation of the actual SU generator with invariant derivatives
 
@@ -32,7 +40,8 @@ theorem specialUnitaryCasimir_commute
     have he : (∑ j, c i j • b j) = ⁅b i, A⁆ := by
       simpa only [OrthonormalBasis.repr_apply_apply] using b.sum_repr ⁅b i, A⁆
     have hd := congrArg (specialUnitaryDerivRepresentation (n := n)) he.symm
-    simpa only [map_sum, map_smul] using hd
+    simpa only [map_sum, map_smul, specialUnitaryDerivRepresentation, LinearMap.coe_mk,
+      AddHom.coe_mk] using hd
   · intro i j
     dsimp only [c]
     rw [← lie_skew (b j) A, inner_neg_right, ← lie_skew (b i) A, inner_neg_right, neg_neg]

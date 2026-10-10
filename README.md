@@ -47,7 +47,7 @@ including dimension zero. It assumes `C¹` regularity, Gaussian L² moments of
 `f` and its derivative norm, and integrability of `f² log(f²)`.
 The compact-support corollary proves these integrability conditions automatically.
 
-The proof selectively ports the Apache-2.0 AI4SLT development to Lean 4.28,
+The proof selectively ports the Apache-2.0 AI4SLT development,
 reuses this library's entropy and two-point inequality, and identifies the
 coordinate sum of squares with the **Euclidean** derivative norm. A corollary
 uses the same `slopeEnergy` as the unitary API. An all-locally-Lipschitz Gaussian
@@ -56,24 +56,26 @@ for precise scope, source attribution, verification, and remaining work.
 
 ## Build and verify
 
-Lean 4.28.0 and Mathlib are pinned in the toolchain and manifest.
+Lean 4.34.1 and matching Mathlib v4.34.1 are pinned in the toolchain and manifest.
 
 ```sh
 lake exe cache get
 bash scripts/check.sh
 ```
 
-On memory-constrained machines, run `bash scripts/build-gaussian-sequential.sh`
-first to avoid compiling independent Gaussian branches concurrently.
+On memory-constrained machines, run `python3 scripts/build-sequential.py`
+first to compile local modules in dependency order.
 
 The check script builds the library, independently compiles eight client files,
-and audits the transitive dependencies of every project declaration. Only
+and audits the transitive dependencies of exported project declarations,
+including their private proof dependencies. Only
 `propext`, `Classical.choice`, and `Quot.sound` are allowed. It saves the audit
 and full elaborated final theorem statements in `docs/unitary-axiom-audit.txt`
 and `docs/gaussian-axiom-audit.txt`.
 
 ## Sources and report
 
+* [Lean 4.34.1 migration](docs/UPGRADE_LEAN.md)
 * [Unitary theorem](LogSobolev/Unitary/UnitaryLSI.lean)
 * [Gaussian theorem](LogSobolev/Gaussian/LSI.lean)
 * [Gaussian source audit and report](docs/GAUSSIAN.md)

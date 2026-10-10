@@ -1,8 +1,12 @@
-import LogSobolev.Geometry.SlopeMeasurable
-import LogSobolev.Measure.Entropy
-import Mathlib.MeasureTheory.Integral.Lebesgue.Map
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.GCongr
+module
+
+public import LogSobolev.Geometry.SlopeMeasurable
+public import LogSobolev.Measure.Entropy
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Map
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.GCongr
+
+@[expose] public section
 
 /-! # Metric LSI and Lipschitz pushforward
 

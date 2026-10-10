@@ -1,7 +1,13 @@
-import LogSobolev.Unitary.SpecialUnitaryIntegratedGammaTwo
-import LogSobolev.Unitary.SpecialUnitaryConnected
-import Mathlib.MeasureTheory.Measure.OpenPos
-import Mathlib.Topology.LocallyConstant.Basic
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryIntegratedGammaTwo
+public import LogSobolev.Unitary.SpecialUnitaryConnected
+public import Mathlib.MeasureTheory.Measure.OpenPos
+public import Mathlib.Topology.LocallyConstant.Basic
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Zero energy for actual smooth SU functions
 

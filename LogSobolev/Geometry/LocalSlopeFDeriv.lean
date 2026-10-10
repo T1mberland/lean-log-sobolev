@@ -1,8 +1,12 @@
-import LogSobolev.Geometry.LocalSlopeDerivative
-import LogSobolev.Geometry.MetricLSI
-import Mathlib.Analysis.Calculus.FDeriv.Comp
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Mul
+module
+
+public import LogSobolev.Geometry.LocalSlopeDerivative
+public import LogSobolev.Geometry.MetricLSI
+public import Mathlib.Analysis.Calculus.FDeriv.Comp
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+
+@[expose] public section
 
 /-! # Fréchet derivatives and local metric slope
 

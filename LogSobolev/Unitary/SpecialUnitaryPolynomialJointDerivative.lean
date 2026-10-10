@@ -1,5 +1,11 @@
-import LogSobolev.Unitary.SpecialUnitaryPolynomialFamily
-import LogSobolev.Unitary.SpecialUnitaryFlow
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialFamily
+public import LogSobolev.Unitary.SpecialUnitaryFlow
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Joint differentiation of a polynomial family along an SU flow
 
@@ -58,7 +64,9 @@ theorem specialUnitaryPolynomial_hasDerivAt_phase_flow (d : ℕ)
     HasDerivAt (fun s => (p (t + c * s)).val (U * specialUnitaryExpCurve A s))
       (c * p'.val U + specialUnitaryDeriv A (p t).val U) 0 := by
   have harg : HasDerivAt (fun s : ℝ => t + c * s) c 0 := by
-    simpa only [Pi.add_apply, zero_add, mul_one] using (hasDerivAt_const 0 t).add ((hasDerivAt_id 0).const_mul c)
+    have h := (hasDerivAt_const 0 t).add ((hasDerivAt_id 0).const_mul c)
+    simp only [zero_add, mul_one] at h
+    convert h using 1 <;> rfl
   have hp0 : HasDerivAt p p' (t + c * 0) := by simpa using hp
   have hq : HasDerivAt (fun s => p (t + c * s)) (c • p') 0 := hp0.scomp 0 harg
   simpa using specialUnitaryPolynomial_hasDerivAt_moving_eval d hq A U

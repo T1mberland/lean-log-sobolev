@@ -1,5 +1,9 @@
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+@[expose] public section
 
 /-! # Integrating a scalar differential decay inequality
 
@@ -19,7 +23,7 @@ theorem le_exp_mul_of_deriv_le {f : ℝ → ℝ} {a : ℝ}
   let g : ℝ → ℝ := fun s => Real.exp (a * s) * f s
   have hg (s : ℝ) (hs : 0 < s) : HasDerivAt g
       (Real.exp (a * s) * (a * f s + deriv f s)) s := by
-    convert (((hasDerivAt_id s).const_mul a).exp).mul (hd s hs).hasDerivAt using 1
+    convert (((hasDerivAt_id s).const_mul a).exp).mul (hd s hs).hasDerivAt using 1 <;> try rfl
     dsimp [g]
     ring
   have hm : AntitoneOn g (Set.Ici 0) := by

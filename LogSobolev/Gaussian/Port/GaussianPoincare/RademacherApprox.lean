@@ -5,13 +5,17 @@ Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 Ported from AI4SLT d0f506f0a695018265dccb33bcb05e2f5ca1c876.
 Modified for Lean 4.28.0 and the shared LogSobolev entropy/two-point API.
 -/
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.Probability.Distributions.Gaussian.Real
-import Mathlib.Probability.IdentDistrib
-import Mathlib.Probability.Independence.Basic
-import Mathlib.Probability.Independence.Integration
-import Mathlib.Probability.Notation
-import Mathlib.Probability.Moments.Variance
+module
+
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+public import Mathlib.Probability.Distributions.Gaussian.Real
+public import Mathlib.Probability.IdentDistrib
+public import Mathlib.Probability.Independence.Basic
+public import Mathlib.Probability.Independence.Integration
+public import Mathlib.Probability.Notation
+public import Mathlib.Probability.Moments.Variance
+
+@[expose] public section
 
 /-!
 # Approximation of Standard Gaussian via Rademacher Sums

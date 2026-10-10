@@ -1,5 +1,11 @@
-import LogSobolev.Geometry.CompactEvolutionMaximum
-import LogSobolev.Unitary.SpecialUnitaryMaximumPrinciple
+module
+
+public import LogSobolev.Geometry.CompactEvolutionMaximum
+public import LogSobolev.Unitary.SpecialUnitaryMaximumPrinciple
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Preservation of bounds by supplied SU heat solutions
 

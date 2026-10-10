@@ -1,5 +1,11 @@
-import LogSobolev.Unitary.SpecialUnitaryHaarCalculus
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryHaarCalculus
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Scalar chain rules for the actual SU differential operators
 

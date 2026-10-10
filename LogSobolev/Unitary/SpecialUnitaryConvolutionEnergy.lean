@@ -1,9 +1,15 @@
-import LogSobolev.Geometry.LocalSlopeAverage
-import LogSobolev.Geometry.CompactRegularity
-import LogSobolev.Unitary.SpecialUnitarySlope
-import LogSobolev.Unitary.SpecialUnitaryHaarCalculus
-import Mathlib.Topology.Algebra.MetricSpace.Lipschitz
-import Mathlib.MeasureTheory.Integral.Prod
+module
+
+public import LogSobolev.Geometry.LocalSlopeAverage
+public import LogSobolev.Geometry.CompactRegularity
+public import LogSobolev.Unitary.SpecialUnitarySlope
+public import LogSobolev.Unitary.SpecialUnitaryHaarCalculus
+public import Mathlib.Topology.Algebra.MetricSpace.Lipschitz
+public import Mathlib.MeasureTheory.Integral.Prod
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Local-slope control of SU convolution energy
 
@@ -24,6 +30,7 @@ theorem specialUnitary_isometry_mul_right (V : Matrix.specialUnitaryGroup n ℂ)
     Isometry (fun U : Matrix.specialUnitaryGroup n ℂ => U * V) := by
   apply isometry_iff_dist_eq.mpr
   intro U W
+  simp only [Subtype.dist_eq, dist_eq_norm, Submonoid.coe_mul]
   change ‖U.val * V.val - W.val * V.val‖ = ‖U.val - W.val‖
   rw [← sub_mul]
   exact norm_mul_unitary _ (specialUnitaryInclusion V)
@@ -63,7 +70,7 @@ theorem specialUnitary_convolution_deriv_sq_le
   have hfL : LipschitzWith L f := lipschitzOnWith_univ.mp hL
   have hγ (V : Matrix.specialUnitaryGroup n ℂ) :
       LipschitzWith ‖A.val‖₊ (fun t => U * specialUnitaryExpCurve A t * V) := by
-    simpa only [one_mul] using
+    simpa only [one_mul, Function.comp_def] using
       (specialUnitary_isometry_mul_right V).lipschitz.comp (specialUnitary_mul_exp_lipschitz U A)
   have hd := specialUnitary_hasDerivAt_mul_exp A U hp 0
   simp only [specialUnitaryExpCurve_zero, mul_one] at hd
@@ -122,7 +129,7 @@ theorem specialUnitary_convolution_gamma_le
   rw [hn, ENNReal.ofReal_pow (specialUnitaryGamma_nonneg b hp U) 2, pow_two] at hd
   by_cases hz : ENNReal.ofReal (specialUnitaryGamma b p p U) = 0
   · rw [hz]
-    exact zero_le _
+    exact zero_le
   · exact (ENNReal.mul_le_mul_iff_right hz ENNReal.ofReal_ne_top).mp hd
 
 /-- Positive normalized convolution controls integrated differential energy by

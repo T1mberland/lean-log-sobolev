@@ -4,20 +4,26 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 Ported from AI4SLT d0f506f0a695018265dccb33bcb05e2f5ca1c876.
 Modified for Lean 4.28.0 and the shared LogSobolev entropy/two-point API.
+The Sobolev-norm equivalence proof was updated for Lean 4.34.1 from
+StatsMLlib 75611ba335ee4ff2fb8b09938f6319d2cbf3d804 (Apache-2.0).
 -/
-import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
-import Mathlib.MeasureTheory.Function.LpSpace.Basic
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.Analysis.Calculus.ContDiff.Basic
-import Mathlib.Analysis.Calculus.FDeriv.Mul
-import Mathlib.Analysis.Convolution
-import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
-import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
-import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-import Mathlib.Probability.Distributions.Gaussian.Real
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import LogSobolev.Gaussian.Port.GaussianMeasure
+module
+
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
+public import Mathlib.MeasureTheory.Function.LpSpace.Basic
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.Analysis.Calculus.ContDiff.Basic
+public import Mathlib.Analysis.Calculus.FDeriv.Mul
+public import Mathlib.Analysis.Convolution
+public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
+public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
+public import Mathlib.Probability.Distributions.Gaussian.Real
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+public import LogSobolev.Gaussian.Port.GaussianMeasure
+
+@[expose] public section
 
 /-!
 # Strong Gaussian Sobolev Space Definitions
@@ -87,19 +93,21 @@ lemma memW12Gaussian_iff_sobolevNormSq_lt_top {f : E n → ℝ}
       AEStronglyMeasurable f γ ∧
       AEStronglyMeasurable (fun x ↦ fderiv ℝ f x) γ := by
   simp only [MemW12Gaussian, GaussianSobolevNormSq, MemLp]
-  -- Use: eLpNorm (‖g ·‖) p μ = eLpNorm g p μ
-  have heq : eLpNorm (fun x ↦ ‖fderiv ℝ f x‖) 2 γ = eLpNorm (fun x ↦ fderiv ℝ f x) 2 γ :=
-    MeasureTheory.eLpNorm_norm (fun x ↦ fderiv ℝ f x)
-  rw [heq]
   constructor
-  · rintro ⟨⟨hf_meas, hf_norm⟩, hdf_meas, hdf_norm⟩
-    refine ⟨?_, hf_meas, hdf_meas⟩
-    exact ENNReal.add_lt_top.mpr ⟨ENNReal.pow_lt_top hf_norm, ENNReal.pow_lt_top hdf_norm⟩
+  · rintro ⟨hf_norm, hdf_norm⟩
+    have hf_meas : AEStronglyMeasurable f γ :=
+      aestronglyMeasurable_of_eLpNorm_ne_top hf_norm.ne
+    have hdf_meas : AEStronglyMeasurable (fun x ↦ fderiv ℝ f x) γ :=
+      aestronglyMeasurable_of_eLpNorm_ne_top hdf_norm.ne
+    -- Use: eLpNorm (‖g ·‖) p μ = eLpNorm g p μ
+    rw [MeasureTheory.eLpNorm_norm _ hdf_meas]
+    exact ⟨ENNReal.add_lt_top.mpr ⟨ENNReal.pow_lt_top hf_norm, ENNReal.pow_lt_top hdf_norm⟩,
+      hf_meas, hdf_meas⟩
   · rintro ⟨hsum, hf_meas, hdf_meas⟩
-    have ⟨h1, h2⟩ := ENNReal.add_lt_top.mp hsum
-    refine ⟨⟨hf_meas, ?_⟩, hdf_meas, ?_⟩
-    · exact (ENNReal.pow_lt_top_iff.mp h1).resolve_right (by decide)
-    · exact (ENNReal.pow_lt_top_iff.mp h2).resolve_right (by decide)
+    rw [MeasureTheory.eLpNorm_norm _ hdf_meas] at hsum
+    obtain ⟨h1, h2⟩ := ENNReal.add_lt_top.mp hsum
+    exact ⟨(ENNReal.pow_lt_top_iff.mp h1).resolve_right (by decide),
+      (ENNReal.pow_lt_top_iff.mp h2).resolve_right (by decide)⟩
 
 /-! ### Smooth Cutoff Functions -/
 

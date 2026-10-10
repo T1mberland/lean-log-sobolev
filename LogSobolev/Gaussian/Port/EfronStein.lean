@@ -5,11 +5,15 @@ Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 Ported from AI4SLT d0f506f0a695018265dccb33bcb05e2f5ca1c876.
 Modified for Lean 4.28.0 and the shared LogSobolev entropy/two-point API.
 -/
-import Mathlib.Probability.Moments.Variance
-import Mathlib.MeasureTheory.Integral.Pi
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+module
+
+public import Mathlib.Probability.Moments.Variance
+public import Mathlib.MeasureTheory.Integral.Pi
+public import Mathlib.MeasureTheory.Integral.Prod
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+@[expose] public section
 
 /-!
 # Efron-Stein Inequality
@@ -64,7 +68,7 @@ lemma condExpExceptCoord_stronglyMeasurable (hf : StronglyMeasurable f) :
     StronglyMeasurable (condExpExceptCoord (μs := μs) i f) := by
   unfold condExpExceptCoord
   apply StronglyMeasurable.integral_prod_right
-  exact hf.comp_measurable (measurable_pi_lambda _ (fun j => by
+  exact hf.comp_measurable (measurable_pi_iff.mpr (fun j => by
     by_cases h : j = i
     · subst h
       simp only [Function.update_self]

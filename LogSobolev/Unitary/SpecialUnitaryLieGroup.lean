@@ -1,6 +1,12 @@
-import LogSobolev.Unitary.SpecialUnitarySmoothMaps
-import Mathlib.Geometry.Manifold.Algebra.LieGroup
-import Mathlib.Topology.Algebra.Module.Star
+module
+
+public import LogSobolev.Unitary.SpecialUnitarySmoothMaps
+public import Mathlib.Geometry.Manifold.Algebra.LieGroup
+public import Mathlib.Topology.Algebra.Module.Star
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # The actual matrix special unitary group as a Lie group
 
@@ -65,7 +71,7 @@ theorem specialUnitary_exp_contMDiff :
   apply ContDiff.contMDiff
   apply contDiff_iff_contDiffAt.mpr
   intro A
-  simpa [specialUnitaryExpCurve, unitaryExpCurve] using
+  simpa [specialUnitaryExpCurve, unitaryExpCurve, Function.comp_def] using
     (NormedSpace.exp_analytic (𝕂 := ℝ) A.val).contDiffAt.comp A
       (specialUnitaryAlgebraInclusion (n := n)).contDiff.contDiffAt
 

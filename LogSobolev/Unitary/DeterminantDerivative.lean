@@ -1,10 +1,14 @@
-import Mathlib.Analysis.Calculus.FDeriv.Analytic
-import Mathlib.Analysis.Calculus.Deriv.Pi
-import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-import Mathlib.Topology.Instances.Matrix
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.LinearAlgebra.Matrix.Trace
+module
+
+public import Mathlib.Analysis.Calculus.FDeriv.Analytic
+public import Mathlib.Analysis.Calculus.Deriv.Pi
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Mathlib.Topology.Instances.Matrix
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.LinearAlgebra.Matrix.Trace
+
+@[expose] public section
 
 /-! # Differentiating the determinant at the identity
 
@@ -25,6 +29,7 @@ theorem det_updateRow_one (v : n → ℂ) (i : n) :
   simpa only [← Matrix.vecMul_eq_sum, Matrix.vecMul_one, Matrix.det_one,
     smul_eq_mul, mul_one] using Matrix.det_updateRow_sum (1 : Matrix n n ℂ) i v
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The determinant derivative at the identity is the trace, for a curve
 specified by its entry derivatives. -/
 theorem hasDerivAt_det_at_one (γ : ℝ → Matrix n n ℂ) (A : Matrix n n ℂ) (x : ℝ)
@@ -37,10 +42,13 @@ theorem hasDerivAt_det_at_one (γ : ℝ → Matrix n n ℂ) (A : Matrix n n ℂ)
     convert (hasFDerivAt_pi.mpr fun i =>
       hasFDerivAt_pi.mpr fun j => (hγ i j).hasFDerivAt).hasDerivAt using 1
     simp
+  have hD (m : n → n → ℂ) : D m = Matrix.det (Matrix.of m) := rfl
   have hd := (D.hasFDerivAt (γ x)).comp_hasDerivAt x h
   have hd' : HasDerivAt (fun t => Matrix.det (γ t))
       (∑ i, Matrix.det (Matrix.updateRow (γ x) i (A i))) x := by
-    simpa only [ContinuousMultilinearMap.linearDeriv_apply] using hd
-  simpa only [hx, det_updateRow_one, Matrix.trace] using hd'
+    rw [ContinuousMultilinearMap.linearDeriv_apply] at hd
+    simp only [Function.comp_def, hD] at hd
+    convert hd using 1 <;> rfl
+  simpa only [hx, det_updateRow_one, Matrix.trace, Matrix.diag_apply] using hd'
 
 end LogSobolev

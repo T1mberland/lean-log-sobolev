@@ -1,8 +1,12 @@
-import LogSobolev.Measure.ProductEntropy
-import LogSobolev.Measure.EntropyVariational
-import LogSobolev.Measure.ParametricEntropy
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
-import Mathlib.MeasureTheory.Integral.Bochner.Set
+module
+
+public import LogSobolev.Measure.ProductEntropy
+public import LogSobolev.Measure.EntropyVariational
+public import LogSobolev.Measure.ParametricEntropy
+public import Mathlib.MeasureTheory.Function.LocallyIntegrable
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
+
+@[expose] public section
 
 /-! # Binary entropy subadditivity
 

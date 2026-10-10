@@ -1,6 +1,10 @@
-import LogSobolev.Measure.Interval
-import LogSobolev.Measure.Entropy
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+module
+
+public import LogSobolev.Measure.Interval
+public import LogSobolev.Measure.Entropy
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+
+@[expose] public section
 
 /-! # Integration and rescaling of normalized interval measure
 

@@ -1,7 +1,13 @@
-import LogSobolev.Unitary.HilbertSchmidt
-import Mathlib.Algebra.Lie.Subalgebra
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.Algebra.Star.Module
+module
+
+public import LogSobolev.Unitary.HilbertSchmidt
+public import Mathlib.Algebra.Lie.Subalgebra
+public import Mathlib.Algebra.Lie.OfAssociative
+public import Mathlib.Algebra.Star.Module
+
+@[expose] public section
+
+attribute [local instance] LieRing.ofAssociativeRing
 
 /-! # The matrix special unitary Lie algebra
 

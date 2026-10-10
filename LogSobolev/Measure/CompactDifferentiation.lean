@@ -1,5 +1,9 @@
-import Mathlib.Analysis.Calculus.ParametricIntegral
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
+module
+
+public import Mathlib.Analysis.Calculus.ParametricIntegral
+public import Mathlib.MeasureTheory.Function.LocallyIntegrable
+
+@[expose] public section
 
 /-! # Differentiation of integrals on compact spaces
 

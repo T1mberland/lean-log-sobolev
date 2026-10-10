@@ -1,7 +1,11 @@
-import Mathlib.Tactic.Ring
-import Mathlib.Topology.MetricSpace.Lipschitz
-import Mathlib.Order.Filter.ENNReal
-import Mathlib.Topology.Instances.ENNReal.Lemmas
+module
+
+public import Mathlib.Tactic.Ring
+public import Mathlib.Topology.MetricSpace.Lipschitz
+public import Mathlib.Order.Filter.ENNReal
+public import Mathlib.Topology.Instances.ENNReal.Lemmas
+
+@[expose] public section
 
 /-! # Local metric slope
 
@@ -95,7 +99,7 @@ theorem localSlope_comp_le {T : X → Y} {K : ℝ≥0} (hT : LipschitzWith K T)
       refine limsup_le_limsup ?_ (by isBoundedDefault) (by isBoundedDefault)
       apply Eventually.of_forall
       intro y
-      simpa only [ENNReal.ofReal_mul K.coe_nonneg, ENNReal.ofReal_coe_nnreal]
+      simpa only [Function.comp_apply, ENNReal.ofReal_mul K.coe_nonneg, ENNReal.ofReal_coe_nnreal]
         using ENNReal.ofReal_le_ofReal (hquot y)
     _ = (K : ℝ≥0∞) * limsup
         (fun y => ENNReal.ofReal (dist (f (T y)) (f (T x)) / dist (T y) (T x)))

@@ -1,9 +1,13 @@
-import LogSobolev.Gaussian.LSI
-import Lean.Util.CollectAxioms
+module
+
+public import LogSobolev.Gaussian.LSI
+public meta import Lean.Util.CollectAxioms
+
+@[expose] public section
 
 /-! # Recursive Gaussian dependency audit
 
-Audit every declaration originating in a Gaussian module, including ported
+Audit every visible declaration originating in a Gaussian module, including ported
 lemmas outside the `LogSobolev` namespace, and the generic geometry bridge.
 Each root's full transitive closure is inspected by Lean's axiom collector.
 -/
@@ -11,17 +15,15 @@ Each root's full transitive closure is inspected by Lean's axiom collector.
 open Lean in
 run_cmd do
   let env ← getEnv
-  let mut count := 0
-  let mut state : CollectAxioms.State := {}
+  let mut count : Nat := 0
   for (name, _) in env.constants.toList do
     let some idx := env.getModuleIdxFor? name | continue
     let modName := env.header.moduleNames[idx.toNat]!
     if (`LogSobolev.Gaussian).isPrefixOf modName ||
         modName == `LogSobolev.Geometry.LocalSlopeFDeriv then
       count := count + 1
-      let (_, next) := ((CollectAxioms.collect name).run env).run state
-      state := next
-      for ax in state.axioms do
+      let axioms ← Lean.collectAxioms name
+      for ax in axioms do
         unless #[``propext, ``Classical.choice, ``Quot.sound].contains ax do
           throwError "Unapproved axiom {ax} in dependency closure of {name}"
   if count == 0 then

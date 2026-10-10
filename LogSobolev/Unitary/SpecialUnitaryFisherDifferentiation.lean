@@ -1,4 +1,10 @@
-import LogSobolev.Unitary.SpecialUnitaryFisherIdentity
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryFisherIdentity
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Differentiation of SU Fisher information for regular families
 
@@ -66,8 +72,10 @@ theorem specialUnitary_hasDerivAt_fisher
     (Q := fun r U => 2 * specialUnitaryGamma b (F r) (Q r) U / F r U -
       specialUnitaryGamma b (F r) (F r) U * Q r U / (F r U) ^ 2)
     (hG.div hF (fun p => h0 p.1 p.2))
-    ((((continuous_const (y := (2 : ℝ))).mul hGQ).div hF (fun p => h0 p.1 p.2)).sub
-      ((hG.mul hQ).div (hF.pow 2) (fun p => pow_ne_zero 2 (h0 p.1 p.2))))
+    (by
+      convert (((continuous_const (y := (2 : ℝ))).mul hGQ).div hF
+        (fun p => h0 p.1 p.2)).sub
+        ((hG.mul hQ).div (hF.pow 2) (fun p => pow_ne_zero 2 (h0 p.1 p.2))) using 1 <;> rfl)
     ?_ t hs
   intro r hr U
   convert (hGD r hr U).div (hd r hr U) (h0 r U) using 1

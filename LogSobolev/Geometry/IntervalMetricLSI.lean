@@ -1,7 +1,11 @@
-import LogSobolev.Analysis.LipschitzUnitIntervalLSI
-import LogSobolev.Measure.IntervalIntegral
-import LogSobolev.Geometry.LocalSlopeDerivative
-import LogSobolev.Geometry.CompactRegularity
+module
+
+public import LogSobolev.Analysis.LipschitzUnitIntervalLSI
+public import LogSobolev.Measure.IntervalIntegral
+public import LogSobolev.Geometry.LocalSlopeDerivative
+public import LogSobolev.Geometry.CompactRegularity
+
+@[expose] public section
 
 /-! # Metric logarithmic Sobolev inequality on an interval
 
@@ -34,7 +38,7 @@ theorem intervalUniform_entropy_sq_le_of_locallyLipschitz (L : ℝ) (hL : 0 < L)
     change |L * x - L * y| ≤ L * |x - y|
     rw [← mul_sub, abs_mul, abs_of_pos hL]
   have hT : LipschitzWith c T := by
-    simpa only [one_mul] using (LipschitzWith.projIcc hL.le).comp hmul
+    simpa only [one_mul, Function.comp_def, T] using (LipschitzWith.projIcc hL.le).comp hmul
   have hq : LipschitzWith (K * c) q := hK'.comp hT
   have hpoint (x : ℝ) : deriv q x ^ 2 ≤ L ^ 2 * (localSlope f (T x)).toReal ^ 2 := by
     have he := (ofReal_norm_deriv_le_localSlope q x).trans (localSlope_comp_le hT f x)
@@ -57,7 +61,7 @@ theorem intervalUniform_entropy_sq_le_of_locallyLipschitz (L : ℝ) (hL : 0 < L)
     exact Eventually.of_forall fun x => by
       have hb : (localSlope f (T x)).toReal ≤ (K : ℝ) := by
         simpa using ENNReal.toReal_mono ENNReal.coe_ne_top (localSlope_le_of_lipschitz hK' (T x))
-      rw [Real.norm_eq_abs, abs_of_nonneg (mul_nonneg (sq_nonneg L) (sq_nonneg _))]
+      rw [Pi.mul_apply, Real.norm_eq_abs, abs_of_nonneg (mul_nonneg (sq_nonneg L) (sq_nonneg _))]
       exact mul_le_mul_of_nonneg_left (pow_le_pow_left₀ ENNReal.toReal_nonneg hb 2) (sq_nonneg L)
   have henergy : (∫ x in (0 : ℝ)..1, (localSlope f (T x)).toReal ^ 2) =
       ∫ t, (localSlope f t).toReal ^ 2 ∂intervalUniform L := by

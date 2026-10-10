@@ -1,10 +1,14 @@
-import Mathlib.LinearAlgebra.UnitaryGroup
-import Mathlib.LinearAlgebra.Matrix.Trace
-import Mathlib.Analysis.Matrix.Normed
-import Mathlib.Topology.Algebra.Star.Unitary
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Linarith
+module
+
+public import Mathlib.LinearAlgebra.UnitaryGroup
+public import Mathlib.LinearAlgebra.Matrix.Trace
+public import Mathlib.Analysis.Matrix.Normed
+public import Mathlib.Topology.Algebra.Star.Unitary
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Linarith
+
+@[expose] public section
 
 /-! # The unnormalized Hilbert–Schmidt metric
 

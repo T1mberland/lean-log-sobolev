@@ -1,4 +1,10 @@
-import LogSobolev
+module
+
+public import LogSobolev
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! Independent clients of the locally Lipschitz interval and U(1) results. -/
 open MeasureTheory LogSobolev

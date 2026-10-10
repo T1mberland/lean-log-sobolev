@@ -1,5 +1,9 @@
-import LogSobolev.Analysis.UnitIntervalLSI
-import LogSobolev.Measure.IntervalIntegral
+module
+
+public import LogSobolev.Analysis.UnitIntervalLSI
+public import LogSobolev.Measure.IntervalIntegral
+
+@[expose] public section
 
 /-! # Scaled interval LSI for continuously differentiable observables
 

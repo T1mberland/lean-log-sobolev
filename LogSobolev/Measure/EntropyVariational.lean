@@ -1,6 +1,10 @@
-import LogSobolev.Measure.Entropy
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Positivity
+module
+
+public import LogSobolev.Measure.Entropy
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Positivity
+
+@[expose] public section
 
 /-! # A real-valued Gibbs entropy bound
 

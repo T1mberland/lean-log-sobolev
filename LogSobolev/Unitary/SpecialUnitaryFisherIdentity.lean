@@ -1,4 +1,10 @@
-import LogSobolev.Unitary.SpecialUnitaryEntropyDissipation
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryEntropyDissipation
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # The spatial Fisher-information dissipation identity on SU
 

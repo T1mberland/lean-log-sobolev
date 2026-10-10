@@ -1,6 +1,10 @@
-import LogSobolev.Measure.Entropy
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
-import Mathlib.Topology.ContinuousMap.Compact
+module
+
+public import LogSobolev.Measure.Entropy
+public import Mathlib.MeasureTheory.Function.LocallyIntegrable
+public import Mathlib.Topology.ContinuousMap.Compact
+
+@[expose] public section
 
 /-! # Entropy and uniform limits
 
@@ -49,10 +53,10 @@ theorem continuous_entropy_continuousMap :
 
 /-- The entropy of the square is continuous in the uniform norm. -/
 theorem continuous_entropy_sq_continuousMap :
-    Continuous (fun f : C(X, ℝ) => entropy μ (fun x => f x ^ 2)) :=
-  (continuous_entropy_continuousMap μ).comp
+    Continuous (fun f : C(X, ℝ) => entropy μ (fun x => f x ^ 2)) := by
+  convert (continuous_entropy_continuousMap μ).comp
     (ContinuousMap.continuous_postcomp
-      (⟨fun x : ℝ => x ^ 2, continuous_id.pow 2⟩ : C(ℝ, ℝ)))
+      (⟨fun x : ℝ => x ^ 2, continuous_id.pow 2⟩ : C(ℝ, ℝ))) using 1 <;> rfl
 
 /-- Uniform limits preserve squared entropy; the index filter is arbitrary. -/
 theorem tendsto_entropy_sq_of_tendsto_continuousMap {ι : Type*} {l : Filter ι}

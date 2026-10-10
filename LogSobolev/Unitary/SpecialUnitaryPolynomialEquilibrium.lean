@@ -1,6 +1,12 @@
-import LogSobolev.Unitary.SpecialUnitaryPolynomialFunctionals
-import LogSobolev.Unitary.SpecialUnitaryPolynomialEnergyDecay
-import LogSobolev.Unitary.SpecialUnitaryZeroEnergy
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialFunctionals
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialEnergyDecay
+public import LogSobolev.Unitary.SpecialUnitaryZeroEnergy
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Equilibrium of constructed polynomial SU heat
 
@@ -72,6 +78,6 @@ theorem specialUnitaryPolynomialForwardHeat_entropy_tendsto_zero
       (fun _ => ∫ U, f.val U ∂specialUnitaryHaar n) := by
     funext U
     exact specialUnitaryPolynomialConst_apply _ _ U
-  simpa only [he, entropy_const] using h
+  simpa only [he, entropy_const, Function.comp_def] using h
 
 end LogSobolev

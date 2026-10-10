@@ -1,4 +1,8 @@
-import LogSobolev
+module
+
+public import LogSobolev
+
+@[expose] public section
 
 /-! Independent clients of the discrete and C¹ interval entropy bounds. -/
 

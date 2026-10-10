@@ -5,9 +5,13 @@ Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 Ported from AI4SLT d0f506f0a695018265dccb33bcb05e2f5ca1c876.
 Modified for Lean 4.28.0 and the shared LogSobolev entropy/two-point API.
 -/
-import LogSobolev.Gaussian.Port.GaussianPoincare.EfronSteinApp
-import Mathlib.Analysis.Calculus.Taylor
-import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+module
+
+public import LogSobolev.Gaussian.Port.GaussianPoincare.EfronSteinApp
+public import Mathlib.Analysis.Calculus.Taylor
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+
+@[expose] public section
 
 /-!
 # Taylor Expansion Analysis for Rademacher Sum Variance Bounds
@@ -247,14 +251,17 @@ theorem taylor_order_one {f : ℝ → ℝ} (hf : ContDiff ℝ 2 f) {a b : ℝ} (
     ∃ ξ ∈ Ioo a b,
     f b = f a + deriv f a * (b - a) + (1/2) * deriv (deriv f) ξ * (b - a)^2 := by
   -- Use taylor_mean_remainder_lagrange_iteratedDeriv with n = 1
-  have hf' : ContDiffOn ℝ (1 + 1) f (Icc a b) := hf.contDiffOn
-  obtain ⟨ξ, hξ_mem, hξ_eq⟩ := taylor_mean_remainder_lagrange_iteratedDeriv hab hf'
-  use ξ, hξ_mem
-  -- Simplify the types
-  have hone_eq : (One.one : ℕ) = 1 := rfl
-  simp only [hone_eq] at hξ_eq
-  -- taylorWithinEval f 1 (Icc a b) a b = f(a) + f'(a)(b-a)
-  have htaylor : taylorWithinEval f 1 (Icc a b) a b = f a + deriv f a * (b - a) := by
+  have hf' : ContDiffOn ℝ (1 + 1) f (uIcc a b) := by
+    rw [uIcc_of_lt hab]
+    norm_num
+    exact hf.contDiffOn
+  obtain ⟨ξ, hξ_mem, hξ_eq⟩ := taylor_mean_remainder_lagrange_iteratedDeriv hab.ne hf'
+  use ξ
+  constructor
+  · simpa [uIoo_of_lt hab] using hξ_mem
+  -- taylorWithinEval f 1 (uIcc a b) a b = f(a) + f'(a)(b-a)
+  have htaylor : taylorWithinEval f 1 (uIcc a b) a b = f a + deriv f a * (b - a) := by
+    rw [uIcc_of_lt hab]
     rw [taylorWithinEval_succ, taylor_within_zero_eval]
     simp only [Nat.factorial_zero, Nat.cast_one]
     rw [iteratedDerivWithin_one]

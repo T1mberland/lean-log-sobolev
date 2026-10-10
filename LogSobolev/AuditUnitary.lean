@@ -1,26 +1,29 @@
-import LogSobolev
-import Lean.Util.CollectAxioms
+module
+
+public import LogSobolev
+public meta import Lean.Util.CollectAxioms
+
+@[expose] public section
 
 /-! # Recursive axiom audit
 
-This checks every declaration under `LogSobolev`, including definitions,
-instances and generated auxiliary declarations, not merely selected theorems.
+This checks every visible declaration under `LogSobolev`, including definitions
+and instances, not merely selected theorems.
 Only Mathlib's three usual foundational axioms are allowed. The core Lean
-collector shares its visited set across roots, so each transitive dependency is
-traversed once; all project declarations are still submitted as roots.
+collector uses the transitive axiom sets recorded when modules are exported,
+including dependencies through private proof bodies. All visible project
+declarations are submitted as roots.
 -/
 
 open Lean in
 run_cmd do
   let env ← getEnv
-  let mut count := 0
-  let mut state : CollectAxioms.State := {}
+  let mut count : Nat := 0
   for (name, _) in env.constants.toList do
     if (`LogSobolev).isPrefixOf name then
       count := count + 1
-      let (_, next) := ((CollectAxioms.collect name).run env).run state
-      state := next
-      for ax in state.axioms do
+      let axioms ← Lean.collectAxioms name
+      for ax in axioms do
         unless #[``propext, ``Classical.choice, ``Quot.sound].contains ax do
           throwError "Unapproved axiom {ax} in the dependency closure of {name}"
   logInfo m!"Recursive axiom audit passed for {count} LogSobolev declarations."

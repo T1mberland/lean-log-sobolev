@@ -1,5 +1,9 @@
-import LogSobolev
-import Lean.Util.CollectAxioms
+module
+
+public import LogSobolev
+public import Lean.Util.CollectAxioms
+
+@[expose] public section
 
 /-! # Recursive axiom audit
 

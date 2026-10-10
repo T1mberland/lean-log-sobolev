@@ -1,5 +1,9 @@
-import LogSobolev.Geometry.IntervalMetricLSI
-import LogSobolev.Measure.IntervalAlmostEverywhere
+module
+
+public import LogSobolev.Geometry.IntervalMetricLSI
+public import LogSobolev.Measure.IntervalAlmostEverywhere
+
+@[expose] public section
 
 /-! # Interval LSI in almost-everywhere derivative form
 
@@ -35,6 +39,6 @@ theorem intervalUniform_entropy_sq_le_of_ae_hasDerivAt (L : ℝ) (hL : 0 < L)
   simp only [ENNReal.coe_one, one_mul] at hs
   have hr := ENNReal.toReal_mono ENNReal.ofReal_ne_top hs
   rw [ENNReal.toReal_ofReal (norm_nonneg _)] at hr
-  simpa only [Real.norm_eq_abs, sq_abs] using pow_le_pow_left₀ ENNReal.toReal_nonneg hr 2
+  simpa only [Real.norm_eq_abs, sq_abs, Function.comp_def] using pow_le_pow_left₀ ENNReal.toReal_nonneg hr 2
 
 end LogSobolev

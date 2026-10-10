@@ -1,6 +1,12 @@
-import LogSobolev.Unitary.SpecialUnitaryChainRules
-import LogSobolev.Unitary.SpecialUnitaryIntegratedGammaTwo
-import LogSobolev.Measure.EntropyDifferentiation
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryChainRules
+public import LogSobolev.Unitary.SpecialUnitaryIntegratedGammaTwo
+public import LogSobolev.Measure.EntropyDifferentiation
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Entropy dissipation in the actual SU generator direction
 

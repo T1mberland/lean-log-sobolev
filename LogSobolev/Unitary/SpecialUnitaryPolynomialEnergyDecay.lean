@@ -1,4 +1,10 @@
-import LogSobolev.Unitary.SpecialUnitaryPolynomialDissipation
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialDissipation
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Decay of integrated energy for polynomial heat
 
@@ -63,7 +69,7 @@ theorem specialUnitaryPolynomialForwardHeat_energy_tendsto_zero
   have he : Tendsto (fun t : ℝ => Real.exp (-(Fintype.card n : ℝ) * t)) atTop (𝓝 0) := by
     have h := Real.tendsto_exp_neg_atTop_nhds_zero.comp
       (tendsto_id.const_mul_atTop (by exact_mod_cast hN : 0 < (Fintype.card n : ℝ)))
-    simpa only [neg_mul] using h
+    simpa only [neg_mul, Function.comp_def, id_eq] using h
   have hh := (he.mul_const
     (∫ U, specialUnitaryGamma b f.val f.val U / f.val U ∂specialUnitaryHaar n)).const_mul ‖f‖
   simp only [mul_zero, zero_mul] at hh

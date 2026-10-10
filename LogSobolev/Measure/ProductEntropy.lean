@@ -4,8 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Original authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 Adapted to heterogeneous binary products and Lean 4.28.0.
 -/
-import LogSobolev.Measure.Entropy
-import Mathlib.MeasureTheory.Integral.Prod
+module
+
+public import LogSobolev.Measure.Entropy
+public import Mathlib.MeasureTheory.Integral.Prod
+
+@[expose] public section
 
 /-! # Entropy chain rule on a product
 

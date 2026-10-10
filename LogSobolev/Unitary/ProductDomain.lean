@@ -1,7 +1,11 @@
-import LogSobolev.Unitary.PhaseMap
-import LogSobolev.Unitary.SpecialUnitary
-import LogSobolev.Measure.Interval
-import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+module
+
+public import LogSobolev.Unitary.PhaseMap
+public import LogSobolev.Unitary.SpecialUnitary
+public import LogSobolev.Measure.Interval
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+
+@[expose] public section
 
 /-! # The exact interval × SU(N) domain
 
@@ -26,7 +30,8 @@ noncomputable def phaseDomainMeasure (N : ℕ) : Measure (PhaseDomain N) :=
 theorem phaseDomainMeasure_probability (N : ℕ) (hN : 0 < N) :
     IsProbabilityMeasure (phaseDomainMeasure N) := by
   letI : Fact (0 < phaseIntervalLength N) := ⟨phaseIntervalLength_pos N hN⟩
-  exact Measure.isProbabilityMeasure_map (WithLp.measurable_toLp 2 _).aemeasurable
+  unfold phaseDomainMeasure
+  infer_instance
 
 /-- Isometric inclusion of the interval domain into the unrestricted domain. -/
 def phaseDomainInclusion (N : ℕ) (p : PhaseDomain N) :
@@ -46,7 +51,11 @@ noncomputable def intervalPhaseMap (N : ℕ) : PhaseDomain N → Matrix.unitaryG
 /-- Restricting the phase map preserves its `sqrt(3)` Lipschitz constant. -/
 theorem intervalPhaseMap_lipschitz (N : ℕ) (hN : 0 < N) :
     LipschitzWith ⟨Real.sqrt 3, Real.sqrt_nonneg 3⟩ (intervalPhaseMap N) := by
-  simpa only [mul_one] using
-    (phaseMap_lipschitz N hN).comp (phaseDomainInclusion_isometry N).lipschitz
+  apply LipschitzWith.of_dist_le_mul
+  intro p q
+  have h := (phaseMap_lipschitz N hN).dist_le_mul
+    (phaseDomainInclusion N p) (phaseDomainInclusion N q)
+  rw [(phaseDomainInclusion_isometry N).dist_eq] at h
+  exact h
 
 end LogSobolev

@@ -1,6 +1,12 @@
-import LogSobolev.Geometry.LocalSlopeAverage
-import LogSobolev.Geometry.CompactRegularity
-import LogSobolev.Unitary.SpecialUnitary
+module
+
+public import LogSobolev.Geometry.LocalSlopeAverage
+public import LogSobolev.Geometry.CompactRegularity
+public import LogSobolev.Unitary.SpecialUnitary
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Local-slope control of SU averages on U(N)
 
@@ -21,6 +27,7 @@ theorem unitary_isometry_mul_right (V : Matrix.unitaryGroup n ℂ) :
     Isometry (fun U : Matrix.unitaryGroup n ℂ => U * V) := by
   apply Isometry.of_dist_eq
   intro U W
+  simp only [Subtype.dist_eq, dist_eq_norm, Submonoid.coe_mul]
   change ‖U.val * V.val - W.val * V.val‖ = ‖U.val - W.val‖
   rw [← sub_mul]
   exact norm_mul_unitary _ V
@@ -59,7 +66,7 @@ theorem unitary_SU_average_deriv_sq_le
   have hfL : LipschitzWith L f := lipschitzOnWith_univ.mp hL
   have hcurve (V : Matrix.specialUnitaryGroup n ℂ) :
       LipschitzWith K (fun t => γ t * specialUnitaryInclusion V) := by
-    simpa only [one_mul] using
+    simpa only [one_mul, Function.comp_def] using
       (unitary_isometry_mul_right (specialUnitaryInclusion V)).lipschitz.comp hγ
   have hd' : HasDerivAt (fun t => ∫ V, f (γ t * specialUnitaryInclusion V) ∂ν) a 0 := by
     simpa only [hmean] using hd

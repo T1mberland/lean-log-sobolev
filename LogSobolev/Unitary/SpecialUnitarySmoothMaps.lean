@@ -1,6 +1,12 @@
-import LogSobolev.Unitary.SpecialUnitaryManifold
-import Mathlib.Geometry.Manifold.ContMDiff.NormedSpace
-import Mathlib.Geometry.Manifold.Algebra.SmoothFunctions
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryManifold
+public import Mathlib.Geometry.Manifold.ContMDiff.NormedSpace
+public import Mathlib.Geometry.Manifold.Algebra.SmoothFunctions
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Smooth maps into and out of the actual SU group
 
@@ -74,7 +80,7 @@ theorem contMDiffAt_specialUnitary_of_val {f : M → Matrix.specialUnitaryGroup 
   refine ⟨hc, ?_⟩
   have ht : ((f x)⁻¹).val * (f x).val ∈ specialUnitaryAmbientChart.target := by
     change ((f x)⁻¹ * f x).val ∈ specialUnitaryAmbientChart.target
-    simpa only [inv_mul_cancel] using (specialUnitaryAmbientChart_spec (n := n)).2.2.1
+    simpa only [inv_mul_cancel, Submonoid.coe_one] using (specialUnitaryAmbientChart_spec (n := n)).2.2.1
   have hF := (specialUnitary_projected_log_contDiffAt ((f x)⁻¹).val (f x).val ht).contMDiffAt.comp x hf
   apply hF.congr_of_eventuallyEq
   have hs := hc.preimage_mem_nhds ((specialUnitaryChartAt (f x)).open_source.mem_nhds

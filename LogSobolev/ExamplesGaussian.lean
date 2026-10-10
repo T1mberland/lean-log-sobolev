@@ -1,4 +1,8 @@
-import LogSobolev.Gaussian.LSI
+module
+
+public import LogSobolev.Gaussian.LSI
+
+@[expose] public section
 
 /-! # Independent Gaussian LSI usage examples -/
 

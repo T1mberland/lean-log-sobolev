@@ -1,7 +1,11 @@
-import LogSobolev.Unitary.CircleDecomposition
-import LogSobolev.Unitary.ProductDomain
-import Mathlib.Analysis.SpecialFunctions.Complex.Circle
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
+module
+
+public import LogSobolev.Unitary.CircleDecomposition
+public import LogSobolev.Unitary.ProductDomain
+public import Mathlib.Analysis.SpecialFunctions.Complex.Circle
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
+
+@[expose] public section
 
 /-! # Periodicity of the SU-averaged phase distribution
 

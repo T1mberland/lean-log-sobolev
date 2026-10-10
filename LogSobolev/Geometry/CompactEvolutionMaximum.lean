@@ -1,6 +1,10 @@
-import Mathlib.Analysis.Calculus.Deriv.Slope
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Topology.Order.Compact
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Slope
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Topology.Order.Compact
+
+@[expose] public section
 
 /-! # Positivity from a compact-space minimum principle
 
@@ -69,7 +73,9 @@ theorem nonneg_of_compact_minimum_principle
       (F := fun t x => F t x + ε * t) (Q := fun t x => Q t x + ε) hT
       (hF.add ((continuous_const (y := ε)).mul continuous_fst))
     · intro t ht x
-      simpa only [mul_one] using (hd t ht x).add ((hasDerivAt_id t).const_mul ε)
+      have h := (hd t ht x).add ((hasDerivAt_id t).const_mul ε)
+      simp only [mul_one] at h
+      convert h using 1 <;> rfl
     · intro t ht x hx
       have hx' : ∀ y, F t x ≤ F t y := fun y => (add_le_add_iff_right _).mp (hx y)
       have h := hmin t ht x hx'
@@ -78,7 +84,8 @@ theorem nonneg_of_compact_minimum_principle
       simpa using hinit x
   intro x
   have hlim : Tendsto (fun ε : ℝ => F T x + ε * T) (𝓝[>] 0) (𝓝 (F T x)) := by
-    simpa using (continuous_const.add (continuous_id.mul continuous_const)).continuousAt.tendsto.mono_left
+    have hc : Continuous (fun ε : ℝ => F T x + ε * T) := by fun_prop
+    simpa using hc.continuousAt.tendsto.mono_left
       (nhdsWithin_le_nhds : 𝓝[>] (0 : ℝ) ≤ 𝓝 0)
   apply ge_of_tendsto hlim
   filter_upwards [self_mem_nhdsWithin] with ε hε

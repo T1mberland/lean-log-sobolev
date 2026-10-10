@@ -3,9 +3,15 @@ Copyright (c) 2026 Yuanhe Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 Ported from AI4SLT d0f506f0a695018265dccb33bcb05e2f5ca1c876.
-Modified for Lean 4.28.0 and the shared LogSobolev entropy/two-point API.
+Initially adapted for Lean 4.28.0. Updated from StatsMLlib
+75611ba335ee4ff2fb8b09938f6319d2cbf3d804 for Lean 4.34.1; local imports
+and module visibility adapted. Original Apache-2.0 attribution retained.
 -/
-import LogSobolev.Gaussian.Port.GaussianSobolevDense.Defs
+module
+
+public import LogSobolev.Gaussian.Port.GaussianSobolevDense.Defs
+
+@[expose] public section
 
 /-!
 # Cutoff Lemmas for Gaussian Sobolev Density
@@ -138,6 +144,8 @@ lemma smoothCutoffR_fderiv_bound {R : ℝ} (hR : 0 < R) :
           (contDiffAt_norm ℝ hx_ne).differentiableAt WithTop.top_ne_zero
         have h2 : DifferentiableAt ℝ (fun y : E n => ‖y‖ * R⁻¹) x := h1.mul_const R⁻¹
         convert h2 using 1
+        ext y
+        rw [div_eq_mul_inv]
       have h_cutoff_diff : DifferentiableAt ℝ smoothCutoff (‖x‖ / R) :=
         smoothCutoff_contDiff.differentiable (WithTop.coe_ne_zero.mpr WithTop.top_ne_zero) (‖x‖ / R)
       -- Chain rule
@@ -156,7 +164,7 @@ lemma smoothCutoffR_fderiv_bound {R : ℝ} (hR : 0 < R) :
               -- fderiv of scalar function = deriv times identity
               have heq : fderiv ℝ smoothCutoff (‖x‖ / R) = (deriv smoothCutoff (‖x‖ / R)) • (1 : ℝ →L[ℝ] ℝ) := by
                 ext
-                simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.one_apply, smul_eq_mul]
+                simp only [smul_apply, one_apply_eq_self, smul_eq_mul]
                 rw [fderiv_eq_smul_deriv, smul_eq_mul, mul_comm]
               rw [heq, norm_smul, norm_one, mul_one, Real.norm_eq_abs]
               calc |deriv smoothCutoff (‖x‖ / R)| = ‖deriv smoothCutoff (‖x‖ / R)‖ := (Real.norm_eq_abs _).symm
@@ -203,7 +211,7 @@ lemma cutoff_L2_convergence (f : E n → ℝ) (hf : MemLp f 2 (stdGaussianE n)) 
   have hf_sq_int : ∫⁻ x, (‖f x‖₊ : ℝ≥0∞) ^ (2 : ℝ) ∂(stdGaussianE n) < ⊤ := by
     have hlt := hf.eLpNorm_lt_top
     rw [MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num : (2 : ℝ≥0∞) ≠ 0)
-        (by norm_num : (2 : ℝ≥0∞) ≠ ⊤)] at hlt
+        (by norm_num : (2 : ℝ≥0∞) ≠ ⊤) hf.aestronglyMeasurable] at hlt
     simp only [ENNReal.toReal_ofNat, one_div, enorm_eq_nnnorm] at hlt
     by_contra habs
     push Not at habs
@@ -314,8 +322,14 @@ lemma cutoff_L2_convergence (f : E n → ℝ) (hf : MemLp f 2 (stdGaussianE n)) 
   have heLpNorm_eq : ∀ R, eLpNorm (fun x => f x * (1 - smoothCutoffR R x)) 2 (stdGaussianE n) =
       (∫⁻ x, F R x ∂(stdGaussianE n)) ^ (2⁻¹ : ℝ) := by
     intro R
+    have hχR_cont : Continuous (smoothCutoffR (n := n) R) := by
+      unfold smoothCutoffR
+      exact smoothCutoff_contDiff.continuous.comp (continuous_norm.div_const R)
+    have haesm : AEStronglyMeasurable (fun x => f x * (1 - smoothCutoffR R x))
+        (stdGaussianE n) :=
+      hf.aestronglyMeasurable.mul (continuous_const.sub hχR_cont).aestronglyMeasurable
     rw [MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num : (2 : ℝ≥0∞) ≠ 0)
-        (by norm_num : (2 : ℝ≥0∞) ≠ ⊤)]
+        (by norm_num : (2 : ℝ≥0∞) ≠ ⊤) haesm]
     simp only [ENNReal.toReal_ofNat, one_div, enorm_eq_nnnorm, F]
   simp only [heLpNorm_eq]
   -- rpow (1/2) is continuous, so if lintegral → 0 then lintegral^(1/2) → 0
@@ -407,7 +421,7 @@ lemma cutoff_gradient_error_bound (f : E n → ℝ)
   have hg_sq_int : ∫⁻ x, (‖g x‖₊ : ℝ≥0∞) ^ (2 : ℝ) ∂(stdGaussianE n) < ⊤ := by
     have hlt := hf_grad.eLpNorm_lt_top
     rw [MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num : (2 : ℝ≥0∞) ≠ 0)
-        (by norm_num : (2 : ℝ≥0∞) ≠ ⊤)] at hlt
+        (by norm_num : (2 : ℝ≥0∞) ≠ ⊤) hf_grad.aestronglyMeasurable] at hlt
     simp only [ENNReal.toReal_ofNat, one_div, enorm_eq_nnnorm, g] at hlt ⊢
     by_contra habs
     push Not at habs
@@ -466,8 +480,14 @@ lemma cutoff_gradient_error_bound (f : E n → ℝ)
   have heLpNorm_eq : ∀ R, eLpNorm (fun x => (1 - smoothCutoffR R x) • fderiv ℝ f x) 2 (stdGaussianE n) =
       (∫⁻ x, F R x ∂(stdGaussianE n)) ^ (2⁻¹ : ℝ) := by
     intro R
+    have hχR_cont : Continuous (smoothCutoffR (n := n) R) := by
+      unfold smoothCutoffR
+      exact smoothCutoff_contDiff.continuous.comp (continuous_norm.div_const R)
+    have haesm : AEStronglyMeasurable (fun x => (1 - smoothCutoffR R x) • g x)
+        (stdGaussianE n) :=
+      (continuous_const.sub hχR_cont).aestronglyMeasurable.smul hf_grad.aestronglyMeasurable
     rw [MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num : (2 : ℝ≥0∞) ≠ 0)
-        (by norm_num : (2 : ℝ≥0∞) ≠ ⊤)]
+        (by norm_num : (2 : ℝ≥0∞) ≠ ⊤) haesm]
     simp only [ENNReal.toReal_ofNat, one_div, enorm_eq_nnnorm, F, g]
   simp only [heLpNorm_eq]
   have h_rpow_tendsto : Filter.Tendsto (fun R => (∫⁻ x, F R x ∂(stdGaussianE n)) ^ (2⁻¹ : ℝ))
@@ -516,6 +536,8 @@ lemma cutoff_gradient_extra_term (f : E n → ℝ) (hf : MemLp f 2 (stdGaussianE
           (contDiffAt_norm ℝ hx_ne).differentiableAt WithTop.top_ne_zero
         have h2 : DifferentiableAt ℝ (fun y : E n => ‖y‖ * R⁻¹) x := h1.mul_const R⁻¹
         convert h2 using 1
+        ext y
+        rw [div_eq_mul_inv]
       have h_cutoff_diff : DifferentiableAt ℝ smoothCutoff (‖x‖ / R) :=
         smoothCutoff_contDiff.differentiable (WithTop.coe_ne_zero.mpr WithTop.top_ne_zero) (‖x‖ / R)
       have hchain : fderiv ℝ (smoothCutoffR (n := n) R) x =
@@ -530,7 +552,7 @@ lemma cutoff_gradient_extra_term (f : E n → ℝ) (hf : MemLp f 2 (stdGaussianE
             apply mul_le_mul
             · have heq : fderiv ℝ smoothCutoff (‖x‖ / R) = (deriv smoothCutoff (‖x‖ / R)) • (1 : ℝ →L[ℝ] ℝ) := by
                 ext
-                simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.one_apply, smul_eq_mul]
+                simp only [smul_apply, one_apply_eq_self, smul_eq_mul]
                 rw [fderiv_eq_smul_deriv, smul_eq_mul, mul_comm]
               rw [heq, norm_smul, norm_one, mul_one, Real.norm_eq_abs]
               calc |deriv smoothCutoff (‖x‖ / R)| = ‖deriv smoothCutoff (‖x‖ / R)‖ := (Real.norm_eq_abs _).symm
@@ -550,7 +572,7 @@ lemma cutoff_gradient_extra_term (f : E n → ℝ) (hf : MemLp f 2 (stdGaussianE
     use 1
     intro R hR
     have hf_ae : f =ᵐ[stdGaussianE n] (fun _ => (0 : ℝ)) :=
-        (eLpNorm_eq_zero_iff hf.aestronglyMeasurable (by norm_num : (2 : ℝ≥0∞) ≠ 0)).mp hf_zero
+        (eLpNorm_eq_zero_iff (by norm_num : (2 : ℝ≥0∞) ≠ 0)).mp hf_zero
     have hgoal_ae : (fun x => f x • fderiv ℝ (smoothCutoffR R) x) =ᵐ[stdGaussianE n]
         (fun _ : E n => (0 : E n →L[ℝ] ℝ)) := by
       filter_upwards [hf_ae] with x hx
@@ -558,7 +580,7 @@ lemma cutoff_gradient_extra_term (f : E n → ℝ) (hf : MemLp f 2 (stdGaussianE
     have h1 : eLpNorm (fun x => f x • fderiv ℝ (smoothCutoffR R) x) 2 (stdGaussianE n) =
         eLpNorm (fun _ : E n => (0 : E n →L[ℝ] ℝ)) 2 (stdGaussianE n) := eLpNorm_congr_ae hgoal_ae
     have h2 : eLpNorm (fun _ : E n => (0 : E n →L[ℝ] ℝ)) 2 (stdGaussianE n) = 0 :=
-      eLpNorm_zero' (α := E n) (ε := E n →L[ℝ] ℝ) (p := 2) (μ := stdGaussianE n)
+      eLpNorm_fun_zero (α := E n) (ε := E n →L[ℝ] ℝ) (p := 2) (μ := stdGaussianE n)
     rw [h1, h2]
     exact le_of_lt hε
   · -- If ||f||_2 ≠ 0
@@ -603,11 +625,17 @@ lemma cutoff_gradient_extra_term (f : E n → ℝ) (hf : MemLp f 2 (stdGaussianE
                 rwa [div_mul_cancel₀ _ hε_ne] at this
               linarith
       -- Use eLpNorm_mono and the pointwise bound
+      have hne : ((⊤ : ℕ∞) : WithTop ℕ∞) ≠ 0 := WithTop.coe_ne_zero.mpr ENat.top_ne_zero
+      have hcont_fderiv : Continuous (fun x : E n => fderiv ℝ (smoothCutoffR (n := n) R) x) :=
+        (smoothCutoffR_contDiff (n := n) hR_pos).continuous_fderiv hne
+      have hprod_meas : AEStronglyMeasurable
+          (fun x => f x • fderiv ℝ (smoothCutoffR R) x) (stdGaussianE n) :=
+        hf.aestronglyMeasurable.smul hcont_fderiv.aestronglyMeasurable
       have heLpNorm_le : eLpNorm (fun x => f x • fderiv ℝ (smoothCutoffR R) x) 2 (stdGaussianE n)
           ≤ ENNReal.ofReal (C / R) * eLpNorm f 2 (stdGaussianE n) := by
         calc eLpNorm (fun x => f x • fderiv ℝ (smoothCutoffR R) x) 2 (stdGaussianE n)
             ≤ eLpNorm (fun x => (C / R) * ‖f x‖) 2 (stdGaussianE n) := by
-              apply MeasureTheory.eLpNorm_mono_real
+              apply MeasureTheory.eLpNorm_mono_real hprod_meas
               intro x
               exact hfact x
           _ = ENNReal.ofReal (C / R) * eLpNorm (fun x => ‖f x‖) 2 (stdGaussianE n) := by
@@ -620,7 +648,7 @@ lemma cutoff_gradient_extra_term (f : E n → ℝ) (hf : MemLp f 2 (stdGaussianE
               exact Real.enorm_eq_ofReal hCR_nneg
           _ = ENNReal.ofReal (C / R) * eLpNorm f 2 (stdGaussianE n) := by
               congr 1
-              exact eLpNorm_norm (f := f)
+              exact eLpNorm_norm f hf.aestronglyMeasurable
       calc eLpNorm (fun x => f x • fderiv ℝ (smoothCutoffR R) x) 2 (stdGaussianE n)
           ≤ ENNReal.ofReal (C / R) * eLpNorm f 2 (stdGaussianE n) := heLpNorm_le
         _ = ENNReal.ofReal (C / R) * ENNReal.ofReal (eLpNorm f 2 (stdGaussianE n)).toReal := by
@@ -805,22 +833,17 @@ lemma fderiv_zero_at_ball_boundary {R : ℝ} {f g : E n → ℝ} {x : E n}
 
 /-! ### Main Cutoff Theorem -/
 
-set_option maxHeartbeats 2000000 in
 /-- Helper for triangle inequality with norm composition. -/
 lemma eLpNorm_norm_add_le {α : Type*} [MeasurableSpace α] {μ : Measure α}
     {E : Type*} [NormedAddCommGroup E] {f g : α → E}
     (hf : AEStronglyMeasurable f μ) (hg : AEStronglyMeasurable g μ) :
     eLpNorm (fun x => ‖f x‖ + ‖g x‖) 2 μ ≤ eLpNorm f 2 μ + eLpNorm g 2 μ := by
-  -- Pre-compute norm measurability to avoid repeated elaboration
-  have hfn : AEStronglyMeasurable (fun x => ‖f x‖) μ := hf.norm
-  have hgn : AEStronglyMeasurable (fun x => ‖g x‖) μ := hg.norm
   have h1 : (fun x => ‖f x‖ + ‖g x‖) = (fun x => ‖f x‖) + (fun x => ‖g x‖) := rfl
   rw [h1]
-  have hadd := eLpNorm_add_le hfn hgn (by norm_num : (1 : ℝ≥0∞) ≤ 2)
-  simp only [eLpNorm_norm] at hadd
-  exact hadd
+  have hadd := eLpNorm_add_le (μ := μ) (p := 2) (f := fun x => ‖f x‖) (g := fun x => ‖g x‖)
+    (by norm_num : (1 : ℝ≥0∞) ≤ 2)
+  rwa [eLpNorm_norm f hf, eLpNorm_norm g hg] at hadd
 
-set_option maxHeartbeats 8000000 in
 /-- The cutoff f^(R) = f·χ_R converges to f in the W^{1,2}(γ) Sobolev norm as R → ∞. -/
 theorem tendsto_cutoff_W12 (f : E n → ℝ) (hf : MemW12Gaussian n f (stdGaussianE n)) :
     Filter.Tendsto (fun R =>
@@ -880,11 +903,12 @@ theorem tendsto_cutoff_W12 (f : E n → ℝ) (hf : MemW12Gaussian n f (stdGaussi
       refine tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds hsum_tendsto ?_ ?_
       · -- Eventually 0 ≤ LHS (always true for eLpNorm)
         filter_upwards with R
-        exact zero_le _
+        exact zero_le
       · -- Eventually LHS ≤ RHS (only need for R > 0)
         filter_upwards [Filter.eventually_gt_atTop (0 : ℝ)] with R (hR_pos : 0 < R)
         -- Need: ||∇(f * χ_R - f)|| ≤ ||(1-χ_R)∇f|| + ||f∇χ_R||
-        rw [eLpNorm_norm (f := fun x => fderiv ℝ (f * smoothCutoffR R - f) x)]
+        rw [eLpNorm_norm (fun x => fderiv ℝ (f * smoothCutoffR R - f) x)
+          (measurable_fderiv ℝ (f * smoothCutoffR R - f)).aestronglyMeasurable]
         have hnorm_bound : ∀ x, ‖fderiv ℝ (f * smoothCutoffR R - f) x‖ ≤
             ‖f x • fderiv ℝ (smoothCutoffR R) x‖ + ‖(1 - smoothCutoffR R x) • fderiv ℝ f x‖ := by
           intro x
@@ -900,8 +924,8 @@ theorem tendsto_cutoff_W12 (f : E n → ℝ) (hf : MemW12Gaussian n f (stdGaussi
             have heq : f x • fderiv ℝ (smoothCutoffR R) x + smoothCutoffR R x • fderiv ℝ f x - fderiv ℝ f x =
                 f x • fderiv ℝ (smoothCutoffR R) x - (1 - smoothCutoffR R x) • fderiv ℝ f x := by
               ext v
-              simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.add_apply,
-                ContinuousLinearMap.smul_apply, sub_smul, one_smul]
+              simp only [sub_apply, add_apply,
+                smul_apply, sub_smul, one_smul]
               ring
             rw [heq]
             exact norm_sub_le _ _
@@ -1024,7 +1048,10 @@ theorem tendsto_cutoff_W12 (f : E n → ℝ) (hf : MemW12Gaussian n f (stdGaussi
         -- Step 1: Use pointwise bound
         have hstep1 : eLpNorm (fun x => fderiv ℝ (f * smoothCutoffR R - f) x) 2 (stdGaussianE n)
             ≤ eLpNorm (fun x => ‖term2 x‖ + ‖term1 x‖) 2 (stdGaussianE n) := by
-          apply eLpNorm_mono_real; intro x; exact hnorm_bound x
+          apply eLpNorm_mono_real
+            (measurable_fderiv ℝ (f * smoothCutoffR R - f)).aestronglyMeasurable
+          intro x
+          exact hnorm_bound x
         -- Step 2: Triangle inequality for eLpNorm using helper
         have hmeas1 : AEStronglyMeasurable term2 (stdGaussianE n) :=
           hf_L2.aestronglyMeasurable.smul hcont_fderiv.aestronglyMeasurable

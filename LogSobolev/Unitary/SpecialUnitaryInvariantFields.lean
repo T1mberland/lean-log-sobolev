@@ -1,7 +1,13 @@
-import LogSobolev.Unitary.SpecialUnitaryLieGroup
-import LogSobolev.Unitary.SpecialUnitaryTangent
-import Mathlib.Geometry.Manifold.GroupLieAlgebra
-import Mathlib.Geometry.Manifold.MFDeriv.FDeriv
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryLieGroup
+public import LogSobolev.Unitary.SpecialUnitaryTangent
+public import Mathlib.Geometry.Manifold.GroupLieAlgebra
+public import Mathlib.Geometry.Manifold.MFDeriv.FDeriv
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Left-invariant tangent fields on SU
 

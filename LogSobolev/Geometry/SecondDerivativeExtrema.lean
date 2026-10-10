@@ -1,5 +1,9 @@
-import Mathlib.Analysis.Calculus.DerivativeTest
-import Mathlib.Analysis.Calculus.LocalExtr.Basic
+module
+
+public import Mathlib.Analysis.Calculus.DerivativeTest
+public import Mathlib.Analysis.Calculus.LocalExtr.Basic
+
+@[expose] public section
 
 /-! # Necessary second-derivative conditions at local extrema
 

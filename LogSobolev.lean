@@ -1,132 +1,136 @@
-import LogSobolev.Measure.Entropy
-import LogSobolev.Measure.ProductEntropy
-import LogSobolev.Measure.EntropyVariational
-import LogSobolev.Measure.ParametricEntropy
-import LogSobolev.Measure.ProductEntropySubadditivity
-import LogSobolev.Measure.LSI
-import LogSobolev.Measure.Interval
-import LogSobolev.Geometry.LocalSlope
-import LogSobolev.Geometry.SlopeMeasurable
-import LogSobolev.Geometry.MetricLSI
-import LogSobolev.Geometry.CompactRegularity
-import LogSobolev.Unitary.HilbertSchmidt
-import LogSobolev.Unitary.Haar
-import LogSobolev.Unitary.SpecialUnitary
-import LogSobolev.Unitary.PhaseMap
-import LogSobolev.Unitary.Observables
-import LogSobolev.Unitary.ProductDomain
-import LogSobolev.Unitary.CircleDecomposition
-import LogSobolev.Unitary.PhasePeriodicity
-import LogSobolev.Unitary.PhaseHaar
-import LogSobolev.Unitary.LSITransfer
-import LogSobolev.Unitary.SpecialUnitaryAlgebra
-import LogSobolev.Unitary.MatrixCasimir
-import LogSobolev.Unitary.SpecialUnitaryCasimir
-import LogSobolev.Unitary.DeterminantDerivative
-import LogSobolev.Unitary.UnitaryCurves
-import LogSobolev.Unitary.SpecialUnitaryCurves
-import LogSobolev.Unitary.SpecialUnitaryInner
-import LogSobolev.Unitary.SpecialUnitaryAdjoint
-import LogSobolev.Unitary.SpecialUnitaryKilling
-import LogSobolev.Unitary.MatrixAdjointTrace
-import LogSobolev.Unitary.MatrixRealForm
-import LogSobolev.Unitary.SpecialUnitaryKillingConstant
-import LogSobolev.Unitary.MatrixExpDeterminant
-import LogSobolev.Unitary.MatrixLocalExponential
-import LogSobolev.Unitary.SpecialUnitaryLocalCoordinates
-import LogSobolev.Unitary.SpecialUnitaryAnalyticNeighborhood
-import LogSobolev.Unitary.SpecialUnitaryChart
-import LogSobolev.Unitary.SpecialUnitaryManifold
-import LogSobolev.Unitary.SpecialUnitarySmoothMaps
-import LogSobolev.Unitary.SpecialUnitaryLieGroup
-import LogSobolev.Unitary.SpecialUnitaryTangent
-import LogSobolev.Geometry.AlgebraVectorFields
-import LogSobolev.Unitary.SpecialUnitaryInvariantFields
-import LogSobolev.Unitary.SpecialUnitarySmoothExtension
-import LogSobolev.Unitary.SpecialUnitaryDifferentialOperators
-import LogSobolev.Geometry.SecondOrderArray
-import LogSobolev.Unitary.SpecialUnitarySecondOrder
-import LogSobolev.Unitary.SpecialUnitaryGenerator
-import LogSobolev.Geometry.CasimirCommutation
-import LogSobolev.Unitary.SpecialUnitaryOperatorAlgebra
-import LogSobolev.Unitary.SpecialUnitaryGeneratorCommutation
-import LogSobolev.Unitary.SpecialUnitaryGammaTwo
-import LogSobolev.Unitary.SpecialUnitaryFlow
-import LogSobolev.Unitary.SpecialUnitaryHaarCalculus
-import LogSobolev.Unitary.SpecialUnitaryIntegratedGammaTwo
-import LogSobolev.Measure.CompactDifferentiation
-import LogSobolev.Measure.EntropyDifferentiation
-import LogSobolev.Unitary.SpecialUnitaryChainRules
-import LogSobolev.Unitary.SpecialUnitaryEntropyDissipation
-import LogSobolev.Unitary.SpecialUnitaryFisherIdentity
-import LogSobolev.Unitary.SpecialUnitaryFisherDifferentiation
-import LogSobolev.Geometry.SecondDerivativeExtrema
-import LogSobolev.Geometry.CompactEvolutionMaximum
-import LogSobolev.Unitary.SpecialUnitaryMaximumPrinciple
-import LogSobolev.Unitary.SpecialUnitaryHeatBounds
-import LogSobolev.Unitary.SpecialUnitaryLinearHeat
-import LogSobolev.Geometry.DerivationSubmodulePowers
-import LogSobolev.Analysis.ExponentialDecay
-import LogSobolev.Unitary.SpecialUnitaryPolynomialSpace
-import LogSobolev.Unitary.SpecialUnitaryPolynomialNorm
-import LogSobolev.Unitary.SpecialUnitaryPolynomialHeat
-import LogSobolev.Unitary.SpecialUnitaryPolynomialHeatRegularity
-import LogSobolev.Unitary.SpecialUnitaryPolynomialDissipation
-import LogSobolev.Geometry.FiniteSpectrumUnitary
-import LogSobolev.Unitary.UnitaryConnected
-import LogSobolev.Unitary.SpecialUnitaryConnected
-import LogSobolev.Unitary.SpecialUnitaryZeroEnergy
-import LogSobolev.Analysis.DissipationBound
-import LogSobolev.Unitary.SpecialUnitaryPolynomialFunctionals
-import LogSobolev.Unitary.SpecialUnitaryPolynomialEnergyDecay
-import LogSobolev.Unitary.SpecialUnitaryPolynomialEquilibrium
-import LogSobolev.Unitary.SpecialUnitarySquareEnergy
-import LogSobolev.Unitary.SpecialUnitaryPolynomialLSI
-import LogSobolev.Geometry.LocalSlopeDerivative
-import LogSobolev.Unitary.SpecialUnitarySlope
-import LogSobolev.Unitary.SpecialUnitaryPolynomialExtension
-import LogSobolev.Unitary.SpecialUnitaryPolynomialMetricLSI
-import LogSobolev.Measure.EntropyContinuity
-import LogSobolev.Unitary.SpecialUnitaryPolynomialPullback
-import LogSobolev.Unitary.SpecialUnitaryPolynomialConvolution
-import LogSobolev.Measure.PowerKernel
-import LogSobolev.Measure.PowerKernelApproximation
-import LogSobolev.Unitary.SpecialUnitaryPeak
-import LogSobolev.Unitary.SpecialUnitaryPowerKernel
-import LogSobolev.Unitary.SpecialUnitaryPolynomialApproximation
-import LogSobolev.Geometry.LocalSlopeAverage
-import LogSobolev.Unitary.SpecialUnitaryConvolutionEnergy
-import LogSobolev.Unitary.SpecialUnitaryLSI
-import LogSobolev.Analysis.TwoPointEntropy
-import LogSobolev.Measure.FiniteUniform
-import LogSobolev.Analysis.DyadicEntropy
-import LogSobolev.Analysis.DyadicEnergy
-import LogSobolev.Analysis.DyadicLSI
-import LogSobolev.Analysis.UniformGridLimit
-import LogSobolev.Analysis.IntervalSquareIncrement
-import LogSobolev.Analysis.UnitIntervalLSI
-import LogSobolev.Measure.IntervalIntegral
-import LogSobolev.Analysis.IntervalLSI
-import LogSobolev.Analysis.LipschitzIntervalEnergy
-import LogSobolev.Analysis.LipschitzUnitIntervalLSI
-import LogSobolev.Geometry.IntervalMetricLSI
-import LogSobolev.Unitary.DimensionOneLSI
-import LogSobolev.Unitary.PhaseSlices
-import LogSobolev.Unitary.SpecialUnitaryPolynomialFamily
-import LogSobolev.Unitary.UnitaryPhasePolynomial
-import LogSobolev.Unitary.SpecialUnitaryPolynomialJointDerivative
-import LogSobolev.Unitary.CentralOrthogonality
-import LogSobolev.Measure.IntervalAlmostEverywhere
-import LogSobolev.Unitary.UnitaryPhaseFlow
-import LogSobolev.Unitary.UnitaryConvolutionDerivative
-import LogSobolev.Unitary.UnitaryPhaseConvolutionEnergy
-import LogSobolev.Unitary.UnitaryAveragedSlope
-import LogSobolev.Unitary.UnitaryPhaseIntegratedEnergy
-import LogSobolev.Unitary.UnitarySUConvolution
-import LogSobolev.Analysis.IntervalDerivativeLSI
-import LogSobolev.Unitary.SpecialUnitaryPolynomialFamilyRegularity
-import LogSobolev.Unitary.PolynomialPhaseEntropy
-import LogSobolev.Unitary.PhaseEntropyEnergy
-import LogSobolev.Unitary.PhaseEntropyTransport
-import LogSobolev.Unitary.UnitaryLSI
-import LogSobolev.Gaussian.LSI
+module
+
+public import LogSobolev.Measure.Entropy
+public import LogSobolev.Measure.ProductEntropy
+public import LogSobolev.Measure.EntropyVariational
+public import LogSobolev.Measure.ParametricEntropy
+public import LogSobolev.Measure.ProductEntropySubadditivity
+public import LogSobolev.Measure.LSI
+public import LogSobolev.Measure.Interval
+public import LogSobolev.Geometry.LocalSlope
+public import LogSobolev.Geometry.SlopeMeasurable
+public import LogSobolev.Geometry.MetricLSI
+public import LogSobolev.Geometry.CompactRegularity
+public import LogSobolev.Unitary.HilbertSchmidt
+public import LogSobolev.Unitary.Haar
+public import LogSobolev.Unitary.SpecialUnitary
+public import LogSobolev.Unitary.PhaseMap
+public import LogSobolev.Unitary.Observables
+public import LogSobolev.Unitary.ProductDomain
+public import LogSobolev.Unitary.CircleDecomposition
+public import LogSobolev.Unitary.PhasePeriodicity
+public import LogSobolev.Unitary.PhaseHaar
+public import LogSobolev.Unitary.LSITransfer
+public import LogSobolev.Unitary.SpecialUnitaryAlgebra
+public import LogSobolev.Unitary.MatrixCasimir
+public import LogSobolev.Unitary.SpecialUnitaryCasimir
+public import LogSobolev.Unitary.DeterminantDerivative
+public import LogSobolev.Unitary.UnitaryCurves
+public import LogSobolev.Unitary.SpecialUnitaryCurves
+public import LogSobolev.Unitary.SpecialUnitaryInner
+public import LogSobolev.Unitary.SpecialUnitaryAdjoint
+public import LogSobolev.Unitary.SpecialUnitaryKilling
+public import LogSobolev.Unitary.MatrixAdjointTrace
+public import LogSobolev.Unitary.MatrixRealForm
+public import LogSobolev.Unitary.SpecialUnitaryKillingConstant
+public import LogSobolev.Unitary.MatrixExpDeterminant
+public import LogSobolev.Unitary.MatrixLocalExponential
+public import LogSobolev.Unitary.SpecialUnitaryLocalCoordinates
+public import LogSobolev.Unitary.SpecialUnitaryAnalyticNeighborhood
+public import LogSobolev.Unitary.SpecialUnitaryChart
+public import LogSobolev.Unitary.SpecialUnitaryManifold
+public import LogSobolev.Unitary.SpecialUnitarySmoothMaps
+public import LogSobolev.Unitary.SpecialUnitaryLieGroup
+public import LogSobolev.Unitary.SpecialUnitaryTangent
+public import LogSobolev.Geometry.AlgebraVectorFields
+public import LogSobolev.Unitary.SpecialUnitaryInvariantFields
+public import LogSobolev.Unitary.SpecialUnitarySmoothExtension
+public import LogSobolev.Unitary.SpecialUnitaryDifferentialOperators
+public import LogSobolev.Geometry.SecondOrderArray
+public import LogSobolev.Unitary.SpecialUnitarySecondOrder
+public import LogSobolev.Unitary.SpecialUnitaryGenerator
+public import LogSobolev.Geometry.CasimirCommutation
+public import LogSobolev.Unitary.SpecialUnitaryOperatorAlgebra
+public import LogSobolev.Unitary.SpecialUnitaryGeneratorCommutation
+public import LogSobolev.Unitary.SpecialUnitaryGammaTwo
+public import LogSobolev.Unitary.SpecialUnitaryFlow
+public import LogSobolev.Unitary.SpecialUnitaryHaarCalculus
+public import LogSobolev.Unitary.SpecialUnitaryIntegratedGammaTwo
+public import LogSobolev.Measure.CompactDifferentiation
+public import LogSobolev.Measure.EntropyDifferentiation
+public import LogSobolev.Unitary.SpecialUnitaryChainRules
+public import LogSobolev.Unitary.SpecialUnitaryEntropyDissipation
+public import LogSobolev.Unitary.SpecialUnitaryFisherIdentity
+public import LogSobolev.Unitary.SpecialUnitaryFisherDifferentiation
+public import LogSobolev.Geometry.SecondDerivativeExtrema
+public import LogSobolev.Geometry.CompactEvolutionMaximum
+public import LogSobolev.Unitary.SpecialUnitaryMaximumPrinciple
+public import LogSobolev.Unitary.SpecialUnitaryHeatBounds
+public import LogSobolev.Unitary.SpecialUnitaryLinearHeat
+public import LogSobolev.Geometry.DerivationSubmodulePowers
+public import LogSobolev.Analysis.ExponentialDecay
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialSpace
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialNorm
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialHeat
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialHeatRegularity
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialDissipation
+public import LogSobolev.Geometry.FiniteSpectrumUnitary
+public import LogSobolev.Unitary.UnitaryConnected
+public import LogSobolev.Unitary.SpecialUnitaryConnected
+public import LogSobolev.Unitary.SpecialUnitaryZeroEnergy
+public import LogSobolev.Analysis.DissipationBound
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialFunctionals
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialEnergyDecay
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialEquilibrium
+public import LogSobolev.Unitary.SpecialUnitarySquareEnergy
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialLSI
+public import LogSobolev.Geometry.LocalSlopeDerivative
+public import LogSobolev.Unitary.SpecialUnitarySlope
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialExtension
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialMetricLSI
+public import LogSobolev.Measure.EntropyContinuity
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialPullback
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialConvolution
+public import LogSobolev.Measure.PowerKernel
+public import LogSobolev.Measure.PowerKernelApproximation
+public import LogSobolev.Unitary.SpecialUnitaryPeak
+public import LogSobolev.Unitary.SpecialUnitaryPowerKernel
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialApproximation
+public import LogSobolev.Geometry.LocalSlopeAverage
+public import LogSobolev.Unitary.SpecialUnitaryConvolutionEnergy
+public import LogSobolev.Unitary.SpecialUnitaryLSI
+public import LogSobolev.Analysis.TwoPointEntropy
+public import LogSobolev.Measure.FiniteUniform
+public import LogSobolev.Analysis.DyadicEntropy
+public import LogSobolev.Analysis.DyadicEnergy
+public import LogSobolev.Analysis.DyadicLSI
+public import LogSobolev.Analysis.UniformGridLimit
+public import LogSobolev.Analysis.IntervalSquareIncrement
+public import LogSobolev.Analysis.UnitIntervalLSI
+public import LogSobolev.Measure.IntervalIntegral
+public import LogSobolev.Analysis.IntervalLSI
+public import LogSobolev.Analysis.LipschitzIntervalEnergy
+public import LogSobolev.Analysis.LipschitzUnitIntervalLSI
+public import LogSobolev.Geometry.IntervalMetricLSI
+public import LogSobolev.Unitary.DimensionOneLSI
+public import LogSobolev.Unitary.PhaseSlices
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialFamily
+public import LogSobolev.Unitary.UnitaryPhasePolynomial
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialJointDerivative
+public import LogSobolev.Unitary.CentralOrthogonality
+public import LogSobolev.Measure.IntervalAlmostEverywhere
+public import LogSobolev.Unitary.UnitaryPhaseFlow
+public import LogSobolev.Unitary.UnitaryConvolutionDerivative
+public import LogSobolev.Unitary.UnitaryPhaseConvolutionEnergy
+public import LogSobolev.Unitary.UnitaryAveragedSlope
+public import LogSobolev.Unitary.UnitaryPhaseIntegratedEnergy
+public import LogSobolev.Unitary.UnitarySUConvolution
+public import LogSobolev.Analysis.IntervalDerivativeLSI
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialFamilyRegularity
+public import LogSobolev.Unitary.PolynomialPhaseEntropy
+public import LogSobolev.Unitary.PhaseEntropyEnergy
+public import LogSobolev.Unitary.PhaseEntropyTransport
+public import LogSobolev.Unitary.UnitaryLSI
+public import LogSobolev.Gaussian.LSI
+
+@[expose] public section

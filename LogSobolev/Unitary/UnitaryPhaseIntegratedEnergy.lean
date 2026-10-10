@@ -1,7 +1,13 @@
-import LogSobolev.Unitary.UnitaryPhaseConvolutionEnergy
-import LogSobolev.Unitary.UnitaryAveragedSlope
-import LogSobolev.Measure.IntervalAlmostEverywhere
-import LogSobolev.Unitary.UnitaryPhasePolynomial
+module
+
+public import LogSobolev.Unitary.UnitaryPhaseConvolutionEnergy
+public import LogSobolev.Unitary.UnitaryAveragedSlope
+public import LogSobolev.Measure.IntervalAlmostEverywhere
+public import LogSobolev.Unitary.UnitaryPhasePolynomial
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Integrated energy bound for polynomial phase regularization
 

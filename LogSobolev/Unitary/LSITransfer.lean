@@ -1,5 +1,9 @@
-import LogSobolev.Unitary.PhaseHaar
-import LogSobolev.Geometry.CompactRegularity
+module
+
+public import LogSobolev.Unitary.PhaseHaar
+public import LogSobolev.Geometry.CompactRegularity
+
+@[expose] public section
 
 /-! # Conditional final transfer to U(N)
 

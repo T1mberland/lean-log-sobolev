@@ -1,7 +1,11 @@
-import LogSobolev.Unitary.PhasePeriodicity
-import Mathlib.MeasureTheory.Integral.BoundedContinuousFunction
-import Mathlib.MeasureTheory.Measure.HasOuterApproxClosed
-import Mathlib.MeasureTheory.Group.Integral
+module
+
+public import LogSobolev.Unitary.PhasePeriodicity
+public import Mathlib.MeasureTheory.Integral.BoundedContinuousFunction
+public import Mathlib.MeasureTheory.Measure.HasOuterApproxClosed
+public import Mathlib.MeasureTheory.Group.Integral
+
+@[expose] public section
 
 /-! # The short-interval Haar decomposition
 
@@ -80,8 +84,9 @@ theorem map_intervalPhaseMap (N : ℕ) (hN : 0 < N) :
     Measure.map (intervalPhaseMap N) (phaseDomainMeasure N) = unitaryHaar (Fin N) := by
   let μ := Measure.map (intervalPhaseMap N) (phaseDomainMeasure N)
   letI := phaseDomainMeasure_probability N hN
-  letI : IsProbabilityMeasure μ := Measure.isProbabilityMeasure_map
-    (intervalPhaseMap_lipschitz N hN).continuous.measurable.aemeasurable
+  letI : IsProbabilityMeasure μ := inferInstance
+  haveI : TopologicalSpace.PseudoMetrizableSpace (Matrix.unitaryGroup (Fin N) ℂ) :=
+    ⟨⟨inferInstance, rfl, inferInstance⟩⟩
   have hinv : μ.IsMulLeftInvariant := by
     constructor
     intro g

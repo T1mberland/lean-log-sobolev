@@ -1,7 +1,15 @@
-import LogSobolev.Geometry.SecondOrderArray
-import LogSobolev.Unitary.SpecialUnitaryKillingConstant
-import LogSobolev.Unitary.SpecialUnitaryDifferentialOperators
-import Mathlib.Analysis.InnerProductSpace.Dual
+module
+
+public import LogSobolev.Geometry.SecondOrderArray
+public import LogSobolev.Unitary.SpecialUnitaryKillingConstant
+public import LogSobolev.Unitary.SpecialUnitaryDifferentialOperators
+public import Mathlib.Analysis.InnerProductSpace.Dual
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-! # The dimension-dependent second-derivative estimate on SU
 

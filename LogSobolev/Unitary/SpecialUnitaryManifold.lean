@@ -1,6 +1,14 @@
-import LogSobolev.Unitary.SpecialUnitaryChart
-import Mathlib.Geometry.Manifold.IsManifold.Basic
-import Mathlib.LinearAlgebra.Basis.VectorSpace
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryChart
+public import Mathlib.Geometry.Manifold.IsManifold.Basic
+public import Mathlib.LinearAlgebra.Basis.VectorSpace
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-! # Smooth manifold structure on the actual matrix SU group
 
@@ -83,7 +91,7 @@ theorem specialUnitary_chart_transition_contDiffOn (U V : Matrix.specialUnitaryG
   rw [hlog] at hp
   simpa only [F, P, OpenPartialHomeomorph.trans_apply, specialUnitaryChartAt_apply,
     specialUnitaryChartAt_symm_apply, specialUnitaryExpCurve, unitaryExpCurve,
-    one_smul, mul_assoc] using hp.symm
+    one_smul, Submonoid.coe_mul, mul_assoc] using hp.symm
 
 /-- The existing matrix SU group is a smooth real manifold modeled on its
 verified traceless skew-Hermitian algebra, with its existing Frobenius topology. -/

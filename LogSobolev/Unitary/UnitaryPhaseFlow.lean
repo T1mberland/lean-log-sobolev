@@ -1,8 +1,14 @@
-import LogSobolev.Unitary.CentralOrthogonality
-import LogSobolev.Unitary.PhaseSlices
-import LogSobolev.Unitary.SpecialUnitaryCurves
-import Mathlib.Analysis.Complex.RealDeriv
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+module
+
+public import LogSobolev.Unitary.CentralOrthogonality
+public import LogSobolev.Unitary.PhaseSlices
+public import LogSobolev.Unitary.SpecialUnitaryCurves
+public import Mathlib.Analysis.Complex.RealDeriv
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Exact speed of the combined phase and SU flow
 
@@ -47,12 +53,12 @@ theorem unitaryPhaseFlow_hasDerivAt (N : ℕ) (t c : ℝ)
         (A.val + (Complex.I * ((Real.sqrt (2 / (N : ℝ)) * c : ℝ) : ℂ)) • 1)) s := by
   let a := Real.sqrt (2 / (N : ℝ))
   have hr : HasDerivAt (fun r : ℝ => a * (t + c * r)) (a * c) s := by
-    simpa only [Pi.add_apply, zero_add, mul_one] using
+    simpa only [Pi.add_apply, zero_add, mul_one, id_eq] using
       ((hasDerivAt_const s t).add ((hasDerivAt_id s).const_mul c)).const_mul a
   have hz := (hr.ofReal_comp.const_mul Complex.I).cexp
   have hU := (specialUnitaryExpCurve_hasDerivAt A s).const_mul U.val
   have hd := hz.smul hU
-  convert hd using 1
+  convert hd using 1 <;> try rfl
   change ((phase (a * (t + c * s)) : ℂ) • (U.val * (specialUnitaryExpCurve A s).val)) *
         (A.val + (Complex.I * ((a * c : ℝ) : ℂ)) • 1) = _
   simp only [Matrix.mul_add, Matrix.smul_mul, Matrix.mul_smul, mul_one, smul_smul,

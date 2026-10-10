@@ -1,9 +1,13 @@
-import Mathlib.Analysis.Calculus.Deriv.Comp
-import LogSobolev.Unitary.SpecialUnitaryAlgebra
-import Mathlib.Analysis.Calculus.Deriv.Star
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.SpecialFunctions.Exponential
-import Mathlib.Analysis.Normed.Module.FiniteDimension
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import LogSobolev.Unitary.SpecialUnitaryAlgebra
+public import Mathlib.Analysis.Calculus.Deriv.Star
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.SpecialFunctions.Exponential
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+
+@[expose] public section
 
 /-! # Velocities of curves in the matrix unitary group
 
@@ -55,6 +59,7 @@ noncomputable def unitaryExpCurve (A : Matrix n n ℂ) (hA : star A = -A)
   apply Subtype.ext
   simp [unitaryExpCurve]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Every skew-Hermitian matrix is realized as an actual unitary curve velocity. -/
 theorem unitaryExpCurve_hasDerivAt_zero (A : Matrix n n ℂ) (hA : star A = -A) :
     HasDerivAt (fun t => (unitaryExpCurve A hA t).val) A 0 := by

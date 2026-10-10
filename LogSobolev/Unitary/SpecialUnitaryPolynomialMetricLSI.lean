@@ -1,7 +1,13 @@
-import LogSobolev.Unitary.SpecialUnitaryPolynomialLSI
-import LogSobolev.Unitary.SpecialUnitarySlope
-import LogSobolev.Geometry.CompactRegularity
-import LogSobolev.Unitary.SpecialUnitaryPolynomialExtension
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialLSI
+public import LogSobolev.Unitary.SpecialUnitarySlope
+public import LogSobolev.Geometry.CompactRegularity
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialExtension
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Polynomial SU logarithmic Sobolev inequality with the paper's local slope
 

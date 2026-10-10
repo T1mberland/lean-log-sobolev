@@ -1,6 +1,12 @@
-import LogSobolev.Unitary.SpecialUnitaryPolynomialSpace
-import Mathlib.Topology.ContinuousMap.Compact
-import Mathlib.Analysis.Normed.Module.FiniteDimension
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryPolynomialSpace
+public import Mathlib.Topology.ContinuousMap.Compact
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Supremum norm on finite-degree SU polynomial observables
 

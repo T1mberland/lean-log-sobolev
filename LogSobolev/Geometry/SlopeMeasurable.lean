@@ -1,6 +1,10 @@
-import LogSobolev.Geometry.LocalSlope
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Order
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Metric
+module
+
+public import LogSobolev.Geometry.LocalSlope
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Order
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Metric
+
+@[expose] public section
 
 /-! # Measurability of the local metric slope
 

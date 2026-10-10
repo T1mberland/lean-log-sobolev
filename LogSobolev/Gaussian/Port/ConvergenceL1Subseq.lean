@@ -5,7 +5,11 @@ Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 Ported from AI4SLT d0f506f0a695018265dccb33bcb05e2f5ca1c876.
 Modified for Lean 4.28.0 and the shared LogSobolev entropy/two-point API.
 -/
-import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
+module
+
+public import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
+
+@[expose] public section
 
 open Filter
 
@@ -22,7 +26,7 @@ theorem exists_seq_tendsto_ae_of_tendsto_eLpNorm_one
     ∃ ns : ℕ → ℕ, StrictMono ns ∧
       ∀ᵐ x ∂mu, Tendsto (fun i => f (ns i) x) atTop (nhds (g x)) := by
   have h_in_measure : TendstoInMeasure mu f atTop g :=
-    tendstoInMeasure_of_tendsto_eLpNorm (p := (1 : ENNReal)) (by simp) hf hg hfg
+    tendstoInMeasure_of_tendsto_eLpNorm (p := (1 : ENNReal)) (by simp) hfg
   exact h_in_measure.exists_seq_tendsto_ae
 
 end MeasureTheory

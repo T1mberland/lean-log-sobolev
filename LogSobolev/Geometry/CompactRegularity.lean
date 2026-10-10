@@ -1,5 +1,9 @@
-import LogSobolev.Geometry.MetricLSI
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
+module
+
+public import LogSobolev.Geometry.MetricLSI
+public import Mathlib.MeasureTheory.Function.LocallyIntegrable
+
+@[expose] public section
 
 /-! # Integrability on compact metric probability spaces
 

@@ -1,7 +1,13 @@
-import LogSobolev.Unitary.PhaseEntropyEnergy
-import LogSobolev.Unitary.PhaseEntropyTransport
-import LogSobolev.Unitary.UnitaryPhaseIntegratedEnergy
-import LogSobolev.Unitary.UnitarySUConvolution
+module
+
+public import LogSobolev.Unitary.PhaseEntropyEnergy
+public import LogSobolev.Unitary.PhaseEntropyTransport
+public import LogSobolev.Unitary.UnitaryPhaseIntegratedEnergy
+public import LogSobolev.Unitary.UnitarySUConvolution
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Logarithmic Sobolev inequality on U(N)
 
@@ -38,7 +44,7 @@ theorem unitarySUConvolution_entropy_sq_le (N : ℕ) (hN : 0 < N) (d : ℕ)
       simp only [ContinuousMap.coe_mk, map_mul, phaseMul_mul]
   have hent := entropy_phase_decomposition N hN
     ((unitarySUConvolution d ⟨f, hf.continuous⟩).continuous.pow 2)
-  simp only [hmatch] at hent
+  simp only [Pi.pow_apply, hmatch] at hent
   have h := (phase_entropy_sq_le_energy N hN d b hp).trans
     (mul_le_mul_right henergy (ENNReal.ofReal (Real.pi ^ 2 / N)))
   rw [← hent, slopeEnergy_eq_ofReal_integral hf,

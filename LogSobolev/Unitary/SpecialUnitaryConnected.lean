@@ -1,5 +1,11 @@
-import LogSobolev.Unitary.UnitaryConnected
-import LogSobolev.Unitary.SpecialUnitary
+module
+
+public import LogSobolev.Unitary.UnitaryConnected
+public import LogSobolev.Unitary.SpecialUnitary
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 /-! # Connectedness of the actual special unitary group
 

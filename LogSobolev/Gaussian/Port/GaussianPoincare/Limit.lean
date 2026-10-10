@@ -5,13 +5,17 @@ Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 Ported from AI4SLT d0f506f0a695018265dccb33bcb05e2f5ca1c876.
 Modified for Lean 4.28.0 and the shared LogSobolev entropy/two-point API.
 -/
-import LogSobolev.Gaussian.Port.GaussianPoincare.TaylorBound
-import LogSobolev.Gaussian.Port.GaussianPoincare.LevyContinuity
-import LogSobolev.Measure.Entropy
-import Mathlib.Topology.ContinuousMap.Bounded.Basic
-import Mathlib.Probability.Distributions.Gaussian.Real
-import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-import Mathlib.Analysis.SpecialFunctions.Complex.LogBounds
+module
+
+public import LogSobolev.Gaussian.Port.GaussianPoincare.TaylorBound
+public import LogSobolev.Gaussian.Port.GaussianPoincare.LevyContinuity
+public import LogSobolev.Measure.Entropy
+public import Mathlib.Topology.ContinuousMap.Bounded.Basic
+public import Mathlib.Probability.Distributions.Gaussian.Real
+public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+public import Mathlib.Analysis.SpecialFunctions.Complex.LogBounds
+
+@[expose] public section
 
 /-!
 # Gaussian Poincaré Inequality via Limit of Rademacher Sums
@@ -93,7 +97,7 @@ lemma charFun_map_sum_pi_const (μ : Measure ℝ) [IsFiniteMeasure μ] (n : ℕ)
 This is the pushforward of `rademacherProductMeasure n` under `rademacherSumProd n`. -/
 def rademacherLaw (n : ℕ) [NeZero n] : ProbabilityMeasure ℝ :=
   ⟨(rademacherProductMeasure n).map (rademacherSumProd n),
-   Measure.isProbabilityMeasure_map (Measurable.aemeasurable (measurable_rademacherSumProd n))⟩
+   inferInstance⟩
 
 /-- The characteristic function of the Rademacher measure: φ(t) = cos(t).
 This follows from: φ(t) = (1/2)e^{it} + (1/2)e^{-it} = cos(t). -/

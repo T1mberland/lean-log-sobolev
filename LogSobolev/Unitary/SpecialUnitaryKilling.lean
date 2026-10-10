@@ -1,6 +1,12 @@
-import LogSobolev.Unitary.SpecialUnitaryInner
-import Mathlib.Analysis.InnerProductSpace.Trace
-import Mathlib.Algebra.Lie.TraceForm
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryInner
+public import Mathlib.Analysis.InnerProductSpace.Trace
+public import Mathlib.Algebra.Lie.TraceForm
+
+@[expose] public section
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-! # The real Killing form and orthonormal commutator energy
 

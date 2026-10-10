@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Original authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 Adapted for Lean 4.28.0; transport API added in this project.
 -/
-import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-import Mathlib.Analysis.Convex.Integral
-import Mathlib.Analysis.Convex.SpecificFunctions.Basic
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
+public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+public import Mathlib.Analysis.Convex.Integral
+public import Mathlib.Analysis.Convex.SpecificFunctions.Basic
 
 /-! # Entropy and transport
 
@@ -20,6 +22,8 @@ port avoids importing their newer, incompatible Lean toolchains.
 The Bochner integral is totalized: applications must establish integrability.
 In particular, this definition alone makes no assertion about infinite entropy.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

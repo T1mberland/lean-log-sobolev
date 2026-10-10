@@ -1,5 +1,9 @@
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+module
+
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+
+@[expose] public section
 
 /-! # Normalized interval measure
 
@@ -30,7 +34,8 @@ instance (L : ℝ) [hL : Fact (0 < L)] : IsProbabilityMeasure (intervalUniform L
 theorem map_intervalUniform (L : ℝ) :
     Measure.map (Subtype.val : Icc (0 : ℝ) L → ℝ) (intervalUniform L) =
       (ENNReal.ofReal L)⁻¹ • volume.restrict (Icc (0 : ℝ) L) := by
-  rw [intervalUniform, Measure.map_smul, map_comap_subtype_coe measurableSet_Icc]
+  rw [intervalUniform, Measure.map_smul _ measurable_subtype_coe.aemeasurable,
+    map_comap_subtype_coe measurableSet_Icc]
 
 /-- Length of the interval in Meckes–Meckes. -/
 noncomputable def phaseIntervalLength (N : ℕ) : ℝ := Real.pi * Real.sqrt (2 / (N : ℝ))

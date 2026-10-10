@@ -5,17 +5,21 @@ Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 Ported from AI4SLT d0f506f0a695018265dccb33bcb05e2f5ca1c876.
 Modified for Lean 4.28.0 and the shared LogSobolev entropy/two-point API.
 -/
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.MeasureTheory.Measure.Prod
-import Mathlib.MeasureTheory.Measure.Count
-import Mathlib.Probability.ProbabilityMassFunction.Basic
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Analysis.SpecialFunctions.BinaryEntropy
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.Logic.Function.Basic
-import LogSobolev.Measure.Entropy
-import LogSobolev.Analysis.TwoPointEntropy
-import LogSobolev.Gaussian.Port.GaussianPoincare.Limit
+module
+
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+public import Mathlib.MeasureTheory.Measure.Prod
+public import Mathlib.MeasureTheory.Measure.Count
+public import Mathlib.Probability.ProbabilityMassFunction.Basic
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Analysis.SpecialFunctions.BinaryEntropy
+public import Mathlib.Analysis.Complex.ExponentialBounds
+public import Mathlib.Logic.Function.Basic
+public import LogSobolev.Measure.Entropy
+public import LogSobolev.Analysis.TwoPointEntropy
+public import LogSobolev.Gaussian.Port.GaussianPoincare.Limit
+
+@[expose] public section
 
 /-!
 # Bernoulli Log-Sobolev Inequality
@@ -135,7 +139,7 @@ theorem bernoulli_flip_invariance (j : Fin n) :
     by_cases h : i = j
     · subst h; simp only [update_self, Bool.not_not]
     · rw [update_of_ne h, update_of_ne h]
-  rw [Measure.map_smul]
+  rw [Measure.map_smul _ (measurable_of_finite _).aemeasurable]
   congr 1
   -- Show count measure is invariant under bijection
   ext s hs
@@ -164,7 +168,7 @@ theorem bernoulli_integral_eq_sum {n : ℕ} (f : (Fin n → Bool) → ℝ) :
     ∫ ε, f ε ∂(bernoulliUniform n) = (∑ ε : Fin n → Bool, f ε) / 2^n := by
   unfold bernoulliUniform
   rw [integral_smul_measure]
-  rw [integral_fintype _ (Integrable.of_finite)]
+  rw [integral_fintype (Integrable.of_finite : Integrable f Measure.count)]
   rw [card_fin_bool n]
   simp only [Nat.cast_pow, Nat.cast_ofNat, smul_eq_mul, count_real_singleton, one_mul]
   rw [ENNReal.toReal_inv, ENNReal.toReal_pow, ENNReal.toReal_ofNat]
@@ -676,6 +680,8 @@ theorem binaryKLfromUniform_convexOn :
   have h3 : ConvexOn ℝ (Set.Icc (0 : ℝ) 1) (fun p => Real.log 2 + (-Real.binEntropy p)) :=
     h2.add h1
   convert h3 using 1
+  funext p
+  exact sub_eq_add_neg _ _
 
 /-- The midpoint inequality for binaryKLfromUniform -/
 theorem binaryKLfromUniform_midpoint_le {p₀ p₁ : ℝ}

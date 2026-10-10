@@ -1,6 +1,12 @@
-import LogSobolev.Unitary.MatrixLocalExponential
-import LogSobolev.Unitary.SpecialUnitaryInner
-import LogSobolev.Unitary.SpecialUnitary
+module
+
+public import LogSobolev.Unitary.MatrixLocalExponential
+public import LogSobolev.Unitary.SpecialUnitaryInner
+public import LogSobolev.Unitary.SpecialUnitary
+
+@[expose] public section
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-! # Exponential local coordinates on the actual SU group
 

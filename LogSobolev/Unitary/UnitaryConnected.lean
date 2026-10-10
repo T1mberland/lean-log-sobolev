@@ -1,6 +1,10 @@
-import LogSobolev.Geometry.FiniteSpectrumUnitary
-import Mathlib.Analysis.CStarAlgebra.Matrix
-import Mathlib.LinearAlgebra.Eigenspace.Minpoly
+module
+
+public import LogSobolev.Geometry.FiniteSpectrumUnitary
+public import Mathlib.Analysis.CStarAlgebra.Matrix
+public import Mathlib.LinearAlgebra.Eigenspace.Minpoly
+
+@[expose] public section
 
 /-! # Connectedness of the actual finite-dimensional unitary group
 

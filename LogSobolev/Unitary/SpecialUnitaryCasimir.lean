@@ -1,5 +1,11 @@
-import LogSobolev.Unitary.SpecialUnitaryAlgebra
-import LogSobolev.Unitary.MatrixCasimir
+module
+
+public import LogSobolev.Unitary.SpecialUnitaryAlgebra
+public import LogSobolev.Unitary.MatrixCasimir
+
+@[expose] public section
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-! # Hilbert–Schmidt commutator energy on the matrix special unitary algebra
 
