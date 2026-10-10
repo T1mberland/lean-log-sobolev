@@ -43,6 +43,11 @@ Proved components include:
 * Haar integration by parts for actual SU derivatives and the generator,
   with symmetry, nonpositivity, and the integrated estimate
   `(N/2) ∫ Γ(f,f) ≤ ∫ (Lf)²` for every smooth real test.
+* Scalar diffusion/logarithm chain rules, the logarithmic Haar energy identity,
+  and entropy differentiation on compact probability spaces. Entropy
+  dissipation is proved **for a supplied positive family satisfying the heat
+  equation at the specified time**; existence of a heat flow remains open.
+  The weighted logarithmic Γ₂ curvature bound is also proved.
 * The normalized interval and its L² product with SU(N).
 * The paper's phase map into U(N), with the `sqrt(3)` Lipschitz bound.
 * **The exact short-interval Haar decomposition (Lemma 16)** for every positive N,

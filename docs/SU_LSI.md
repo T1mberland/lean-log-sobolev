@@ -339,16 +339,64 @@ estimate, a real Hilbert–Schmidt orthonormal basis. This is a generator
 coercivity estimate, not yet a Poincaré or entropy inequality. No spectral or
 heat-semigroup existence assumption is introduced.
 
+## Logarithmic calculus and entropy differentiation now proved
+
+`Unitary/SpecialUnitaryChainRules.lean` proves the actual scalar chain rule
+`L(φ ∘ f) = φ′(f) Lf + φ″(f) Γ(f,f)`, with scalar smoothness required only
+along the range of `f`. Its logarithmic specializations give
+`L log f = Lf/f − Γ(f,f)/f²` and `Γ(log f,log f) = Γ(f,f)/f²`.
+The logarithmic Haar identity is
+`specialUnitary_integral_log_mul_laplacian`:
+
+`∫ log(f) Lf = −∫ Γ(f,f)/f`.
+
+`Measure/CompactDifferentiation.lean` derives domination on a compact time
+interval times a compact space from joint continuity.
+`Measure/EntropyDifferentiation.lean:hasDerivAt_entropy_of_compact` proves
+entropy differentiation, including the correction for varying total mass.
+The family and proposed time derivative are jointly continuous, the family is
+positive, and the time-derivative hypothesis is required only on a neighborhood
+of the specified time.
+
+`Unitary/SpecialUnitaryEntropyDissipation.lean:specialUnitary_hasDerivAt_entropy`
+then proves `d Ent(F_t)/dt = −∫ Γ(F_t,F_t)/F_t` **for a supplied family whose
+time derivative at that time is the actual Laplacian**. Integrability and
+nonpositivity of this entropy derivative are proved. This is a conditional
+statement about a differentiable family, not a construction of a heat solution
+and not an assumed entropy-decay axiom. In particular, no backwards heat
+solution is required by its local time-derivative hypothesis.
+
+For every positive smooth `f` and real HS orthonormal basis, the same module
+proves `specialUnitary_weighted_gammaTwo_log_lower_bound`:
+
+`(N/2) ∫ Γ(f,f)/f ≤ ∫ f Γ₂(log f)`.
+
+This supplies the curvature part of the Fisher-information argument. The
+identity differentiating Fisher information along a heat trajectory, its
+exponential decay, heat existence, and equilibrium convergence remain open.
+
 ## Remaining route to the theorem
 
 The sum-of-squares route now has its exact differential estimate
 `Γ₂ ≥ (N/2) Γ`. The remaining central task is analytic: construct the diffusion
 for this operator and prove the entropy argument, with invariant measure equal
 to the already-defined normalized Haar probability. Haar integration by parts
-is now proved. Required steps include semigroup existence and regularity, entropy dissipation,
-the Fisher-information estimate derived from the proved Γ₂ bound, and convergence
+is now proved, as is the entropy-dissipation formula for a supplied positive
+regular family in the heat direction. Required steps include semigroup
+existence and regularity, the Fisher-information derivative and decay using
+the proved weighted Γ₂ estimate, and convergence
 to constants. Connectedness/ergodicity needed for this convergence must be proved;
 it is not supplied by an abstract class or inferred from Γ₂ alone.
+
+The next unproved differential identity, for a positive regular heat family
+`f_t` with `∂ₜ f_t = L f_t`, is
+
+`I′(t) = −2 ∫ f_t Γ₂(log f_t)`, where `I(t) = ∫ Γ(f_t,f_t)/f_t`.
+
+The proved weighted estimate would then yield `I′(t) ≤ −N I(t)`. Integrating
+entropy dissipation still requires existence of this family and its convergence
+to equilibrium. Neither the identity nor those analytic existence/convergence
+statements is currently a proved library declaration.
 
 A precise **unproved smooth intermediate goal**, for `N ≥ 2`, a real orthonormal
 basis `b` of su(N), and `f` smooth on SU(N), is
@@ -403,9 +451,11 @@ operations, ambient criterion, and exact manifold tangent normalization), and
 operator commutators), and `6cb53ac` (the `N/2` second-derivative estimate and
 generator-defined carré du champ), and `eb986ff` (actual operator Casimir
 commutation and the exact generator-defined Γ₂ identity and bound), and
-`3c059da` (actual Haar integration by parts and integrated Γ₂ coercivity).
+`3c059da` (actual Haar integration by parts and integrated Γ₂ coercivity), and
+`0c520e8` (scalar/logarithmic diffusion calculus, compact entropy
+differentiation, conditional entropy dissipation, and weighted logarithmic Γ₂).
 `lake build` and the independent `Examples.lean`
-compilation pass. The recursive `Audit.lean` check passes for all 482 project
+compilation pass. The recursive `Audit.lean` check passes for all 507 project
 declarations, accepting only `propext`, `Classical.choice`, and `Quot.sound`.
 It prints the fully elaborated commutator-energy, curve-velocity, and
 exponential-speed, conjugation-derivative, and Killing-contraction, exact-coefficient, and real-orthonormal-energy theorems, exposes the Frobenius instances, and inspects the
@@ -413,5 +463,5 @@ Lie-algebra, trace-pairing, exponential-curve, and inner-product definitions.
 The full output is in [axiom-audit.txt](axiom-audit.txt). These checks certify
 the algebraic, curve, local-coordinate, smooth Lie-group, tangent-derivative,
 smooth differential-operator, second-order energy, generator, Γ₂, and Haar
-integration results
+integration, logarithmic chain-rule, and entropy-differentiation results
 above, not an SU(N) LSI theorem.

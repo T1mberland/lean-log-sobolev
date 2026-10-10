@@ -67,6 +67,10 @@ All names below are in namespace `LogSobolev`.
 | `LogSobolev/Unitary/SpecialUnitaryFlow.lean` | `specialUnitary_hasDerivAt_mul_exp` | Derivative along the actual curve `U exp(tA)` equals invariant differentiation for smooth tests. |
 | `LogSobolev/Unitary/SpecialUnitaryHaarCalculus.lean` | `eq_specialUnitaryHaar`, `specialUnitary_integral_deriv_eq_zero`, `specialUnitary_integral_mul_laplacian` | Right invariance, zero integral of invariant derivatives, and the actual Haar Dirichlet identity. The generator is symmetric and nonpositive on smooth tests; all integrability is proved. |
 | `LogSobolev/Unitary/SpecialUnitaryIntegratedGammaTwo.lean` | `specialUnitary_integral_gammaTwo`, `specialUnitary_integrated_gammaTwo_lower_bound` | `∫ Γ₂(f) = ∫ (Lf)²` and `(N/2) ∫ Γ(f,f) ≤ ∫ (Lf)²` for normalized Haar and smooth tests. This is not an entropy or Poincaré inequality. |
+| `LogSobolev/Measure/CompactDifferentiation.lean` | `hasDerivAt_integral_of_compact` | Joint continuity and a local time derivative give differentiation under a finite measure on a compact space; domination is proved. |
+| `LogSobolev/Measure/EntropyDifferentiation.lean` | `hasDerivAt_entropy_of_compact`, `hasDerivAt_entropy_of_compact_of_integral_eq_zero` | Entropy derivative of a positive family, including the changing-mass correction and its zero-mass-derivative specialization. |
+| `LogSobolev/Unitary/SpecialUnitaryChainRules.lean` | `specialUnitaryLaplacian_comp`, `specialUnitaryLaplacian_log`, `specialUnitaryGamma_log`, `specialUnitary_integral_log_mul_laplacian` | Actual diffusion chain rule, logarithmic generator/energy formulas, and logarithmic Haar integration by parts. |
+| `LogSobolev/Unitary/SpecialUnitaryEntropyDissipation.lean` | `specialUnitary_hasDerivAt_entropy`, `specialUnitary_entropy_deriv_nonpos`, `specialUnitary_weighted_gammaTwo_log_lower_bound` | Entropy dissipation for an explicitly supplied positive differentiable family in the actual heat direction; weighted logarithmic Γ₂ estimate. No heat existence or Fisher time-decay theorem is asserted. |
 | `LogSobolev/Unitary/PhaseMap.lean` | `phaseMul_dist_le`, `phaseMap_lipschitz` | The full-line phase map has Lipschitz constant `sqrt(3)` for every positive N; no probability argument is needed. |
 | `LogSobolev/Measure/Interval.lean` | `intervalUniform_univ`, `map_intervalUniform` | Normalized Lebesgue measure on the Euclidean subtype `[0,L]` for `L>0`. |
 | `LogSobolev/Unitary/ProductDomain.lean` | `phaseDomainMeasure_probability`, `intervalPhaseMap_lipschitz` | The exact interval × SU domain and probability measure, and the restricted map's Lipschitz bound. |
@@ -180,8 +184,9 @@ invariant derivatives, its actual iterated carré du champ equals the
 second-derivative sum, and `Γ₂ ≥ (N/2)Γ` is proved for every smooth real test.
 This avoids needing a geometric Ricci theorem for the current operator route.
 Haar integration by parts and the integrated Γ₂ identity are now proved.
-The SU step still needs a constructed diffusion,
-entropy dissipation, the Fisher-information estimate, and equilibrium convergence
+The entropy-dissipation formula for a supplied positive differentiable family
+in the heat direction is also proved. The SU step still needs a constructed
+diffusion, the Fisher-information time derivative and decay, and equilibrium convergence
 with proved ergodicity. Energy identification and approximation are required to
 obtain locally Lipschitz functions. The abstract
 `markov-semigroups` class does not eliminate these obligations. Its assumed
@@ -196,16 +201,16 @@ the compact regularity side conditions. A verified Herbst argument is a later ta
 Verification performed on 2026-10-10 with Lean 4.28.0 and the pinned Mathlib
 commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
 
-* `lake build`: passed for the complete library (2943 dependency/build jobs,
+* `lake build`: passed for the complete library (2947 dependency/build jobs,
   primarily cached Mathlib artifacts).
 * `lake env lean LogSobolev/Examples.lean`: passed; the examples compile as an
   independent client importing the public root module.
 * `lake env lean LogSobolev/Audit.lean`: passed. The automated traversal checked
-  **482 declarations** in the `LogSobolev` namespace, including definitions,
+  **507 declarations** in the `LogSobolev` namespace, including definitions,
   instances, and generated auxiliaries. Every transitive axiom was one of
   `propext`, `Classical.choice`, or `Quot.sound`. No `sorryAx` or custom axiom
   was present in those dependency closures.
-* The audit also executes 109 `#print axioms` commands, prints the core
+* The audit also executes 121 `#print axioms` commands, prints the core
   definitions, and prints fully elaborated types for the trace normalization,
   phase-map Lipschitz theorem, U(N) regularity theorem, exact Haar identity,
   conditional final LSI transfer, product entropy chain rule, and SU algebra
@@ -216,7 +221,8 @@ commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
   extension, the actual differential-operator commutator, the `N/2` second-order
   bound, the generator-defined carré du champ identity, generator commutation,
   the exact Γ₂ bound, Haar integration by parts, and the integrated Γ₂
-  estimate. The elaborated
+  estimate, scalar diffusion chain rule, entropy differentiation with changing
+  mass, conditional entropy dissipation, and weighted logarithmic Γ₂. The elaborated
   metric instances are explicitly Frobenius and `WithLp 2`.
 * The recursive audit now shares Lean's core collector visited set across all
   project roots. At milestone `6cb53ac`, an independent-root baseline run and
@@ -321,6 +327,17 @@ Completed milestones:
   and the 482-declaration recursive audit pass; 109 explicit `#print axioms`
   commands use only the three standard foundational axioms. Diffusion
   construction, entropy dissipation/convergence, energy identification, and
+  locally Lipschitz LSI remain open.
+
+* `0c520e8`: scalar and logarithmic chain rules for the actual SU generator,
+  logarithmic Haar energy identity, and entropy differentiation on compact
+  probability spaces with changing-mass correction. For a supplied regular
+  positive family in the heat direction, entropy dissipation and nonpositivity
+  are proved; the weighted logarithmic Γ₂ estimate is also proved. Build
+  (2947 jobs), independent positive nonconstant SU-density and time-dependent
+  exponential-family examples, and the 507-declaration recursive audit pass.
+  All 121 explicit axiom checks use only standard foundational axioms. Heat
+  construction, Fisher time derivative/decay, equilibrium convergence, and the
   locally Lipschitz LSI remain open.
 
 The report and README are committed separately after these verified proof
