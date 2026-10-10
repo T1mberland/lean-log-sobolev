@@ -496,13 +496,52 @@ Independent examples construct `(2 + Im(U₀₀))²` in degree two on SU(2), pro
 strict positivity and an actual invariant derivative equal to four, and check
 Haar-mass conservation and Fisher decay at exact rate two.
 
+## Connectedness and the zero-energy kernel
+
+`Geometry/FiniteSpectrumUnitary.lean` reuses Mathlib's selfadjoint argument and
+continuous functional calculus. A scalar argument restricted to a finite
+spectrum is continuous, even at a branch cut. The theorem
+`expUnitary_argSelfAdjoint_of_finite_spectrum` therefore proves that its
+selfadjoint exponential is the original unitary. Surjectivity of the continuous
+exponential gives `unitary_connectedSpace_of_finite_spectrum`.
+
+`Unitary/UnitaryConnected.lean` applies this to actual complex matrices, reusing
+`Matrix.finite_spectrum`. The C⋆ operator norm is used locally to invoke the
+functional-calculus API. Mathlib's matrix operator-norm topology is the original
+finite matrix topology, so the exported `unitaryConnectedSpace` asserts
+connectedness for that topology. It does not install an operator norm on the
+LSI development or change its Frobenius metric.
+
+`Unitary/SpecialUnitaryConnected.lean` constructs a continuous retraction
+`unitaryToSpecialUnitary i`: multiply row `i` by the conjugate of the determinant.
+Unitarity, determinant one, continuity, and the right-inverse identity on SU
+are proved. Its surjectivity proves `specialUnitaryConnectedSpace` for every
+finite index type; the empty-index singleton case is treated separately.
+
+`Unitary/SpecialUnitaryZeroEnergy.lean` uses full support of actual normalized
+Haar measure to turn zero integrated carré du champ into pointwise zero energy.
+A real HS orthonormal basis then detects every invariant derivative.
+`specialUnitary_eq_mul_exp_of_deriv_eq_zero` proves constancy along actual
+exponential curves. The existing local exponential atlas gives local constancy,
+and the newly proved connectedness gives global constancy:
+
+* `specialUnitary_eq_mean_of_integral_gamma_eq_zero`: every smooth zero-energy
+  function equals its normalized Haar mean.
+* `specialUnitary_eq_const_of_laplacian_eq_zero`: a smooth function annihilated
+  by the actual Laplacian is constant, by Haar integration by parts.
+
+Independent examples check connectedness under the Frobenius scope at dimensions
+zero, one, and three. The nonconstant quadratic SU(2) example now has **strictly
+positive integrated Haar energy**, and an SU(3) example checks the harmonic
+function conclusion. No connectedness or ergodicity class is assumed.
+
 ## Remaining route to the theorem
 
 The sum-of-squares estimate `Γ₂ ≥ (N/2) Γ` and polynomial Fisher decay are proved.
 The next central obligation is equilibrium convergence with vanishing limiting
-entropy, followed by integration of entropy dissipation. Connectedness or an
-equivalent rigorous argument identifying the generator's kernel with constants
-must be proved; it cannot be inferred from Γ₂ alone. For a positive polynomial
+entropy, followed by integration of entropy dissipation. Connectedness and the
+identification of the smooth generator kernel with constants are now proved, as described above. Convergence itself is still an
+independent analytic obligation. For a positive polynomial
 `g`, the immediate intended inequality is
 
 `entropy Haar g ≤ (1/N) * ∫ Γ(g,g)/g dHaar`.
@@ -522,8 +561,16 @@ In the existing API, its exact remaining statement is:
 ```
 
 This inequality is **not yet proved**, even on the polynomial class. It requires
-the missing zero limiting entropy. Polynomial approximation with control of
-energy, identification of energy with local Hilbert–Schmidt slopes, and the
+the missing zero limiting entropy. The shortest current route is finite-dimensional:
+the proved supremum contraction bounds each polynomial heat orbit in a compact
+ball. Fisher decay and the upper bound on the positive density imply decay of
+integrated carré du champ. Continuity of that energy in the polynomial space
+then makes every cluster point a zero-energy function, hence a constant by the
+new kernel theorem; Haar-mass conservation uniquely fixes that constant. Proving
+these limit steps yields convergence to the Haar mean and vanishing entropy,
+after which the proved entropy dissipation can be integrated. These compactness
+and limit arguments have not yet been formalized. Polynomial approximation with
+control of energy, identification of energy with local Hilbert–Schmidt slopes, and the
 extension to locally Lipschitz functions remain open. Consistency between
 finite-degree heat constructions and density/extension to continuous or smooth
 functions are also not yet proved; a proof of LSI on polynomials followed by
@@ -590,9 +637,11 @@ dissipation with explicit mixed-derivative hypotheses), and `60361a5` (actual
 generator maximum principle, preservation of heat bounds, and constructed
 positive affine heat solutions), and `50aba17` (finite-degree polynomial heat,
 Haar-mass conservation, mixed regularity, constructed entropy/Fisher
-dissipation, and exponential Fisher decay at rate `N`).
+dissipation, and exponential Fisher decay at rate `N`), and `c70774f`
+(connectedness of actual U(N)/SU(N), zero-energy constancy, and the smooth
+generator kernel).
 `lake build` and the independent `Examples.lean`
-compilation pass. The recursive `Audit.lean` check passes for all 657 project
+compilation pass. The recursive `Audit.lean` check passes for all 682 project
 declarations, accepting only `propext`, `Classical.choice`, and `Quot.sound`.
 It prints the fully elaborated commutator-energy, curve-velocity, and
 exponential-speed, conjugation-derivative, and Killing-contraction, exact-coefficient, and real-orthonormal-energy theorems, exposes the Frobenius instances, and inspects the
@@ -601,6 +650,6 @@ The full output is in [axiom-audit.txt](axiom-audit.txt). These checks certify
 the algebraic, curve, local-coordinate, smooth Lie-group, tangent-derivative,
 smooth differential-operator, second-order energy, generator, Γ₂, and Haar
 integration, logarithmic chain-rule, entropy-differentiation, and spatial and
-conditional time-dependent Fisher results, the maximum principle, and the
-constructed affine and polynomial heat solutions, their regularity, and
-polynomial Fisher decay above, not an SU(N) LSI theorem.
+conditional time-dependent Fisher results, the maximum principle, constructed
+affine and polynomial heat solutions, their regularity and Fisher decay, and
+actual U(N)/SU(N) connectedness and kernel constancy above, not an SU(N) LSI theorem.

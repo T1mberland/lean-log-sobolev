@@ -65,6 +65,10 @@ Proved components include:
   differentiation is proved. For strictly positive polynomial data,
   `I(Pₜ f) ≤ exp(−Nt) I(f)` holds for every `t ≥ 0`. Equilibrium convergence,
   the resulting LSI, and extension to locally Lipschitz tests remain open.
+* Connectedness of the actual U(N) and SU(N), proved using finite-spectrum
+  functional calculus and a continuous determinant-correcting retraction.
+  Smooth SU functions with zero Haar energy are proved equal to their Haar
+  mean; in particular, the actual Laplacian has only constants in its kernel.
 * The normalized interval and its L² product with SU(N).
 * The paper's phase map into U(N), with the `sqrt(3)` Lipschitz bound.
 * **The exact short-interval Haar decomposition (Lemma 16)** for every positive N,

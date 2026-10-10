@@ -85,6 +85,10 @@ All names below are in namespace `LogSobolev`.
 | `LogSobolev/Unitary/SpecialUnitaryPolynomialHeatRegularity.lean` | `specialUnitaryPolynomialForwardHeat_clm_continuous`, `specialUnitaryPolynomialForwardHeat_clm_hasDerivAt` | Joint and mixed derivative regularity for the constructed heat flow, constantly extended before time zero. |
 | `LogSobolev/Analysis/ExponentialDecay.lean` | `le_exp_mul_of_deriv_le` | Integrating-factor decay from `f′ ≤ −a f`, with only continuity required at zero. |
 | `LogSobolev/Unitary/SpecialUnitaryPolynomialDissipation.lean` | `specialUnitaryPolynomialForwardHeat_hasDerivAt_entropy`, `specialUnitaryPolynomialForwardHeat_hasDerivAt_fisher`, `specialUnitaryPolynomialForwardHeat_fisher_le_exp` | Actual entropy/Fisher dissipation and `I(Pₜ f) ≤ exp(−Nt) I(f)` for strictly positive polynomial data. No supplied trajectory, PDE, or mixed-regularity hypothesis remains. Equilibrium and LSI are not proved. |
+| `LogSobolev/Geometry/FiniteSpectrumUnitary.lean` | `expUnitary_argSelfAdjoint_of_finite_spectrum`, `unitary_connectedSpace_of_finite_spectrum` | Finite-spectrum unitaries are exponentials by Mathlib's continuous functional calculus; the unitary group is connected when all unitary spectra are finite. |
+| `LogSobolev/Unitary/UnitaryConnected.lean` | `unitaryConnectedSpace` | Connectedness of actual complex U(N) in the standard finite matrix topology; operator norm used only locally for C⋆ functional calculus. |
+| `LogSobolev/Unitary/SpecialUnitaryConnected.lean` | `unitaryToSpecialUnitary_continuous`, `unitaryToSpecialUnitary_inclusion`, `specialUnitaryConnectedSpace` | A verified continuous determinant-correcting retraction U(N) → SU(N) proves connectedness, including the empty-index case. |
+| `LogSobolev/Unitary/SpecialUnitaryZeroEnergy.lean` | `specialUnitary_eq_mean_of_integral_gamma_eq_zero`, `specialUnitary_eq_const_of_laplacian_eq_zero` | Smooth zero-Haar-energy functions equal their Haar mean. The actual SU Laplacian's smooth kernel contains only constants. Full support, basis detection, exponential orbits, and connectedness are proved or reused, not assumed. |
 | `LogSobolev/Unitary/PhaseMap.lean` | `phaseMul_dist_le`, `phaseMap_lipschitz` | The full-line phase map has Lipschitz constant `sqrt(3)` for every positive N; no probability argument is needed. |
 | `LogSobolev/Measure/Interval.lean` | `intervalUniform_univ`, `map_intervalUniform` | Normalized Lebesgue measure on the Euclidean subtype `[0,L]` for `L>0`. |
 | `LogSobolev/Unitary/ProductDomain.lean` | `phaseDomainMeasure_probability`, `intervalPhaseMap_lipschitz` | The exact interval × SU domain and probability measure, and the restricted map's Lipschitz bound. |
@@ -204,9 +208,10 @@ polynomial-observable space, with the actual PDE, preservation of bounds,
 supremum-norm contraction, normalized Haar-mass conservation, and all regularity
 needed for entropy and Fisher differentiation. Exponential Fisher decay at rate
 `N` is proved, including time zero. The next missing step is convergence to
-constants (or vanishing limiting entropy), requiring proved connectedness or
-an equivalent kernel/ergodicity argument. LSI is not yet proved even for positive
-polynomial data. Consistency across polynomial degrees and general heat
+constants (or vanishing limiting entropy). Connectedness of U(N) and SU(N)
+and the zero-energy/kernel constancy argument are now proved; convergence
+still needs the finite-dimensional compactness and limit steps. LSI is not yet
+proved even for positive polynomial data. Consistency across polynomial degrees and general heat
 extension are not yet proved; an approximation route after polynomial LSI may
 avoid needing a general heat construction. Energy identification and approximation are required to
 obtain locally Lipschitz functions. The abstract
@@ -222,16 +227,16 @@ the compact regularity side conditions. A verified Herbst argument is a later ta
 Verification performed on 2026-10-10 with Lean 4.28.0 and the pinned Mathlib
 commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
 
-* `lake build`: passed for the complete library (2964 dependency/build jobs,
+* `lake build`: passed for the complete library (3094 dependency/build jobs,
   primarily cached Mathlib artifacts).
 * `lake env lean LogSobolev/Examples.lean`: passed; the examples compile as an
   independent client importing the public root module.
 * `lake env lean LogSobolev/Audit.lean`: passed. The automated traversal checked
-  **657 declarations** in the `LogSobolev` namespace, including definitions,
+  **682 declarations** in the `LogSobolev` namespace, including definitions,
   instances, and generated auxiliaries. Every transitive axiom was one of
   `propext`, `Classical.choice`, or `Quot.sound`. No `sorryAx` or custom axiom
   was present in those dependency closures.
-* The audit also executes 160 `#print axioms` commands, prints the core
+* The audit also executes 172 `#print axioms` commands, prints the core
   definitions, and prints fully elaborated types for the trace normalization,
   phase-map Lipschitz theorem, U(N) regularity theorem, exact Haar identity,
   conditional final LSI transfer, product entropy chain rule, and SU algebra
@@ -247,7 +252,8 @@ commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
   Fisher identity, and the conditional Fisher differential inequality with all
   mixed-derivative hypotheses exposed, the actual generator maximum principle,
   bound preservation, the constructed affine and polynomial heat equations,
-  polynomial Haar conservation, and polynomial Fisher dissipation/decay. The elaborated
+  polynomial Haar conservation, polynomial Fisher dissipation/decay, actual
+  U(N)/SU(N) connectedness, and zero-energy/kernel constancy. The elaborated
   metric instances are explicitly Frobenius and `WithLp 2`.
 * The recursive audit now shares Lean's core collector visited set across all
   project roots. At milestone `6cb53ac`, an independent-root baseline run and
@@ -398,6 +404,18 @@ Completed milestones:
   axiom checks use only standard foundational axioms. Polynomial LSI still
   needs vanishing limiting entropy; equilibrium/connectedness and the
   locally Lipschitz approximation and slope identification remain open.
+
+* `c70774f`: connectedness of actual U(N) from finite-spectrum continuous
+  functional calculus; a continuous determinant-correcting retraction proves
+  connectedness of actual SU(N), including dimension zero. Zero Haar energy
+  forces all actual invariant derivatives to vanish; exponential coordinates
+  and connectedness then prove that the function equals its Haar mean. The
+  smooth Laplacian kernel therefore has only constants. Full build (3094 jobs),
+  independent Frobenius-topology connectedness, strictly positive quadratic
+  Haar-energy, and SU(3) harmonic-function examples pass. The recursive audit
+  covers 682 declarations and all 172 explicit axiom prints use only standard
+  foundational axioms. Equilibrium convergence and the polynomial/locally
+  Lipschitz LSI remain open; connectedness and kernel constancy no longer do.
 
 The report and README are committed separately after these verified proof
 milestones; use `git log --oneline` to see the documentation commit as well.
