@@ -39,7 +39,8 @@ Proved components include:
 * The exact `N/2` lower bound on second-derivative energy, and a constructed
   sum-of-squares operator whose carré du champ is proved to be first-derivative
   energy. Generator commutation, the Γ₂ identity, and `Γ₂ ≥ (N/2) Γ` are
-  now proved for all smooth real SU tests. The entropy inequality remains open.
+  now proved for all smooth real SU tests. The entropy inequality is proved
+  on polynomial tests below; the full smooth and locally Lipschitz classes remain open.
 * Haar integration by parts for actual SU derivatives and the generator,
   with symmetry, nonpositivity, and the integrated estimate
   `(N/2) ∫ Γ(f,f) ≤ ∫ (Lf)²` for every smooth real test.
@@ -63,12 +64,17 @@ Proved components include:
   with the semigroup law, positivity, supremum-norm contraction, and normalized
   Haar-mass conservation. All regularity needed for entropy and Fisher
   differentiation is proved. For strictly positive polynomial data,
-  `I(Pₜ f) ≤ exp(−Nt) I(f)` holds for every `t ≥ 0`. Equilibrium convergence,
-  the resulting LSI, and extension to locally Lipschitz tests remain open.
+  `I(Pₜ f) ≤ exp(−Nt) I(f)` holds for every `t ≥ 0`.
 * Connectedness of the actual U(N) and SU(N), proved using finite-spectrum
   functional calculus and a continuous determinant-correcting retraction.
   Smooth SU functions with zero Haar energy are proved equal to their Haar
   mean; in particular, the actual Laplacian has only constants in its kernel.
+* Polynomial heat converges uniformly to its Haar mean and has vanishing limiting
+  entropy. The resulting **polynomial LSI is proved**:
+  `Ent(f²) ≤ (4/N) ∫ Γ(f,f)` for every real finite-degree polynomial observable,
+  with no positivity restriction on `f`. This is the carré-du-champ energy form;
+  local Hilbert–Schmidt slope identification and extension to all locally
+  Lipschitz functions remain open.
 * The normalized interval and its L² product with SU(N).
 * The paper's phase map into U(N), with the `sqrt(3)` Lipschitz bound.
 * **The exact short-interval Haar decomposition (Lemma 16)** for every positive N,
@@ -78,9 +84,10 @@ Proved components include:
 * A 1-Lipschitz diagonal coordinate that is not Haar-a.e. constant in every
   positive dimension.
 
-No LSI for U(N), SU(N), the interval, or the circle is claimed. In particular,
-the transfer theorems take an explicit source LSI assumption; no such source
-inequality is supplied for these spaces.
+The full metric LSI on SU(N), U(N), the interval, and the circle remains open.
+The proved SU inequality currently covers polynomial observables with actual
+carré-du-champ energy. The U(N) transfer still takes an explicit product
+`MetricLSI` assumption, which this development has not discharged.
 
 ## Build and audit
 

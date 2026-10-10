@@ -1,6 +1,7 @@
 # SU(N) LSI: current proof boundary
 
-**The SU(N) LSI is not yet proved, even for smooth functions.**
+**The SU(N) LSI is proved in carré-du-champ energy form on all polynomial
+observables. It is not yet proved on all smooth or locally Lipschitz functions.**
 The exact remaining target, with the existing definitions, is:
 
 ```lean
@@ -374,8 +375,8 @@ proves `specialUnitary_weighted_gammaTwo_log_lower_bound`:
 This supplies the curvature part of the Fisher-information argument. The
 spatial dissipation identity and a conditional time-derivative theorem are now
 proved below. Polynomial heat existence, its required regularity, and exponential
-Fisher decay are established later in this report. Equilibrium convergence and
-extension beyond the polynomial class remain open.
+Fisher decay, equilibrium, and polynomial LSI are established later in this
+report. Extension beyond the polynomial class remains open.
 
 ## Fisher dissipation now proved under explicit regularity
 
@@ -535,46 +536,81 @@ zero, one, and three. The nonconstant quadratic SU(2) example now has **strictly
 positive integrated Haar energy**, and an SU(3) example checks the harmonic
 function conclusion. No connectedness or ergodicity class is assumed.
 
+## Polynomial equilibrium and logarithmic Sobolev inequality
+
+`Unitary/SpecialUnitaryPolynomialFunctionals.lean` proves joint evaluation,
+continuity of normalized Haar mass, integrated carré du champ, and entropy on
+each polynomial space with its actual supremum norm. Entropy continuity includes
+zeros, using Mathlib's global continuity of `x log x`. Constants are constructed
+inside every degree bound.
+
+`Unitary/SpecialUnitaryPolynomialEnergyDecay.lean` proves that a positive smooth
+density bounded by `M` satisfies `∫ Γ(g,g) ≤ M I(g)`. The proved polynomial heat
+bounds and exponential Fisher estimate then give decay of integrated energy
+to zero for every positive matrix dimension.
+
+`Unitary/SpecialUnitaryPolynomialEquilibrium.lean` closes the equilibrium step:
+
+* `specialUnitaryPolynomialForwardHeat_tendsto_mean`: every strictly positive
+  polynomial heat orbit converges in the supremum norm to its normalized Haar mean.
+* `specialUnitaryPolynomialForwardHeat_entropy_tendsto_zero`: its entropy tends
+  to zero.
+
+The proof puts the bounded orbit in a compact finite-dimensional ball. Continuity
+of energy makes every cluster point zero-energy; the connectedness/kernel theorem
+makes it a constant. Continuity and conservation of Haar mass uniquely determine
+that constant. Mathlib's compact unique-cluster-point criterion yields convergence
+of the entire orbit. No convergence or ergodicity assumption is introduced.
+
+`Analysis/DissipationBound.lean:initial_le_div_of_dissipation_decay` proves the
+scalar comparison `E(0) ≤ K/a` from `E′ = −I`, `I(t) ≤ exp(−at) K`, and a zero
+limit of `E`. The hypotheses are all discharged by the constructed polynomial flow.
+
+`Unitary/SpecialUnitaryPolynomialLSI.lean` now proves:
+
+* `specialUnitaryPolynomial_entropy_le_fisher`:
+  `entropy Haar g ≤ (1/N) * ∫ Γ(g,g)/g dHaar` for strictly positive polynomial `g`.
+* `specialUnitaryPolynomial_entropy_sq_le`:
+  `entropy Haar (f²) ≤ (4/N) * ∫ Γ(f,f) dHaar` for **every real polynomial `f`**.
+
+Both apply in every positive matrix dimension. Here `Γ` is the actual generator's
+carré du champ for a real orthonormal basis of the **unnormalized HS** Lie-algebra
+inner product, and Haar is the actual normalized measure on SU(N).
+`Unitary/SpecialUnitarySquareEnergy.lean` proves the exact factor four in
+`Γ(f²+ε) = 4 f² Γ(f,f)` and the Fisher bound by `4 Γ(f,f)`. The squared theorem
+uses the degree-`2d` polynomial `f²+ε` and entropy continuity as `ε ↓ 0`, so it has
+no sign or nonvanishing hypothesis. Independent examples check a nonconstant
+quadratic density, a centered quadratic vanishing at the identity, and the exact
+coefficient `4/N` for arbitrary positive `N`.
+
 ## Remaining route to the theorem
 
-The sum-of-squares estimate `Γ₂ ≥ (N/2) Γ` and polynomial Fisher decay are proved.
-The next central obligation is equilibrium convergence with vanishing limiting
-entropy, followed by integration of entropy dissipation. Connectedness and the
-identification of the smooth generator kernel with constants are now proved, as described above. Convergence itself is still an
-independent analytic obligation. For a positive polynomial
-`g`, the immediate intended inequality is
+**Polynomial carré-du-champ LSI is now proved.** It is not yet a theorem for the
+whole smooth or locally Lipschitz test class, nor has `Γ` been identified with
+(or bounded by) the paper's local metric slope in a proved theorem.
 
-`entropy Haar g ≤ (1/N) * ∫ Γ(g,g)/g dHaar`.
-
-In the existing API, its exact remaining statement is:
+The remaining central task is approximation with energy control. One route is
+approximation by polynomial matrix observables with convergence of entropy and
+suitable gradient/energy bounds, followed by extension to locally Lipschitz tests.
+A smoothing or convolution argument must preserve the local-slope energy bound;
+uniform density alone does not suffice. The existing exact tangent-inclusion
+norm identity and exponential curves can be used for the missing relation
+between invariant derivatives and the unnormalized Hilbert–Schmidt local slope.
+A sufficient pointwise bridge, still **unproved**, for smooth `f`, an HS
+orthonormal basis `b`, and `U : SU(N)`, is:
 
 ```lean
--- An unproved goal, not a declaration in the library:
-∀ (N : ℕ), 2 ≤ N → ∀ (ι : Type) [Fintype ι]
-  (b : OrthonormalBasis ι ℝ (specialUnitaryLieAlgebra (n := Fin N)))
-  (d : ℕ) (g : specialUnitaryPolynomialSpace (n := Fin N) d),
-  (∀ U, 0 < g.val U) →
-  entropy (specialUnitaryHaar (Fin N)) g.val ≤
-    (1 / (N : ℝ)) *
-      ∫ U, specialUnitaryGamma b g.val g.val U / g.val U
-        ∂specialUnitaryHaar (Fin N)
+ENNReal.ofReal (specialUnitaryGamma b f f U) ≤ localSlope f U ^ 2
 ```
 
-This inequality is **not yet proved**, even on the polynomial class. It requires
-the missing zero limiting entropy. The shortest current route is finite-dimensional:
-the proved supremum contraction bounds each polynomial heat orbit in a compact
-ball. Fisher decay and the upper bound on the positive density imply decay of
-integrated carré du champ. Continuity of that energy in the polynomial space
-then makes every cluster point a zero-energy function, hence a constant by the
-new kernel theorem; Haar-mass conservation uniquely fixes that constant. Proving
-these limit steps yields convergence to the Haar mean and vanishing entropy,
-after which the proved entropy dissipation can be integrated. These compactness
-and limit arguments have not yet been formalized. Polynomial approximation with
-control of energy, identification of energy with local Hilbert–Schmidt slopes, and the
-extension to locally Lipschitz functions remain open. Consistency between
-finite-degree heat constructions and density/extension to continuous or smooth
-functions are also not yet proved; a proof of LSI on polynomials followed by
-energy approximation could avoid constructing heat on the entire smooth class.
+The extended-real statement permits infinite slope and avoids silently
+converting infinity to zero. The full `MetricLSI` target at the top of this
+report still requires the energy-controlled extension to all locally Lipschitz
+functions.
+
+Consistency across finite-degree heat constructions and extension of heat to
+arbitrary smooth functions remain unproved, but are no longer needed if the
+polynomial LSI is extended directly by a verified energy approximation argument.
 
 A precise **unproved smooth intermediate goal**, for `N ≥ 2`, a real orthonormal
 basis `b` of su(N), and `f` smooth on SU(N), is
@@ -639,9 +675,11 @@ positive affine heat solutions), and `50aba17` (finite-degree polynomial heat,
 Haar-mass conservation, mixed regularity, constructed entropy/Fisher
 dissipation, and exponential Fisher decay at rate `N`), and `c70774f`
 (connectedness of actual U(N)/SU(N), zero-energy constancy, and the smooth
-generator kernel).
+generator kernel), and `35e2978` (polynomial heat equilibrium, zero limiting
+entropy, positive-density entropy bound, and the squared-polynomial LSI with
+coefficient `4/N`).
 `lake build` and the independent `Examples.lean`
-compilation pass. The recursive `Audit.lean` check passes for all 682 project
+compilation pass. The recursive `Audit.lean` check passes for all 706 project
 declarations, accepting only `propext`, `Classical.choice`, and `Quot.sound`.
 It prints the fully elaborated commutator-energy, curve-velocity, and
 exponential-speed, conjugation-derivative, and Killing-contraction, exact-coefficient, and real-orthonormal-energy theorems, exposes the Frobenius instances, and inspects the
@@ -652,4 +690,6 @@ smooth differential-operator, second-order energy, generator, Γ₂, and Haar
 integration, logarithmic chain-rule, entropy-differentiation, and spatial and
 conditional time-dependent Fisher results, the maximum principle, constructed
 affine and polynomial heat solutions, their regularity and Fisher decay, and
-actual U(N)/SU(N) connectedness and kernel constancy above, not an SU(N) LSI theorem.
+actual U(N)/SU(N) connectedness, kernel constancy, polynomial equilibrium, and
+polynomial entropy inequalities above. They do not certify the full locally
+Lipschitz metric LSI.

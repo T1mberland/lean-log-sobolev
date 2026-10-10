@@ -8,10 +8,12 @@ for N=1. No interval or SU(N) LSI has been assumed as an axiom or installed in a
 typeclass. The development proves the metric/measure foundations, the exact Haar
 decomposition in Lemma 16, and the transport and regularity results below.
 
-The principal unfinished step is analytic: obtaining SU(N)'s LSI from the now
-proved Γ₂ estimate through a constructed Haar-invariant diffusion and a proved
-entropy argument. The
-interval/circle LSI and the appropriate tensorization argument are also
+The SU(N) entropy inequality is now proved on **all polynomial matrix observables**
+in carré-du-champ energy form, with coefficient `4/N` on `Ent(f²)`. The constructed
+heat proof includes positivity, Haar-mass conservation, Fisher decay, convergence,
+and vanishing limiting entropy. The principal remaining SU obligation is extension
+to the full locally Lipschitz class with verified local Hilbert–Schmidt slope
+energy control. The interval/circle LSI and the appropriate tensorization argument are also
 substantial analytic obligations. The exact short-interval Haar decomposition is now proved, including N=1.
 The remaining analytic/geometric obligations are mathematical missing proofs,
 not merely unresolved Lean syntax or typeclass errors.
@@ -56,7 +58,7 @@ All names below are in namespace `LogSobolev`.
 | `LogSobolev/Geometry/AlgebraVectorFields.lean` | `rightMul_lieBracket`, `rightMulDeriv_commutator` | The actual Euclidean bracket of `x ↦ x A` and `x ↦ x B` is `x ↦ x(AB−BA)`; differentiation operators satisfy the corresponding commutator for `C²` tests. |
 | `LogSobolev/Unitary/SpecialUnitaryInvariantFields.lean` | `specialUnitary_mfderiv_mul_left_apply`, `specialUnitary_mulInvariantVectorField_val` | Mathlib's geometric invariant tangent field has ambient velocity `U A`; no geometric bracket or curvature formula is presumed. |
 | `LogSobolev/Unitary/SpecialUnitarySmoothExtension.lean` | `specialUnitary_exists_local_smooth_extension` | Every smooth SU function has a proved smooth ambient extension locally at each point, with no extension assumption. |
-| `LogSobolev/Unitary/SpecialUnitaryDifferentialOperators.lean` | `specialUnitaryDeriv_contMDiff`, `specialUnitaryDeriv_commutator` | Actual invariant manifold differentiation preserves smoothness and satisfies `D_A D_B − D_B D_A = D_[A,B]` for every smooth SU test. No Γ₂ estimate or LSI yet. |
+| `LogSobolev/Unitary/SpecialUnitaryDifferentialOperators.lean` | `specialUnitaryDeriv_contMDiff`, `specialUnitaryDeriv_commutator` | Actual invariant manifold differentiation preserves smoothness and satisfies `D_A D_B − D_B D_A = D_[A,B]` for every smooth SU test. First-order operator identities; the higher-order conclusions are proved in later modules. |
 | `LogSobolev/Geometry/SecondOrderArray.lean` | `sum_sq_sub_transpose_le` | Antisymmetrization has squared norm at most four on a finite real array. |
 | `LogSobolev/Unitary/SpecialUnitarySecondOrder.lean` | `specialUnitary_dual_commutator_energy`, `specialUnitary_second_derivative_energy_lower_bound` | Exact dual Killing contraction `2N`; for every smooth real SU test and real HS orthonormal basis, second-derivative energy is at least `N/2` times first-derivative energy. No Γ₂ identity is assumed. |
 | `LogSobolev/Unitary/SpecialUnitaryGenerator.lean` | `specialUnitaryLaplacian`, `specialUnitaryLaplacian_contMDiff`, `specialUnitaryGamma_eq`, `specialUnitaryGamma_nonneg` | Actual sum of squares preserves smoothness. Its generator-defined carré du champ equals the sum of products of first derivatives. No semigroup or invariant-measure identity yet. |
@@ -84,11 +86,17 @@ All names below are in namespace `LogSobolev`.
 | `LogSobolev/Unitary/SpecialUnitaryPolynomialHeat.lean` | `specialUnitaryPolynomialHeat_hasDerivAt_apply`, `specialUnitaryPolynomialHeat_add`, `specialUnitaryPolynomialHeat_norm_le`, `specialUnitaryPolynomialHeat_integral` | Constructed exponential evolution solves the actual heat equation on each polynomial space, preserves bounds and normalized Haar mass, and contracts the supremum norm. |
 | `LogSobolev/Unitary/SpecialUnitaryPolynomialHeatRegularity.lean` | `specialUnitaryPolynomialForwardHeat_clm_continuous`, `specialUnitaryPolynomialForwardHeat_clm_hasDerivAt` | Joint and mixed derivative regularity for the constructed heat flow, constantly extended before time zero. |
 | `LogSobolev/Analysis/ExponentialDecay.lean` | `le_exp_mul_of_deriv_le` | Integrating-factor decay from `f′ ≤ −a f`, with only continuity required at zero. |
-| `LogSobolev/Unitary/SpecialUnitaryPolynomialDissipation.lean` | `specialUnitaryPolynomialForwardHeat_hasDerivAt_entropy`, `specialUnitaryPolynomialForwardHeat_hasDerivAt_fisher`, `specialUnitaryPolynomialForwardHeat_fisher_le_exp` | Actual entropy/Fisher dissipation and `I(Pₜ f) ≤ exp(−Nt) I(f)` for strictly positive polynomial data. No supplied trajectory, PDE, or mixed-regularity hypothesis remains. Equilibrium and LSI are not proved. |
+| `LogSobolev/Unitary/SpecialUnitaryPolynomialDissipation.lean` | `specialUnitaryPolynomialForwardHeat_hasDerivAt_entropy`, `specialUnitaryPolynomialForwardHeat_hasDerivAt_fisher`, `specialUnitaryPolynomialForwardHeat_fisher_le_exp` | Actual entropy/Fisher dissipation and `I(Pₜ f) ≤ exp(−Nt) I(f)` for strictly positive polynomial data. No supplied trajectory, PDE, or mixed-regularity hypothesis remains. Equilibrium and polynomial LSI are proved in subsequent modules. |
 | `LogSobolev/Geometry/FiniteSpectrumUnitary.lean` | `expUnitary_argSelfAdjoint_of_finite_spectrum`, `unitary_connectedSpace_of_finite_spectrum` | Finite-spectrum unitaries are exponentials by Mathlib's continuous functional calculus; the unitary group is connected when all unitary spectra are finite. |
 | `LogSobolev/Unitary/UnitaryConnected.lean` | `unitaryConnectedSpace` | Connectedness of actual complex U(N) in the standard finite matrix topology; operator norm used only locally for C⋆ functional calculus. |
 | `LogSobolev/Unitary/SpecialUnitaryConnected.lean` | `unitaryToSpecialUnitary_continuous`, `unitaryToSpecialUnitary_inclusion`, `specialUnitaryConnectedSpace` | A verified continuous determinant-correcting retraction U(N) → SU(N) proves connectedness, including the empty-index case. |
 | `LogSobolev/Unitary/SpecialUnitaryZeroEnergy.lean` | `specialUnitary_eq_mean_of_integral_gamma_eq_zero`, `specialUnitary_eq_const_of_laplacian_eq_zero` | Smooth zero-Haar-energy functions equal their Haar mean. The actual SU Laplacian's smooth kernel contains only constants. Full support, basis detection, exponential orbits, and connectedness are proved or reused, not assumed. |
+| `LogSobolev/Unitary/SpecialUnitaryPolynomialFunctionals.lean` | `specialUnitaryPolynomial_integral_continuous`, `specialUnitaryPolynomial_energy_continuous`, `specialUnitaryPolynomial_entropy_continuous` | Continuous Haar mass, energy, and entropy on each polynomial space with its actual supremum norm. |
+| `LogSobolev/Unitary/SpecialUnitaryPolynomialEnergyDecay.lean` | `specialUnitaryPolynomialForwardHeat_energy_tendsto_zero` | Positive polynomial heat has integrated carré-du-champ energy tending to zero. |
+| `LogSobolev/Unitary/SpecialUnitaryPolynomialEquilibrium.lean` | `specialUnitaryPolynomialForwardHeat_tendsto_mean`, `specialUnitaryPolynomialForwardHeat_entropy_tendsto_zero` | Supremum-norm convergence to the normalized Haar mean and zero limiting entropy; no assumed convergence/ergodicity. |
+| `LogSobolev/Analysis/DissipationBound.lean` | `initial_le_div_of_dissipation_decay` | Scalar comparison bound from explicit dissipation, information decay, continuity at zero, and a zero entropy limit. |
+| `LogSobolev/Unitary/SpecialUnitarySquareEnergy.lean` | `specialUnitaryGamma_sq_add_const`, `specialUnitary_fisher_sq_add_const_le` | Exact factor four for regularized squares and the corresponding Fisher-density bound. |
+| `LogSobolev/Unitary/SpecialUnitaryPolynomialLSI.lean` | `specialUnitaryPolynomial_entropy_le_fisher`, `specialUnitaryPolynomial_entropy_sq_le` | Proved positive-density `Ent(g) ≤ I(g)/N`, then `Ent(f²) ≤ (4/N) ∫ Γ(f,f)` for every real polynomial observable, without a positivity hypothesis on `f`. Actual normalized Haar and unnormalized HS orthonormal generator. Full smooth/locally Lipschitz extension and local-slope identification remain open. |
 | `LogSobolev/Unitary/PhaseMap.lean` | `phaseMul_dist_le`, `phaseMap_lipschitz` | The full-line phase map has Lipschitz constant `sqrt(3)` for every positive N; no probability argument is needed. |
 | `LogSobolev/Measure/Interval.lean` | `intervalUniform_univ`, `map_intervalUniform` | Normalized Lebesgue measure on the Euclidean subtype `[0,L]` for `L>0`. |
 | `LogSobolev/Unitary/ProductDomain.lean` | `phaseDomainMeasure_probability`, `intervalPhaseMap_lipschitz` | The exact interval × SU domain and probability measure, and the restricted map's Lipschitz bound. |
@@ -207,14 +215,16 @@ in the heat direction is also proved. Heat solutions are now constructed on ever
 polynomial-observable space, with the actual PDE, preservation of bounds,
 supremum-norm contraction, normalized Haar-mass conservation, and all regularity
 needed for entropy and Fisher differentiation. Exponential Fisher decay at rate
-`N` is proved, including time zero. The next missing step is convergence to
-constants (or vanishing limiting entropy). Connectedness of U(N) and SU(N)
-and the zero-energy/kernel constancy argument are now proved; convergence
-still needs the finite-dimensional compactness and limit steps. LSI is not yet
-proved even for positive polynomial data. Consistency across polynomial degrees and general heat
-extension are not yet proved; an approximation route after polynomial LSI may
-avoid needing a general heat construction. Energy identification and approximation are required to
-obtain locally Lipschitz functions. The abstract
+`N` is proved, including time zero. Connectedness and zero-energy/kernel constancy are proved.
+The polynomial heat orbit now converges in its actual supremum norm to the Haar
+mean; limiting entropy is proved zero. This yields the polynomial LSI
+`Ent(f²) ≤ (4/N) ∫ Γ(f,f)` with no sign restriction on `f`, after regularizing
+squares and taking the limit. The remaining SU step is extension to arbitrary
+smooth and locally Lipschitz functions, with verified energy approximation and
+comparison with the local Hilbert–Schmidt metric slope. Uniform polynomial
+density alone would not establish the energy bound. Consistency across degrees
+and general heat extension remain unproved but can be bypassed by extending the
+proved polynomial inequality directly. The abstract
 `markov-semigroups` class does not eliminate these obligations. Its assumed
 entropy decay must not be passed off as a proved curvature criterion.
 
@@ -227,16 +237,16 @@ the compact regularity side conditions. A verified Herbst argument is a later ta
 Verification performed on 2026-10-10 with Lean 4.28.0 and the pinned Mathlib
 commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
 
-* `lake build`: passed for the complete library (3094 dependency/build jobs,
+* `lake build`: passed for the complete library (3100 dependency/build jobs,
   primarily cached Mathlib artifacts).
 * `lake env lean LogSobolev/Examples.lean`: passed; the examples compile as an
   independent client importing the public root module.
 * `lake env lean LogSobolev/Audit.lean`: passed. The automated traversal checked
-  **682 declarations** in the `LogSobolev` namespace, including definitions,
+  **706 declarations** in the `LogSobolev` namespace, including definitions,
   instances, and generated auxiliaries. Every transitive axiom was one of
   `propext`, `Classical.choice`, or `Quot.sound`. No `sorryAx` or custom axiom
   was present in those dependency closures.
-* The audit also executes 172 `#print axioms` commands, prints the core
+* The audit also executes 183 `#print axioms` commands, prints the core
   definitions, and prints fully elaborated types for the trace normalization,
   phase-map Lipschitz theorem, U(N) regularity theorem, exact Haar identity,
   conditional final LSI transfer, product entropy chain rule, and SU algebra
@@ -253,7 +263,8 @@ commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
   mixed-derivative hypotheses exposed, the actual generator maximum principle,
   bound preservation, the constructed affine and polynomial heat equations,
   polynomial Haar conservation, polynomial Fisher dissipation/decay, actual
-  U(N)/SU(N) connectedness, and zero-energy/kernel constancy. The elaborated
+  U(N)/SU(N) connectedness, zero-energy/kernel constancy, polynomial equilibrium,
+  zero limiting entropy, and both polynomial entropy bounds. The elaborated
   metric instances are explicitly Frobenius and `WithLp 2`.
 * The recursive audit now shares Lean's core collector visited set across all
   project roots. At milestone `6cb53ac`, an independent-root baseline run and
@@ -416,6 +427,19 @@ Completed milestones:
   covers 682 declarations and all 172 explicit axiom prints use only standard
   foundational axioms. Equilibrium convergence and the polynomial/locally
   Lipschitz LSI remain open; connectedness and kernel constancy no longer do.
+
+* `35e2978`: continuity of polynomial mass, energy and entropy; decay of
+  integrated energy; compactness and the zero-energy theorem prove uniform
+  heat convergence to the Haar mean and zero limiting entropy. A proved scalar
+  dissipation comparison gives `Ent(g) ≤ I(g)/N` on strictly positive polynomial
+  densities. Exact regularized-square calculus and the `ε ↓ 0` limit then prove
+  `Ent(f²) ≤ (4/N) ∫ Γ(f,f)` for all real polynomial observables with no positivity
+  restriction. Full build (3100 jobs), independent concrete density, centered
+  quadratic with zeros, equilibrium, and arbitrary-positive-dimension examples
+  pass. All 706 declarations pass recursive auditing, and all 183 explicit
+  axiom checks use only standard foundational axioms. The full locally Lipschitz
+  metric LSI still requires local-slope comparison and energy-controlled
+  approximation; it is not claimed by this polynomial result.
 
 The report and README are committed separately after these verified proof
 milestones; use `git log --oneline` to see the documentation commit as well.
