@@ -69,3 +69,7 @@ import LogSobolev.Unitary.SpecialUnitaryPolynomialNorm
 import LogSobolev.Unitary.SpecialUnitaryPolynomialHeat
 import LogSobolev.Unitary.SpecialUnitaryPolynomialHeatRegularity
 import LogSobolev.Unitary.SpecialUnitaryPolynomialDissipation
+import LogSobolev.Geometry.FiniteSpectrumUnitary
+import LogSobolev.Unitary.UnitaryConnected
+import LogSobolev.Unitary.SpecialUnitaryConnected
+import LogSobolev.Unitary.SpecialUnitaryZeroEnergy

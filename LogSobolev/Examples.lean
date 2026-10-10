@@ -479,7 +479,7 @@ private theorem quadraticSU2_pos (U : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
   exact sq_pos_of_pos h
 
 -- Nonzero actual invariant derivative certifies that this test is not constant.
-example : ∃ A : specialUnitaryLieAlgebra (n := Fin 2),
+private theorem quadraticSU2_nonconstantDerivative : ∃ A : specialUnitaryLieAlgebra (n := Fin 2),
     specialUnitaryDeriv A quadraticSU2.val 1 = 4 := by
   let A : specialUnitaryLieAlgebra (n := Fin 2) :=
     ⟨Matrix.diagonal ![Complex.I, -Complex.I], by
@@ -518,3 +518,36 @@ example (t : ℝ) (ht : 0 ≤ t) :
         quadraticSU2.val U ∂specialUnitaryHaar (Fin 2)) := by
   simpa using specialUnitaryPolynomialForwardHeat_fisher_le_exp
     (stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 2))) 2 quadraticSU2 quadraticSU2_pos ht
+
+
+-- These use the original matrix topology with the Frobenius scope active.
+example : ConnectedSpace (Matrix.unitaryGroup (Fin 3) ℂ) := inferInstance
+example : ConnectedSpace (Matrix.specialUnitaryGroup (Fin 0) ℂ) := inferInstance
+example : ConnectedSpace (Matrix.specialUnitaryGroup (Fin 1) ℂ) := inferInstance
+example : ConnectedSpace (Matrix.specialUnitaryGroup (Fin 3) ℂ) := inferInstance
+
+-- A concrete nonconstant positive quadratic has strictly positive Haar energy.
+example :
+    let b := stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 2))
+    0 < ∫ U, specialUnitaryGamma b quadraticSU2.val quadraticSU2.val U
+      ∂specialUnitaryHaar (Fin 2) := by
+  dsimp only
+  let b := stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 2))
+  have hn : 0 ≤ ∫ U, specialUnitaryGamma b quadraticSU2.val quadraticSU2.val U
+      ∂specialUnitaryHaar (Fin 2) :=
+    integral_nonneg (fun U => specialUnitaryGamma_nonneg b quadraticSU2.val.contMDiff U)
+  by_contra! h
+  have hz := le_antisymm h hn
+  obtain ⟨A, hA⟩ := quadraticSU2_nonconstantDerivative
+  have h0 := specialUnitaryDeriv_eq_zero_of_integral_gamma_eq_zero b
+    quadraticSU2.val.contMDiff hz A 1
+  linarith
+
+-- Harmonic smooth SU(3) functions are constant, with their value fixed by normalized Haar mass.
+example {f : Matrix.specialUnitaryGroup (Fin 3) ℂ → ℝ}
+    (hf : ContMDiff 𝓘(ℝ, specialUnitaryLieAlgebra (n := Fin 3)) 𝓘(ℝ) ∞ f)
+    (hL : specialUnitaryLaplacian
+      (stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 3))) f = 0) :
+    f = fun _ => ∫ U, f U ∂specialUnitaryHaar (Fin 3) :=
+  specialUnitary_eq_mean_of_integral_gamma_eq_zero _ hf
+    (specialUnitary_integral_gamma_eq_zero_of_laplacian_eq_zero _ hf hL)

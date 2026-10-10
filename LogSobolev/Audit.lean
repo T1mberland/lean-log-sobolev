@@ -323,3 +323,27 @@ set_option pp.all true in
 #check @LogSobolev.specialUnitaryPolynomialForwardHeat_hasDerivAt_fisher
 set_option pp.all true in
 #check @LogSobolev.specialUnitaryPolynomialForwardHeat_fisher_le_exp
+
+
+#print axioms LogSobolev.expUnitary_argSelfAdjoint_of_finite_spectrum
+#print axioms LogSobolev.unitary_connectedSpace_of_finite_spectrum
+#print axioms LogSobolev.unitaryConnectedSpace
+#print axioms LogSobolev.unitaryToSpecialUnitary_continuous
+#print axioms LogSobolev.unitaryToSpecialUnitary_inclusion
+#print axioms LogSobolev.specialUnitaryConnectedSpace
+#print axioms LogSobolev.specialUnitaryGamma_eq_zero_of_integral_eq_zero
+#print axioms LogSobolev.specialUnitaryDeriv_eq_zero_of_gamma_eq_zero
+#print axioms LogSobolev.specialUnitary_eq_mul_exp_of_deriv_eq_zero
+#print axioms LogSobolev.specialUnitary_isLocallyConstant_of_laplacian_eq_zero
+#print axioms LogSobolev.specialUnitary_eq_const_of_laplacian_eq_zero
+#print axioms LogSobolev.specialUnitary_eq_mean_of_integral_gamma_eq_zero
+#print LogSobolev.unitaryDetCorrection
+#print LogSobolev.unitaryToSpecialUnitary
+set_option pp.all true in
+#check @LogSobolev.unitaryConnectedSpace
+set_option pp.all true in
+#check @LogSobolev.specialUnitaryConnectedSpace
+set_option pp.all true in
+#check @LogSobolev.specialUnitary_eq_const_of_laplacian_eq_zero
+set_option pp.all true in
+#check @LogSobolev.specialUnitary_eq_mean_of_integral_gamma_eq_zero
