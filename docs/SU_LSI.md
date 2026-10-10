@@ -168,8 +168,43 @@ commutator on the matrix inclusion has `(0,1)` entry `2i` at identity.
 
 This proves the differential-operator commutator relation. Equality between
 Mathlib's `GroupLieAlgebra` bracket and the algebraic matrix bracket has not
-itself been packaged as a theorem. No Laplacian, Γ₂ bound, heat semigroup, or LSI
-is asserted by these modules.
+itself been packaged as a theorem. No Γ₂ bound, heat semigroup, or LSI
+is asserted by these modules; the subsequent generator module is described below.
+
+## Second-order energy and the constructed generator
+
+`Unitary/SpecialUnitarySecondOrder.lean:specialUnitary_dual_commutator_energy`
+uses the Riesz representation theorem and the exact Killing contraction to prove
+`Σᵢⱼ (ℓ([bᵢ,bⱼ]))² = 2N Σᵢ (ℓ(bᵢ))²` for every continuous real linear functional
+on su and every real HS orthonormal basis. Applied to the actual manifold
+differential, it gives `specialUnitaryDeriv_commutator_energy`.
+
+`specialUnitary_second_derivative_energy_lower_bound` then proves
+
+`(N/2) Σᵢ (Dᵢ f(U))² ≤ Σᵢⱼ (Dᵢ Dⱼ f(U))²`
+
+for every real function smooth at `U`. The proof uses the already-proved operator
+commutator and `Geometry/SecondOrderArray.lean:sum_sq_sub_transpose_le`, which
+bounds the squared antisymmetric part of an array by four times its squared norm.
+The `N/2` coefficient is thus a proved estimate on actual derivatives.
+
+`Unitary/SpecialUnitaryGenerator.lean` defines `specialUnitaryLaplacian` as
+`L = Σᵢ Dᵢ²`, for a supplied finite family of directions, and proves it preserves
+smoothness. `specialUnitaryGamma` is defined by the actual generator expression
+`(L(fg) − f Lg − g Lf)/2`, not by declaring an energy formula.
+`specialUnitaryGamma_eq` proves this equals `Σᵢ (Dᵢ f)(Dᵢ g)` via two applications
+of the verified product rule. Nonnegativity on equal smooth tests follows.
+An orthonormal family is supplied when using the HS metric normalization.
+
+Independent examples instantiate an existing real orthonormal basis of su(2)
+for the second-order estimate, and verify that the generator-defined energy is
+`1` at identity for `f(U) = Im(U₀₀)` and the single direction `diag(i,−i)`.
+The latter is a nonzero one-direction test, not a claim that one direction is a
+full orthonormal frame.
+
+These results do not identify second-derivative energy with Γ₂. Commutation of
+`L` with invariant derivatives, the Γ₂ identity, and the analytic LSI argument
+remain unproved. No heat semigroup has been introduced by assumption.
 
 ## Inner product, adjoint action, and real contraction
 
@@ -243,34 +278,24 @@ needed for its abstract LSI implication and cannot supply this missing proof.
 
 ## Remaining route to the theorem
 
-An economical next route is to define the actual sum-of-squares operator
-`L = Σᵢ Dᵢ²` and `Γ(f) = Σᵢ (Dᵢ f)²`, then prove the Γ₂ estimate with
-coefficient `N/2` using the commutator identity and the exact Killing contraction.
-This would avoid developing a Levi-Civita connection solely to obtain that
-estimate. The operator approach is supported by
+The sum-of-squares route now has a constructed operator `L`, a proved carré du
+champ formula, and the exact `N/2` second-derivative estimate. The next obligations
+are to prove `L(D_A f) = D_A(L f)` for an orthonormal frame, and then establish
+
+`(L Γ(f,f) − 2 Γ(f,Lf))/2 = Σᵢⱼ (Dᵢ Dⱼ f)²`.
+
+Combining that identity with the proved second-order estimate would yield the
+Γ₂ bound `Γ₂(f) ≥ (N/2) Γ(f,f)`. This implication has not yet been closed: the
+left-hand side has not been identified with the second-derivative sum.
+
+This route may avoid developing a Levi-Civita connection solely to obtain the
+estimate. It is supported by
 [Rothaus, *Hypercontractivity and the Bakry–Emery criterion for compact Lie
 groups*, pp. 361–363](https://www.researchgate.net/publication/243022735_Hypercontractivity_and_the_Bakry-Emery_criterion_for_compact_Lie_groups),
-which uses commutation of the Laplacian with invariant fields to reduce the
-curvature expression to second derivatives. This is a proposed formalization
-route, not a proved Γ₂ theorem here. It still needs Haar integration by parts,
-a constructed diffusion, entropy dissipation and equilibrium convergence, and
-the local-slope extension.
-
-A concrete next inequality, already expressible using the proved API, is the
-following **unproved goal**. For a real orthonormal basis `b` of su(N), any
-smooth real SU function `f`, and `U : SU(N)`, prove
-
-```lean
-(N : ℝ) / 2 * (∑ i, (specialUnitaryDeriv (b i) f U) ^ 2) ≤
-  ∑ i, ∑ j, (specialUnitaryDeriv (b i) (specialUnitaryDeriv (b j) f) U) ^ 2
-```
-
-The proposed proof combines the operator commutator with the algebraic
-orthonormal contraction and the sum-of-squares inequality for the antisymmetric
-part of the second-derivative array. Separately prove that the actual operator
-`L = Σᵢ Dᵢ²` commutes with each invariant derivative and that its carré du champ
-is `Σᵢ (Dᵢ f)²`; these identify the displayed second-derivative sum with Γ₂.
-These are remaining proof obligations, not definitions declaring curvature.
+which uses commutation of the Laplacian with invariant fields. It still needs
+Haar integration by parts, a constructed diffusion, entropy dissipation and
+equilibrium convergence, and the extension to local metric slopes for locally
+Lipschitz functions. These are remaining proof obligations, not assumed data.
 
 The alternative geometric route remains:
 
@@ -307,13 +332,15 @@ Proof commits: `0f05569` (algebra), `339112a` (curves), and `5bf0ed6`
 `78fea3b` (smooth translated exponential atlas), and `fc7c4c0` (smooth group
 operations, ambient criterion, and exact manifold tangent normalization), and
 `e5cfa1d` (invariant fields, local smooth extensions, and smooth directional
-operator commutators).
+operator commutators), and `6cb53ac` (the `N/2` second-derivative estimate and
+generator-defined carré du champ).
 `lake build` and the independent `Examples.lean`
-compilation pass. The recursive `Audit.lean` check passes for all 425 project
+compilation pass. The recursive `Audit.lean` check passes for all 439 project
 declarations, accepting only `propext`, `Classical.choice`, and `Quot.sound`.
 It prints the fully elaborated commutator-energy, curve-velocity, and
 exponential-speed, conjugation-derivative, and Killing-contraction, exact-coefficient, and real-orthonormal-energy theorems, exposes the Frobenius instances, and inspects the
 Lie-algebra, trace-pairing, exponential-curve, and inner-product definitions.
 The full output is in [axiom-audit.txt](axiom-audit.txt). These checks certify
 the algebraic, curve, local-coordinate, smooth Lie-group, tangent-derivative,
-and smooth differential-operator results above, not an SU(N) LSI theorem.
+smooth differential-operator, second-order energy, and generator results above,
+not an SU(N) LSI theorem.
