@@ -423,3 +423,29 @@ example {ι : Type*} [Fintype ι]
       specialUnitaryGamma b (F t) (F t) U * F t U / (F t U) ^ 2
   field_simp [h0 t U]
   ring
+
+-- A constructed, nonconstant affine SU(2) heat solution stays positive at every forward time.
+example (T : ℝ) (hT : 0 ≤ T) :
+    let l : Matrix (Fin 2) (Fin 2) ℂ →L[ℝ] ℝ := Complex.imCLM.comp
+      (LinearMap.toContinuousLinearMap (Matrix.entryLinearMap ℝ ℂ 0 0))
+    let b := stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 2))
+    ∀ U, 0 < specialUnitaryLinearHeat b l 2 T U := by
+  dsimp only
+  apply specialUnitaryLinearHeat_pos _ _ 2 hT
+  intro U
+  change 0 < 2 + (U.val 0 0).im
+  have hn : ‖U.val‖ = Real.sqrt 2 := by
+    simpa using unitary_norm (specialUnitaryInclusion U)
+  have hb := (Complex.abs_im_le_norm (U.val 0 0)).trans (norm_entry_le_frobenius U.val 0 0)
+  rw [hn] at hb
+  have hs := Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)
+  have ha := neg_abs_le (U.val 0 0).im
+  nlinarith [Real.sqrt_nonneg (2 : ℝ)]
+
+-- The actual PDE is checked directly, without a supplied heat trajectory or heat-equation premise.
+example (t : ℝ) (U : Matrix.specialUnitaryGroup (Fin 3) ℂ)
+    (l : Matrix (Fin 3) (Fin 3) ℂ →L[ℝ] ℝ) :
+    let b := stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 3))
+    HasDerivAt (fun r => specialUnitaryLinearHeat b l 2 r U)
+      (specialUnitaryLaplacian b (specialUnitaryLinearHeat b l 2 t) U) t :=
+  specialUnitaryLinearHeat_hasDerivAt _ l 2 t U

@@ -266,3 +266,29 @@ set_option pp.all true in
 #check @LogSobolev.specialUnitary_fisher_variation_identity
 set_option pp.all true in
 #check @LogSobolev.specialUnitary_fisher_deriv_le
+
+#print axioms LogSobolev.secondDeriv_nonneg_of_isLocalMin
+#print axioms LogSobolev.secondDerivative_nonneg_of_isLocalMin
+#print axioms LogSobolev.secondDerivative_nonpos_of_isLocalMax
+#print axioms LogSobolev.nonneg_of_compact_strict_minimum_principle
+#print axioms LogSobolev.nonneg_of_compact_minimum_principle
+#print axioms LogSobolev.specialUnitaryDeriv_twice_nonneg_at_min
+#print axioms LogSobolev.specialUnitary_laplacian_nonneg_at_min
+#print axioms LogSobolev.specialUnitary_laplacian_nonpos_at_max
+#print axioms LogSobolev.specialUnitary_heat_lower_bound
+#print axioms LogSobolev.specialUnitary_heat_upper_bound
+#print axioms LogSobolev.specialUnitary_heat_nonneg
+#print axioms LogSobolev.specialUnitaryLaplacian_affine
+#print axioms LogSobolev.specialUnitaryLinearHeat_hasDerivAt
+#print axioms LogSobolev.specialUnitaryLinearHeat_lower_bound
+#print axioms LogSobolev.specialUnitaryLinearHeat_pos
+#print LogSobolev.specialUnitaryLinearHeatMatrix
+#print LogSobolev.specialUnitaryLinearHeat
+set_option pp.all true in
+#check @LogSobolev.specialUnitary_laplacian_nonneg_at_min
+set_option pp.all true in
+#check @LogSobolev.specialUnitary_heat_nonneg
+set_option pp.all true in
+#check @LogSobolev.specialUnitaryLinearHeat_hasDerivAt
+set_option pp.all true in
+#check @LogSobolev.specialUnitaryLinearHeat_pos

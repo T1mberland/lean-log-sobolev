@@ -57,3 +57,8 @@ import LogSobolev.Unitary.SpecialUnitaryChainRules
 import LogSobolev.Unitary.SpecialUnitaryEntropyDissipation
 import LogSobolev.Unitary.SpecialUnitaryFisherIdentity
 import LogSobolev.Unitary.SpecialUnitaryFisherDifferentiation
+import LogSobolev.Geometry.SecondDerivativeExtrema
+import LogSobolev.Geometry.CompactEvolutionMaximum
+import LogSobolev.Unitary.SpecialUnitaryMaximumPrinciple
+import LogSobolev.Unitary.SpecialUnitaryHeatBounds
+import LogSobolev.Unitary.SpecialUnitaryLinearHeat
