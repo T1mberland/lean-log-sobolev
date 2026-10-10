@@ -40,6 +40,9 @@ Proved components include:
   sum-of-squares operator whose carré du champ is proved to be first-derivative
   energy. Generator commutation, the Γ₂ identity, and `Γ₂ ≥ (N/2) Γ` are
   now proved for all smooth real SU tests. The entropy inequality remains open.
+* Haar integration by parts for actual SU derivatives and the generator,
+  with symmetry, nonpositivity, and the integrated estimate
+  `(N/2) ∫ Γ(f,f) ≤ ∫ (Lf)²` for every smooth real test.
 * The normalized interval and its L² product with SU(N).
 * The paper's phase map into U(N), with the `sqrt(3)` Lipschitz bound.
 * **The exact short-interval Haar decomposition (Lemma 16)** for every positive N,

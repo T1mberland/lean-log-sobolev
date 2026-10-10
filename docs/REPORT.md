@@ -64,6 +64,9 @@ All names below are in namespace `LogSobolev`.
 | `LogSobolev/Unitary/SpecialUnitaryOperatorAlgebra.lean` | `specialUnitaryDerivEnd`, `specialUnitaryDerivRepresentation`, `specialUnitaryDerivEnd_commutator` | Actual invariant derivatives as linear endomorphisms of genuine smooth functions, with proved linearity and commutator relation. |
 | `LogSobolev/Unitary/SpecialUnitaryGeneratorCommutation.lean` | `specialUnitaryCasimir_commute`, `specialUnitaryLaplacian_deriv` | The constructed generator commutes with every invariant derivative for a real HS orthonormal basis; no diffusion or curvature hypothesis. |
 | `LogSobolev/Unitary/SpecialUnitaryGammaTwo.lean` | `specialUnitaryGammaTwo_eq`, `specialUnitaryGammaTwo_lower_bound` | Γ₂ is defined by `(LΓ−2Γ(f,Lf))/2`; its equality with second-derivative energy and the exact lower bound `Γ₂ ≥ (N/2)Γ` are proved for every smooth real test. This is not LSI or entropy decay. |
+| `LogSobolev/Unitary/SpecialUnitaryFlow.lean` | `specialUnitary_hasDerivAt_mul_exp` | Derivative along the actual curve `U exp(tA)` equals invariant differentiation for smooth tests. |
+| `LogSobolev/Unitary/SpecialUnitaryHaarCalculus.lean` | `eq_specialUnitaryHaar`, `specialUnitary_integral_deriv_eq_zero`, `specialUnitary_integral_mul_laplacian` | Right invariance, zero integral of invariant derivatives, and the actual Haar Dirichlet identity. The generator is symmetric and nonpositive on smooth tests; all integrability is proved. |
+| `LogSobolev/Unitary/SpecialUnitaryIntegratedGammaTwo.lean` | `specialUnitary_integral_gammaTwo`, `specialUnitary_integrated_gammaTwo_lower_bound` | `∫ Γ₂(f) = ∫ (Lf)²` and `(N/2) ∫ Γ(f,f) ≤ ∫ (Lf)²` for normalized Haar and smooth tests. This is not an entropy or Poincaré inequality. |
 | `LogSobolev/Unitary/PhaseMap.lean` | `phaseMul_dist_le`, `phaseMap_lipschitz` | The full-line phase map has Lipschitz constant `sqrt(3)` for every positive N; no probability argument is needed. |
 | `LogSobolev/Measure/Interval.lean` | `intervalUniform_univ`, `map_intervalUniform` | Normalized Lebesgue measure on the Euclidean subtype `[0,L]` for `L>0`. |
 | `LogSobolev/Unitary/ProductDomain.lean` | `phaseDomainMeasure_probability`, `intervalPhaseMap_lipschitz` | The exact interval × SU domain and probability measure, and the restricted map's Lipschitz bound. |
@@ -176,7 +179,8 @@ The sum-of-squares Γ₂ argument is now closed: the generator commutes with
 invariant derivatives, its actual iterated carré du champ equals the
 second-derivative sum, and `Γ₂ ≥ (N/2)Γ` is proved for every smooth real test.
 This avoids needing a geometric Ricci theorem for the current operator route.
-The SU step still needs Haar integration by parts, a constructed diffusion,
+Haar integration by parts and the integrated Γ₂ identity are now proved.
+The SU step still needs a constructed diffusion,
 entropy dissipation, the Fisher-information estimate, and equilibrium convergence
 with proved ergodicity. Energy identification and approximation are required to
 obtain locally Lipschitz functions. The abstract
@@ -192,16 +196,16 @@ the compact regularity side conditions. A verified Herbst argument is a later ta
 Verification performed on 2026-10-10 with Lean 4.28.0 and the pinned Mathlib
 commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
 
-* `lake build`: passed for the complete library (2939 dependency/build jobs,
+* `lake build`: passed for the complete library (2943 dependency/build jobs,
   primarily cached Mathlib artifacts).
 * `lake env lean LogSobolev/Examples.lean`: passed; the examples compile as an
   independent client importing the public root module.
 * `lake env lean LogSobolev/Audit.lean`: passed. The automated traversal checked
-  **465 declarations** in the `LogSobolev` namespace, including definitions,
+  **482 declarations** in the `LogSobolev` namespace, including definitions,
   instances, and generated auxiliaries. Every transitive axiom was one of
   `propext`, `Classical.choice`, or `Quot.sound`. No `sorryAx` or custom axiom
   was present in those dependency closures.
-* The audit also executes 99 `#print axioms` commands, prints the core
+* The audit also executes 109 `#print axioms` commands, prints the core
   definitions, and prints fully elaborated types for the trace normalization,
   phase-map Lipschitz theorem, U(N) regularity theorem, exact Haar identity,
   conditional final LSI transfer, product entropy chain rule, and SU algebra
@@ -211,7 +215,8 @@ commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
   inclusion derivative with exact coordinate-norm preservation, local smooth
   extension, the actual differential-operator commutator, the `N/2` second-order
   bound, the generator-defined carré du champ identity, generator commutation,
-  and the exact Γ₂ bound. The elaborated
+  the exact Γ₂ bound, Haar integration by parts, and the integrated Γ₂
+  estimate. The elaborated
   metric instances are explicitly Frobenius and `WithLp 2`.
 * The recursive audit now shares Lean's core collector visited set across all
   project roots. At milestone `6cb53ac`, an independent-root baseline run and
@@ -307,6 +312,16 @@ Completed milestones:
   465-declaration recursive axiom audit pass. Haar integration by parts,
   diffusion construction, entropy dissipation/convergence, and locally Lipschitz
   LSI remain open; the Γ₂ differential estimate itself is now proved.
+
+* `3c059da`: derivative along actual exponential curves, SU Haar right
+  invariance and uniqueness, zero integral of invariant derivatives, and the
+  generator Dirichlet identity with symmetry and nonpositivity. Integrated Γ₂
+  equals `∫ (Lf)²`, giving the exact `N/2` coercivity estimate. Full build
+  (2943 jobs), independent examples including a nonconstant coordinate test,
+  and the 482-declaration recursive audit pass; 109 explicit `#print axioms`
+  commands use only the three standard foundational axioms. Diffusion
+  construction, entropy dissipation/convergence, energy identification, and
+  locally Lipschitz LSI remain open.
 
 The report and README are committed separately after these verified proof
 milestones; use `git log --oneline` to see the documentation commit as well.

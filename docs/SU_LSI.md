@@ -311,22 +311,44 @@ here was found. No such result has been added as a hypothesis disguised as an
 instance. The audited `markov-semigroups` class still assumes the entropy decay
 needed for its abstract LSI implication and cannot supply this missing proof.
 
+## Haar integration now proved
+
+`Unitary/SpecialUnitaryFlow.lean:specialUnitary_hasDerivAt_mul_exp` identifies
+ordinary differentiation of `f(U exp(tA))` with the actual invariant derivative
+at `U exp(tA)`. It uses the proved local smooth ambient extension and the matrix
+exponential derivative; no flow derivative is assumed.
+
+`Unitary/SpecialUnitaryHaarCalculus.lean` proves uniqueness and right invariance
+of the existing normalized SU Haar measure. Differentiation under the integral,
+with compactness bounding the derivative, gives
+`specialUnitary_integral_deriv_eq_zero`: `∫ D_A f = 0`.
+The product rule gives `specialUnitary_integral_mul_deriv` and
+`specialUnitary_integral_mul_laplacian`: `∫ f Lg = −∫ Γ(f,g)`.
+Smoothness and compactness establish all integrability requirements. The
+actual generator therefore has zero integral, is symmetric, and has nonpositive
+quadratic form on smooth real tests.
+
+`Unitary/SpecialUnitaryIntegratedGammaTwo.lean` then proves
+`specialUnitary_integral_gammaTwo`: `∫ Γ₂(f) = ∫ (Lf)²`, and
+`specialUnitary_integrated_gammaTwo_lower_bound`:
+
+`(N/2) ∫ Γ(f,f) ≤ ∫ (Lf)²`.
+
+These statements use the existing normalized Haar measure and, for the last
+estimate, a real Hilbert–Schmidt orthonormal basis. This is a generator
+coercivity estimate, not yet a Poincaré or entropy inequality. No spectral or
+heat-semigroup existence assumption is introduced.
+
 ## Remaining route to the theorem
 
 The sum-of-squares route now has its exact differential estimate
 `Γ₂ ≥ (N/2) Γ`. The remaining central task is analytic: construct the diffusion
 for this operator and prove the entropy argument, with invariant measure equal
-to the already-defined normalized Haar probability. Required steps include Haar
-integration by parts, semigroup existence and regularity, entropy dissipation,
+to the already-defined normalized Haar probability. Haar integration by parts
+is now proved. Required steps include semigroup existence and regularity, entropy dissipation,
 the Fisher-information estimate derived from the proved Γ₂ bound, and convergence
 to constants. Connectedness/ergodicity needed for this convergence must be proved;
 it is not supplied by an abstract class or inferred from Γ₂ alone.
-
-The immediate measure-theoretic goals, for smooth `f,g` and the existing Haar
-probability `μ`, are `∫ D_A f dμ = 0` and
-`∫ f Lg dμ = −∫ Γ(f,g) dμ`. The proposed proof differentiates the verified Haar
-invariance along actual exponential curves, using compactness for domination.
-These identities have not yet been formalized.
 
 A precise **unproved smooth intermediate goal**, for `N ≥ 2`, a real orthonormal
 basis `b` of su(N), and `f` smooth on SU(N), is
@@ -380,14 +402,16 @@ operations, ambient criterion, and exact manifold tangent normalization), and
 `e5cfa1d` (invariant fields, local smooth extensions, and smooth directional
 operator commutators), and `6cb53ac` (the `N/2` second-derivative estimate and
 generator-defined carré du champ), and `eb986ff` (actual operator Casimir
-commutation and the exact generator-defined Γ₂ identity and bound).
+commutation and the exact generator-defined Γ₂ identity and bound), and
+`3c059da` (actual Haar integration by parts and integrated Γ₂ coercivity).
 `lake build` and the independent `Examples.lean`
-compilation pass. The recursive `Audit.lean` check passes for all 465 project
+compilation pass. The recursive `Audit.lean` check passes for all 482 project
 declarations, accepting only `propext`, `Classical.choice`, and `Quot.sound`.
 It prints the fully elaborated commutator-energy, curve-velocity, and
 exponential-speed, conjugation-derivative, and Killing-contraction, exact-coefficient, and real-orthonormal-energy theorems, exposes the Frobenius instances, and inspects the
 Lie-algebra, trace-pairing, exponential-curve, and inner-product definitions.
 The full output is in [axiom-audit.txt](axiom-audit.txt). These checks certify
 the algebraic, curve, local-coordinate, smooth Lie-group, tangent-derivative,
-smooth differential-operator, second-order energy, generator, and Γ₂ results
+smooth differential-operator, second-order energy, generator, Γ₂, and Haar
+integration results
 above, not an SU(N) LSI theorem.
