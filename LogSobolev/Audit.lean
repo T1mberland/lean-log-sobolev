@@ -347,3 +347,25 @@ set_option pp.all true in
 #check @LogSobolev.specialUnitary_eq_const_of_laplacian_eq_zero
 set_option pp.all true in
 #check @LogSobolev.specialUnitary_eq_mean_of_integral_gamma_eq_zero
+
+
+#print axioms LogSobolev.specialUnitaryPolynomial_energy_continuous
+#print axioms LogSobolev.specialUnitaryPolynomial_entropy_continuous
+#print axioms LogSobolev.specialUnitary_integral_gamma_le_mul_fisher
+#print axioms LogSobolev.specialUnitaryPolynomialForwardHeat_energy_tendsto_zero
+#print axioms LogSobolev.specialUnitaryPolynomialForwardHeat_tendsto_mean
+#print axioms LogSobolev.specialUnitaryPolynomialForwardHeat_entropy_tendsto_zero
+#print axioms LogSobolev.initial_le_div_of_dissipation_decay
+#print axioms LogSobolev.specialUnitaryGamma_sq_add_const
+#print axioms LogSobolev.specialUnitary_fisher_sq_add_const_le
+#print axioms LogSobolev.specialUnitaryPolynomial_entropy_le_fisher
+#print axioms LogSobolev.specialUnitaryPolynomial_entropy_sq_le
+#print LogSobolev.specialUnitaryPolynomialConst
+set_option pp.all true in
+#check @LogSobolev.specialUnitaryPolynomialForwardHeat_tendsto_mean
+set_option pp.all true in
+#check @LogSobolev.specialUnitaryPolynomialForwardHeat_entropy_tendsto_zero
+set_option pp.all true in
+#check @LogSobolev.specialUnitaryPolynomial_entropy_le_fisher
+set_option pp.all true in
+#check @LogSobolev.specialUnitaryPolynomial_entropy_sq_le

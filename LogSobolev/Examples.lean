@@ -551,3 +551,49 @@ example {f : Matrix.specialUnitaryGroup (Fin 3) ℂ → ℝ}
     f = fun _ => ∫ U, f U ∂specialUnitaryHaar (Fin 3) :=
   specialUnitary_eq_mean_of_integral_gamma_eq_zero _ hf
     (specialUnitary_integral_gamma_eq_zero_of_laplacian_eq_zero _ hf hL)
+
+
+-- Uniform convergence of an actual nonconstant quadratic heat flow to its Haar mean.
+example :
+    let b := stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 2))
+    Filter.Tendsto (specialUnitaryPolynomialForwardHeat b 2 quadraticSU2) Filter.atTop
+      (nhds (specialUnitaryPolynomialConst 2
+        (∫ U, quadraticSU2.val U ∂specialUnitaryHaar (Fin 2)))) :=
+  specialUnitaryPolynomialForwardHeat_tendsto_mean _ 2 (by decide) quadraticSU2 quadraticSU2_pos
+
+-- The proved positive-density bound on the concrete quadratic test, with coefficient 1/2.
+example :
+    let b := stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 2))
+    entropy (specialUnitaryHaar (Fin 2)) quadraticSU2.val ≤
+      (1 / 2 : ℝ) * (∫ U, specialUnitaryGamma b quadraticSU2.val quadraticSU2.val U /
+        quadraticSU2.val U ∂specialUnitaryHaar (Fin 2)) := by
+  simpa using specialUnitaryPolynomial_entropy_le_fisher
+    (stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 2))) 2 (by decide)
+    quadraticSU2 quadraticSU2_pos
+
+-- A test with a zero at the identity: strict positivity is absent from the squared-function LSI.
+private noncomputable def centeredQuadraticSU2 : specialUnitaryPolynomialSpace (n := Fin 2) 2 :=
+  quadraticSU2 - specialUnitaryPolynomialConst 2 4
+
+example : centeredQuadraticSU2.val 1 = 0 := by
+  change quadraticSU2.val 1 - (specialUnitaryPolynomialConst (n := Fin 2) 2 4).val 1 = 0
+  rw [quadraticSU2_apply, specialUnitaryPolynomialConst_apply]
+  norm_num
+
+example :
+    let b := stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 2))
+    entropy (specialUnitaryHaar (Fin 2)) (fun U => centeredQuadraticSU2.val U ^ 2) ≤
+      2 * (∫ U, specialUnitaryGamma b centeredQuadraticSU2.val centeredQuadraticSU2.val U
+        ∂specialUnitaryHaar (Fin 2)) := by
+  have h := specialUnitaryPolynomial_entropy_sq_le
+    (stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 2))) 2 (by decide) centeredQuadraticSU2
+  norm_num at h
+  exact h
+
+-- Exact N-dependence in the public squared-polynomial theorem, with no heat hypotheses.
+example (N d : ℕ) (hN : 0 < N) (f : specialUnitaryPolynomialSpace (n := Fin N) d) :
+    let b := stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin N))
+    entropy (specialUnitaryHaar (Fin N)) (fun U => f.val U ^ 2) ≤
+      (4 / (N : ℝ)) * (∫ U, specialUnitaryGamma b f.val f.val U ∂specialUnitaryHaar (Fin N)) := by
+  simpa using specialUnitaryPolynomial_entropy_sq_le
+    (stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin N))) d (by simpa using hN) f

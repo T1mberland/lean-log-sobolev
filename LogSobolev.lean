@@ -73,3 +73,9 @@ import LogSobolev.Geometry.FiniteSpectrumUnitary
 import LogSobolev.Unitary.UnitaryConnected
 import LogSobolev.Unitary.SpecialUnitaryConnected
 import LogSobolev.Unitary.SpecialUnitaryZeroEnergy
+import LogSobolev.Analysis.DissipationBound
+import LogSobolev.Unitary.SpecialUnitaryPolynomialFunctionals
+import LogSobolev.Unitary.SpecialUnitaryPolynomialEnergyDecay
+import LogSobolev.Unitary.SpecialUnitaryPolynomialEquilibrium
+import LogSobolev.Unitary.SpecialUnitarySquareEnergy
+import LogSobolev.Unitary.SpecialUnitaryPolynomialLSI
