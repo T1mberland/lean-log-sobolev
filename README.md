@@ -17,7 +17,10 @@ Proved components include:
 * Polynomial convolution on SU preserves degree; normalized averaging preserves
   Haar mass and nonnegative normalized kernels preserve upper bounds.
 * Entropy transport, the product entropy chain rule with proved marginal
-  log-integrability, and an explicit-energy LSI transport/scaling API.
+  log-integrability, and binary entropy subadditivity for every nonnegative
+  continuous density on compact metric probability spaces, including zeros.
+* A real Gibbs entropy bound, parameter continuity, and an explicit-energy
+  LSI transport/scaling API.
 * The upper local metric slope: agreement with the punctured limsup,
   finiteness for locally Lipschitz functions, Borel measurability, a Lipschitz
   chain bound, and invariance under domain isometries.

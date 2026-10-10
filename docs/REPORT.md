@@ -36,6 +36,9 @@ All names below are in namespace `LogSobolev`.
 |---|---|---|
 | `LogSobolev/Measure/Entropy.lean` | `entropy_nonneg`, `entropy_map` | Jensen with integrability; entropy commutes with measurable pushforward. |
 | `LogSobolev/Measure/ProductEntropy.lean` | `integrable_marginal_mul_log`, `integrable_slice_entropy`, `entropy_prod_chain`, `entropy_marginal_le` | Exact binary product chain rule and entropy contraction under marginalization. For nonnegative integrable densities with integrable log moment, marginal log-integrability is proved. This is not metric-LSI tensorization. |
+| `LogSobolev/Measure/EntropyVariational.lean` | `integral_mul_log_le_entropy` | Gibbs bound for a positive normalized reference density with explicit cross-log integrability; zero mass allowed. |
+| `LogSobolev/Measure/ParametricEntropy.lean` | `continuous_parametric_entropy` | Joint continuity on a compact integration space implies continuous entropy, including zeros. |
+| `LogSobolev/Measure/ProductEntropySubadditivity.lean` | `entropy_prod_le_integral_entropy_add_of_continuous` | Joint entropy is bounded by the sum of averaged slice entropies for every continuous nonnegative density on compact metric probability spaces. All integrability is proved; this is entropy subadditivity, not metric-LSI tensorization. |
 | `LogSobolev/Measure/LSI.lean` | `HasEnergyLSI.map`, `.mono`, `.scale_energy` | Abstract implications with explicitly supplied source LSI, test class and energy comparison; not LSI existence. |
 | `LogSobolev/Geometry/LocalSlope.lean` | `localSlope_eq_limsup_nhdsNE`, `localSlope_lt_top`, `localSlope_comp_le`, `localSlope_comp_isometryEquiv` | Actual upper local metric slope, including collapsed points under a map and isolated points. |
 | `LogSobolev/Geometry/SlopeMeasurable.lean` | `localSlope_eq_iInf_iSup_probe`, `measurable_localSlope` | Borel measurability for every continuous real function on a metric space; no separability assumption. |
@@ -257,15 +260,16 @@ integration show invariance under every left translation in U. The existing
 endpoints are handled by the verified equality of Lebesgue integrals on Icc
 and Ioc. This argument applies for every positive N.
 
-The binary entropy chain rule and its marginal log-integrability are now
-proved in `ProductEntropy.lean`, adapted from the inspected conditional-entropy
-library to heterogeneous products. This is an analytic ingredient, not the
-metric-LSI tensorization theorem. The next tensorization obligation is to control
-the local slope of the square root of a marginal of `f²`, and relate the two
-coordinate energies to the full L²-product energy. The manifold/interval
-setting needs the appropriate gradient-to-local-slope identification; the
-inspected Gaussian tensorization is not immediately that theorem. Prove a one-dimensional
-circle/interval LSI and scaling, including the circle case for N=1.
+Binary entropy subadditivity is now proved in
+`ProductEntropySubadditivity.lean` for all nonnegative continuous densities on
+compact metric probability spaces. The proof uses a real Gibbs inequality and
+positive regularization, with parameter continuity handling zeros. Applied to
+`f²`, it bounds joint entropy by the two averaged slice entropies without
+differentiating a marginal square root. The remaining tensorization obligation
+is to compare the sum of the coordinate energies with the full L²-product
+energy. This is not an automatic pointwise inequality for arbitrary nonsmooth
+functions; a smooth approximation or almost-everywhere argument is still needed.
+The interval/circle LSI and its scaling are also still unproved.
 
 The [completed SU proof](SU_LSI.md) supplies the `2/N` factor unconditionally,
 including locally Lipschitz tests. Its route uses actual sum-of-squares Γ₂ and
@@ -286,11 +290,18 @@ milestones supersede earlier open obligations.
 Verification performed on 2026-10-10 with Lean 4.28.0 and the pinned Mathlib
 commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
 
-* `lake build`: passed for the complete library (3115 dependency/build jobs,
+* `lake build`: passed for the complete library (3118 dependency/build jobs,
   primarily cached Mathlib artifacts).
 * `lake env lean LogSobolev/Examples.lean`: passed; the examples compile as an
   independent client importing the public root module.
-* `lake env lean LogSobolev/Audit.lean`: passed. The automated traversal checked
+* `lake env lean LogSobolev/ExamplesProductEntropy.lean`: passed, including
+  squared functions with zeros and a joint interval/SU(2) distance observable.
+* `lake env lean LogSobolev/AuditProductEntropy.lean`: passed at `7a5ed75`;
+  all **808 declarations** and their recursive dependencies use only the three
+  standard foundational axioms. Eight new explicit axiom checks and the
+  complete final subadditivity statement are recorded in
+  [product-entropy-axiom-audit.txt](product-entropy-axiom-audit.txt).
+* `lake env lean LogSobolev/Audit.lean`: passed at the SU completion milestone. The automated traversal checked
   **792 declarations** in the `LogSobolev` namespace, including definitions,
   instances, and generated auxiliaries. Every transitive axiom was one of
   `propext`, `Classical.choice`, or `Quot.sound`. No `sorryAx` or custom axiom
@@ -538,6 +549,14 @@ Completed milestones:
   successfully: 792 recursively audited declarations, 242 explicit axiom
   prints, only `propext`, `Classical.choice`, and `Quot.sound`. The larger U(N)
   theorem still needs the interval/circle LSI and metric product tensorization.
+
+* `7a5ed75`: real Gibbs entropy inequality (including zero mass), entropy
+  continuity for compact-space parameter families, and binary entropy
+  subadditivity for every continuous nonnegative density on compact metric
+  probability spaces. Positive regularization removes positivity and cross-log
+  assumptions from the compact conclusion. Build (3118 jobs), independent
+  square/interval/SU(2) examples, and an 808-declaration recursive axiom audit
+  pass. No interval LSI or metric-energy tensorization is asserted here.
 
 The report and README are committed separately after these verified proof
 milestones; use `git log --oneline` to see the documentation commit as well.

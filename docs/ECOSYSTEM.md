@@ -70,7 +70,11 @@ products. These compiled proofs do not supply metric-LSI tensorization.
 `Probability/Entropy/Conditional/Subadditivity.lean:entropy_subadditive` proves
 an entropy bound for finite independent products. It assumes measurability,
 nonnegativity a.e., integrability, and log-moment integrability. This is a useful
-future port, but it is not metric-slope tensorization on two different manifolds.
+reference, but it is not metric-slope tensorization on two different manifolds.
+The project now proves heterogeneous binary subadditivity for continuous
+nonnegative densities on compact metric probability spaces in
+`ProductEntropySubadditivity.lean`. Its real Gibbs argument avoids importing
+the external extended-real variational API; positive regularization handles zeros.
 
 `Probability/Concentration/LogSobolev/GaussianTensorization.lean:
 gaussian_logSobolev_W12_pi` (and `SLT/GaussianLSI/TensorizedGLSI.lean`) assumes
