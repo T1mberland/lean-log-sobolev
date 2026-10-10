@@ -37,3 +37,7 @@ import LogSobolev.Unitary.SpecialUnitaryManifold
 import LogSobolev.Unitary.SpecialUnitarySmoothMaps
 import LogSobolev.Unitary.SpecialUnitaryLieGroup
 import LogSobolev.Unitary.SpecialUnitaryTangent
+import LogSobolev.Geometry.AlgebraVectorFields
+import LogSobolev.Unitary.SpecialUnitaryInvariantFields
+import LogSobolev.Unitary.SpecialUnitarySmoothExtension
+import LogSobolev.Unitary.SpecialUnitaryDifferentialOperators

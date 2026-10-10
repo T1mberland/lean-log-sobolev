@@ -218,3 +218,37 @@ example (U : Matrix.specialUnitaryGroup (Fin 2) ℂ)
       U.val * A.val := by
   rw [(specialUnitary_val_hasMFDerivAt U).mfderiv]
   rfl
+
+-- Repeated invariant derivatives remain legitimate smooth manifold tests.
+example (A B : specialUnitaryLieAlgebra (n := Fin 3))
+    {f : Matrix.specialUnitaryGroup (Fin 3) ℂ → ℝ}
+    (hf : ContMDiff 𝓘(ℝ, specialUnitaryLieAlgebra (n := Fin 3)) 𝓘(ℝ) ∞ f) :
+    ContMDiff 𝓘(ℝ, specialUnitaryLieAlgebra (n := Fin 3)) 𝓘(ℝ) ∞
+      (specialUnitaryDeriv A (specialUnitaryDeriv B f)) :=
+  specialUnitaryDeriv_contMDiff A (specialUnitaryDeriv_contMDiff B hf)
+
+-- Concrete noncommuting SU(2) directions detect the sign and nonzero operator bracket.
+example : ∃ A B : specialUnitaryLieAlgebra (n := Fin 2),
+    (specialUnitaryDeriv A (specialUnitaryDeriv B
+      (Subtype.val : Matrix.specialUnitaryGroup (Fin 2) ℂ → Matrix (Fin 2) (Fin 2) ℂ)) 1 -
+     specialUnitaryDeriv B (specialUnitaryDeriv A Subtype.val) 1) 0 1 = 2 * Complex.I := by
+  let A : specialUnitaryLieAlgebra (n := Fin 2) :=
+    ⟨Matrix.diagonal ![Complex.I, -Complex.I], by
+      constructor
+      · ext i j
+        fin_cases i <;> fin_cases j <;> simp [Matrix.diagonal]
+      · simp [Matrix.trace, Fin.sum_univ_two]⟩
+  let B : specialUnitaryLieAlgebra (n := Fin 2) := ⟨!![0, 1; -1, 0], by
+    constructor
+    · ext i j
+      fin_cases i <;> fin_cases j <;> simp
+    · simp [Matrix.trace, Fin.sum_univ_two]⟩
+  refine ⟨A, B, ?_⟩
+  rw [specialUnitaryDeriv_commutator A B specialUnitary_val_contMDiff.contMDiffAt]
+  unfold specialUnitaryDeriv
+  rw [(specialUnitary_val_hasMFDerivAt (1 : Matrix.specialUnitaryGroup (Fin 2) ℂ)).mfderiv]
+  change ((1 : Matrix (Fin 2) (Fin 2) ℂ) *
+    (A.val * B.val - B.val * A.val)) 0 1 = 2 * Complex.I
+  norm_num [A, B, Matrix.mul_apply, Fin.sum_univ_two, Matrix.diagonal,
+    Matrix.vecHead, Matrix.vecTail]
+  ring

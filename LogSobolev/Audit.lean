@@ -171,3 +171,17 @@ set_option pp.all true in
 #check LogSobolev.specialUnitary_val_hasMFDerivAt
 set_option pp.all true in
 #check LogSobolev.specialUnitary_mfderiv_val_norm
+
+#print axioms LogSobolev.rightMul_lieBracket
+#print axioms LogSobolev.rightMulDeriv_commutator
+#print axioms LogSobolev.specialUnitary_mfderiv_mul_left_apply
+#print axioms LogSobolev.specialUnitary_mulInvariantVectorField_val
+#print axioms LogSobolev.specialUnitary_exists_local_smooth_extension
+#print axioms LogSobolev.specialUnitaryDeriv_contMDiff
+#print axioms LogSobolev.specialUnitaryDeriv_commutator
+#print LogSobolev.specialUnitaryDeriv
+#print LogSobolev.specialUnitaryLocalRetraction
+set_option pp.all true in
+#check LogSobolev.specialUnitary_exists_local_smooth_extension
+set_option pp.all true in
+#check LogSobolev.specialUnitaryDeriv_commutator
