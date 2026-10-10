@@ -21,6 +21,10 @@ Proved components include:
 * Compactness and Haar probability on U(N) and SU(N).
 * The normalized interval and its L² product with SU(N).
 * The paper's phase map into U(N), with the `sqrt(3)` Lipschitz bound.
+* **The exact short-interval Haar decomposition (Lemma 16)** for every positive N,
+  including N=1, proved from Haar invariance and periodic integration.
+* Conditional final transfer from an explicitly assumed product LSI with
+  constant `2/N` to U(N) with constant `6/N`.
 * A 1-Lipschitz diagonal coordinate that is not Haar-a.e. constant in every
   positive dimension.
 

@@ -5,14 +5,14 @@
 This is a **partial formalization**, not a proof of Meckes–Meckes Theorem 15.
 There is no theorem claiming the `6/N` LSI on U(N), even for smooth functions or
 for N=1. No interval or SU(N) LSI has been assumed as an axiom or installed in a
-typeclass. The development proves the metric/measure foundations and general
-transport and regularity results described below.
+typeclass. The development proves the metric/measure foundations, the exact Haar
+decomposition in Lemma 16, and the transport and regularity results below.
 
 The principal unfinished step is analytic/geometric: obtaining SU(N)'s LSI
 from a proved curvature calculation and a proved diffusion criterion. The
 interval/circle LSI and the appropriate tensorization argument are also
-substantial analytic obligations. Short-interval Haar decomposition is a
-separate measure-theoretic obligation. These are mathematical missing proofs,
+substantial analytic obligations. The exact short-interval Haar decomposition is now proved, including N=1.
+The remaining analytic/geometric obligations are mathematical missing proofs,
 not merely unresolved Lean syntax or typeclass errors.
 
 ## Proved declarations
@@ -32,7 +32,11 @@ All names below are in namespace `LogSobolev`.
 | `LogSobolev/Unitary/SpecialUnitary.lean` | `specialUnitaryInclusion_isometry`, `specialUnitaryCompactSpace`, `specialUnitaryHaar` | Actual SU group, closed/compact, isometrically included in U, with normalized Haar measure. No curvature result. |
 | `LogSobolev/Unitary/PhaseMap.lean` | `phaseMul_dist_le`, `phaseMap_lipschitz` | The full-line phase map has Lipschitz constant `sqrt(3)` for every positive N; no probability argument is needed. |
 | `LogSobolev/Measure/Interval.lean` | `intervalUniform_univ`, `map_intervalUniform` | Normalized Lebesgue measure on the Euclidean subtype `[0,L]` for `L>0`. |
-| `LogSobolev/Unitary/ProductDomain.lean` | `phaseDomainMeasure_probability`, `intervalPhaseMap_lipschitz` | The exact interval × SU domain and probability measure, and the restricted map's Lipschitz bound. No equality of its pushforward with Haar. |
+| `LogSobolev/Unitary/ProductDomain.lean` | `phaseDomainMeasure_probability`, `intervalPhaseMap_lipschitz` | The exact interval × SU domain and probability measure, and the restricted map's Lipschitz bound. |
+| `LogSobolev/Unitary/CircleDecomposition.lean` | `circleSpecialUnitaryMap_surjective`, `map_circleSpecialUnitaryMap`, `map_circleSpecialUnitaryMap_mul_root` | Continuous surjective scalar homomorphism from Circle × SU to U, full-circle Haar decomposition, and invariance of the SU mixture under central Nth roots. |
+| `LogSobolev/Unitary/PhasePeriodicity.lean` | `phaseInterval_root`, `phaseSliceMeasure_periodic`, `phaseAverage_intervalIntegral_translate` | The SU-averaged phase distribution has exactly the paper's short period, and its integral is unchanged by translating the integration window. |
+| `LogSobolev/Unitary/PhaseHaar.lean` | `integral_map_intervalPhaseMap`, `map_intervalPhaseMap` | **Unconditional Lemma 16:** the exact normalized interval × SU measure maps to normalized U Haar, for every positive N including N=1. |
+| `LogSobolev/Unitary/LSITransfer.lean` | `unitary_metricLSI_of_phaseDomain` | **Conditional:** explicitly assumes source MetricLSI(2/N), then proves target MetricLSI(6/N) using the verified Haar identity and Lipschitz bound. No source LSI is proved. |
 | `LogSobolev/Unitary/Observables.lean` | `entryReal_lipschitz`, `entryReal_not_ae_constant`, `unitary_regular` | A meaningful nonconstant test in each positive dimension, and all integrability requirements for every locally Lipschitz U(N) observable. |
 
 ## Convention and semantic checks
@@ -100,23 +104,25 @@ The reference route still needs these statements:
   MetricLSI (specialUnitaryHaar (Fin N)) (2 / (N : ℝ≥0)) →
   MetricLSI (phaseDomainMeasure N) (2 / (N : ℝ≥0))
 
--- Lemma 16, expressed on the constructed interval domain:
-∀ (N : ℕ), 0 < N →
-  Measure.map (intervalPhaseMap N) (phaseDomainMeasure N) = unitaryHaar (Fin N)
-
 -- The remaining separate N=1 analytic case:
 MetricLSI (unitaryHaar (Fin 1)) 6
 ```
 
 None of these is a hypothesis hidden in the proved geometric or regularity
-results. In particular, `phaseDomainMeasure_probability` proves only that the
-source measure is probability, not that its image is Haar.
+results. `map_intervalPhaseMap` now proves the required Haar image identity
+without any analytic assumptions. `unitary_metricLSI_of_phaseDomain` separately
+exposes the remaining product LSI as its hypothesis.
 
 ## Shortest sound continuation
 
-Keep the existing Mathlib matrix groups and norm. First close the independent
-short-interval Haar decomposition by verified phase translation and SU central
-root-of-unity invariance, followed by `eq_unitaryHaar`.
+The measure-theoretic step is complete. Its proof takes an Nth root of the
+determinant to factor every unitary as a circle scalar times an SU matrix.
+Central Nth roots preserve SU Haar, so averaging over SU makes the phase
+distribution periodic with period `π * sqrt(2/N)`. Fubini and periodic interval
+integration show invariance under every left translation in U. The existing
+`eq_unitaryHaar` then identifies the normalized pushforward. Closed interval
+endpoints are handled by the verified equality of Lebesgue integrals on Icc
+and Ioc. This argument applies for every positive N.
 
 For analysis, port the inspected finite-product entropy subadditivity rather
 than redeveloping it. Prove the required gradient-to-local-slope identification
@@ -131,27 +137,28 @@ approximation needed to obtain locally Lipschitz functions. The abstract
 `markov-semigroups` class does not eliminate these obligations. Its assumed
 entropy decay must not be passed off as a proved curvature criterion.
 
-Once these ingredients exist, use `MetricLSI.map` and
-`intervalPhaseMap_lipschitz`; `MetricLSI.real_form` already removes the compact
-regularity side conditions. A verified Herbst argument is a later task.
+Once the analytic ingredients exist, `unitary_metricLSI_of_phaseDomain`
+already assembles the result with constant `6/N`; `MetricLSI.real_form` removes
+the compact regularity side conditions. A verified Herbst argument is a later task.
 
 ## Verification and commits
 
 Verification performed on 2026-10-10 with Lean 4.28.0 and the pinned Mathlib
 commit `8f9d9cff6bd728b17a24e163c9402775d9e6a365`:
 
-* `lake build`: passed for the complete library (2710 dependency/build jobs,
+* `lake build`: passed for the complete library (2744 dependency/build jobs,
   primarily cached Mathlib artifacts).
 * `lake env lean LogSobolev/Examples.lean`: passed; the examples compile as an
   independent client importing the public root module.
 * `lake env lean LogSobolev/Audit.lean`: passed. The automated traversal checked
-  **124 declarations** in the `LogSobolev` namespace, including definitions,
+  **163 declarations** in the `LogSobolev` namespace, including definitions,
   instances, and generated auxiliaries. Every transitive axiom was one of
   `propext`, `Classical.choice`, or `Quot.sound`. No `sorryAx` or custom axiom
   was present in those dependency closures.
-* The audit also executes 23 `#print axioms` commands, prints the core
+* The audit also executes 29 `#print axioms` commands, prints the core
   definitions, and prints fully elaborated types for the trace normalization,
-  phase-map Lipschitz theorem and U(N) regularity theorem. The elaborated
+  phase-map Lipschitz theorem, U(N) regularity theorem, exact Haar identity,
+  and conditional final LSI transfer. The elaborated
   metric instances are explicitly Frobenius and `WithLp 2`.
 * Source scan found no proof omissions or custom axiom declarations;
   `git diff --check` passed.
@@ -167,6 +174,10 @@ Completed milestones:
 * `a8ce6ef`: metric-slope measurability and transport, compact regularity,
   normalized Haar/interval/product measures, the phase-map estimate,
   nonconstant observables, independent examples and the recursive axiom audit.
+* `cc0eae8`: unconditional short-interval Haar decomposition for every positive
+  N, full-circle decomposition, central-root invariance and phase periodicity;
+  conditional `2/N` to `6/N` LSI transfer; independent examples at N=1 and N=3,
+  and the expanded 163-declaration recursive audit.
 
 The report and README are committed separately after these verified proof
 milestones; use `git log --oneline` to see the documentation commit as well.
