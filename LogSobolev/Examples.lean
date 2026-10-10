@@ -366,3 +366,60 @@ example {h : Matrix.specialUnitaryGroup (Fin 2) ℂ → ℝ} (hc : Continuous h)
   · intro r _ U
     simpa only [one_mul] using ((hasDerivAt_id r).mul_const (h U)).exp
   · simp
+
+-- The spatial Fisher variation has the exact coefficient -3 on SU(3).
+example {f : Matrix.specialUnitaryGroup (Fin 3) ℂ → ℝ}
+    (hf : ContMDiff 𝓘(ℝ, specialUnitaryLieAlgebra (n := Fin 3)) 𝓘(ℝ) ∞ f)
+    (hpos : ∀ U, 0 < f U) :
+    let b := stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 3))
+    (∫ U, 2 * specialUnitaryGamma b f (specialUnitaryLaplacian b f) U / f U -
+        specialUnitaryGamma b f f U * specialUnitaryLaplacian b f U / (f U) ^ 2
+      ∂specialUnitaryHaar (Fin 3)) ≤
+      -3 * (∫ U, specialUnitaryGamma b f f U / f U ∂specialUnitaryHaar (Fin 3)) := by
+  simpa using specialUnitary_fisher_variation_le
+    (stdOrthonormalBasis ℝ (specialUnitaryLieAlgebra (n := Fin 3))) hf hpos
+
+-- A supplied positive family with nonzero time variation: Fisher information scales as exp(t).
+-- This tests the differentiation theorem; this rescaling is not asserted to solve the heat equation.
+example {ι : Type*} [Fintype ι]
+    (b : ι → specialUnitaryLieAlgebra (n := Fin 2))
+    {f : Matrix.specialUnitaryGroup (Fin 2) ℂ → ℝ}
+    (hf : ContMDiff 𝓘(ℝ, specialUnitaryLieAlgebra (n := Fin 2)) 𝓘(ℝ) ∞ f)
+    (hpos : ∀ U, 0 < f U) (t : ℝ) :
+    let F : ℝ → Matrix.specialUnitaryGroup (Fin 2) ℂ → ℝ := fun r U => Real.exp r * f U
+    HasDerivAt (fun r => ∫ U, specialUnitaryGamma b (F r) (F r) U / F r U
+      ∂specialUnitaryHaar (Fin 2))
+      (∫ U, specialUnitaryGamma b (F t) (F t) U / F t U ∂specialUnitaryHaar (Fin 2)) t := by
+  let F : ℝ → Matrix.specialUnitaryGroup (Fin 2) ℂ → ℝ := fun r U => Real.exp r * f U
+  have hF : Continuous (Function.uncurry F) :=
+    (Real.continuous_exp.comp continuous_fst).mul (hf.continuous.comp continuous_snd)
+  have hs r : ContMDiff 𝓘(ℝ, specialUnitaryLieAlgebra (n := Fin 2)) 𝓘(ℝ) ∞ (F r) :=
+    contMDiff_const.mul hf
+  have h0 r U : F r U ≠ 0 := ne_of_gt (mul_pos (Real.exp_pos r) (hpos U))
+  have he (i : ι) (r : ℝ) (U : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+      specialUnitaryDeriv (b i) (F r) U = Real.exp r * specialUnitaryDeriv (b i) f U := by
+    exact DFunLike.congr_fun
+      ((hf.mdifferentiableAt (by decide)).hasMFDerivAt.const_smul (Real.exp r)).mfderiv (b i)
+  have hDF i : Continuous (fun p : ℝ × Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      specialUnitaryDeriv (b i) (F p.1) p.2) := by
+    simp_rw [he]
+    exact (Real.continuous_exp.comp continuous_fst).mul
+      ((specialUnitaryDeriv_contMDiff (b i) hf).continuous.comp continuous_snd)
+  have hd (r : ℝ) (_ : r ∈ Set.univ) (U : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+      HasDerivAt (fun v => F v U) (F r U) r :=
+    (Real.hasDerivAt_exp r).mul_const (f U)
+  have hdD (i : ι) (r : ℝ) (_ : r ∈ Set.univ) (U : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+      HasDerivAt (fun v => specialUnitaryDeriv (b i) (F v) U)
+        (specialUnitaryDeriv (b i) (F r) U) r := by
+    simp_rw [he]
+    exact (Real.hasDerivAt_exp r).mul_const _
+  have h := specialUnitary_hasDerivAt_fisher b hF hF h0 hs hs hDF hDF hd hdD t (by simp)
+  convert h using 1
+  apply integral_congr_ae
+  apply Filter.Eventually.of_forall
+  intro U
+  change specialUnitaryGamma b (F t) (F t) U / F t U =
+    2 * specialUnitaryGamma b (F t) (F t) U / F t U -
+      specialUnitaryGamma b (F t) (F t) U * F t U / (F t U) ^ 2
+  field_simp [h0 t U]
+  ring

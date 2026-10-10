@@ -55,3 +55,5 @@ import LogSobolev.Measure.CompactDifferentiation
 import LogSobolev.Measure.EntropyDifferentiation
 import LogSobolev.Unitary.SpecialUnitaryChainRules
 import LogSobolev.Unitary.SpecialUnitaryEntropyDissipation
+import LogSobolev.Unitary.SpecialUnitaryFisherIdentity
+import LogSobolev.Unitary.SpecialUnitaryFisherDifferentiation

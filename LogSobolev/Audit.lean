@@ -252,3 +252,17 @@ set_option pp.all true in
 #check @LogSobolev.specialUnitary_hasDerivAt_entropy
 set_option pp.all true in
 #check @LogSobolev.specialUnitary_weighted_gammaTwo_log_lower_bound
+
+#print axioms LogSobolev.specialUnitaryGamma_comm
+#print axioms LogSobolev.specialUnitaryGamma_log_mixed
+#print axioms LogSobolev.specialUnitary_mul_gamma_log_mixed
+#print axioms LogSobolev.specialUnitary_integral_weighted_gammaTwo_log
+#print axioms LogSobolev.specialUnitary_fisher_variation_identity
+#print axioms LogSobolev.specialUnitary_fisher_variation_le
+#print axioms LogSobolev.specialUnitary_hasDerivAt_fisher
+#print axioms LogSobolev.specialUnitary_hasDerivAt_fisher_of_heat
+#print axioms LogSobolev.specialUnitary_fisher_deriv_le
+set_option pp.all true in
+#check @LogSobolev.specialUnitary_fisher_variation_identity
+set_option pp.all true in
+#check @LogSobolev.specialUnitary_fisher_deriv_le
