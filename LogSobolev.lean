@@ -132,5 +132,7 @@ public import LogSobolev.Unitary.PhaseEntropyEnergy
 public import LogSobolev.Unitary.PhaseEntropyTransport
 public import LogSobolev.Unitary.UnitaryLSI
 public import LogSobolev.Gaussian.LSI
+public import LogSobolev.Concentration.Unitary
+public import LogSobolev.Concentration.Gaussian
 
 @[expose] public section
