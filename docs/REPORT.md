@@ -96,10 +96,12 @@ sharp-interval-plus-global-Lipschitz argument. Every ingredient below is proved.
    `π²/N`, and then `12/N`, for the original locally Lipschitz function.
 
 This route works also for N=1. The earlier independent U(1) theorem is retained.
-General metric-space tensorization, the sharp interval constant, and the optional
-Herbst/concentration corollary are not asserted; none is needed for the completed
-main theorem. General entropy subadditivity, Lipschitz pushforward, isometric
-transport, and interval scaling remain reusable components.
+General metric-space tensorization and the sharp interval constant are not
+asserted; neither is needed for the completed main theorem. The optional
+Herbst/concentration corollary is now proved for all globally Lipschitz
+observables; see [CONCENTRATION.md](CONCENTRATION.md) for Haar and Gaussian
+statements and audits. General entropy subadditivity, Lipschitz pushforward,
+isometric transport, and interval scaling remain reusable components.
 
 ## Principal sources
 

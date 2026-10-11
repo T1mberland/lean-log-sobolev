@@ -33,8 +33,9 @@ Actual declarations examined:
   with the integrated local-slope energy. Its supporting
   `Probability/Gaussian/Sobolev/LipschitzMollification.lean` proves smoothness,
   pointwise convergence, and preservation of the global Lipschitz constant.
-  These Apache-2.0 components are relevant to a future nonsmooth extension
-  but are not needed for the C¹ theorem ported here.
+  These Apache-2.0 components now support the all-globally-Lipschitz
+  concentration extension described in [CONCENTRATION.md](CONCENTRATION.md).
+  The local-slope Gaussian LSI extension remains separate.
 - `markov-semigroups/MarkovSemigroups/Abstract/LogSobolev.lean` contains
   documentation advertising `gross_log_sobolev_gaussian`, but no declaration
   in that file. Its hypercontractivity development has custom axioms

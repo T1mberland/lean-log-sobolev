@@ -36,8 +36,7 @@ The proof includes the almost-everywhere differentiation and entropy-limit steps
 Reusable infrastructure includes entropy subadditivity, Lipschitz pushforward,
 local-slope measurability and integrability, exact Haar decomposition, the full
 SU(N) LSI with constant `2/N`, and an interval LSI with constant `L²/8`.
-General metric tensorization, the sharp interval constant, and the optional
-concentration corollary are not claimed.
+General metric tensorization and the sharp interval constant are not claimed.
 
 ## Gaussian LSI
 
@@ -54,6 +53,22 @@ uses the same `slopeEnergy` as the unitary API. An all-locally-Lipschitz Gaussia
 `MetricLSI` theorem is **not** claimed. See [the Gaussian report](docs/GAUSSIAN.md)
 for precise scope, source attribution, verification, and remaining work.
 
+## Herbst argument and concentration
+
+The shared Herbst proof gives centered sub-Gaussian MGF bounds and upper,
+lower, and two-sided concentration for globally Lipschitz real functions.
+The variance proxies for an `L`-Lipschitz observable are `6 L²/N` on U(N),
+`2 L²/N` on SU(N), and `L²` on Euclidean standard Gaussian space. The Gaussian
+result includes nonsmooth functions, dimension zero, and L=0; all moment
+conditions are proved. The Haar results include N=1.
+
+`gaussian_measure_abs_ge_le` gives `P(|f - E f| ≥ r) ≤ 2 exp(-r²/(2 L²))`.
+`unitary_measure_abs_ge_le` gives the corresponding Haar bound with exponent
+`-N r²/(12 L²)`. The generic API is `MetricLSI.hasSubgaussianMGF_of_compact`
+and `MetricLSI.measure_abs_ge_le`; the noncompact MGF transfer has explicit
+exponential-moment hypotheses. See [the concentration report](docs/CONCENTRATION.md)
+for theorem names, proof, source licenses, and verification.
+
 ## Build and verify
 
 Lean 4.34.1 and matching Mathlib v4.34.1 are pinned in the toolchain and manifest.
@@ -66,12 +81,14 @@ bash scripts/check.sh
 On memory-constrained machines, run `python3 scripts/build-sequential.py`
 first to compile local modules in dependency order.
 
-The check script builds the library, independently compiles eight client files,
+The check script builds the library, independently compiles nine client files,
 and audits the transitive dependencies of exported project declarations,
 including their private proof dependencies. Only
 `propext`, `Classical.choice`, and `Quot.sound` are allowed. It saves the audit
 and full elaborated final theorem statements in `docs/unitary-axiom-audit.txt`
-and `docs/gaussian-axiom-audit.txt`.
+and `docs/gaussian-axiom-audit.txt`. The concentration audit also checks every
+visible project declaration by originating module, including upstream namespaces,
+and saves `docs/concentration-axiom-audit.txt`.
 
 ## Sources and report
 
